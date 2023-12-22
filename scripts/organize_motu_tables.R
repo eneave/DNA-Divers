@@ -43,7 +43,8 @@ p1_meta <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores Universi
 colnames(p1_meta)[1] <- "seq_id"
 sample_info_tab <- merge(p1_names,p1_meta, by="seq_id", all.x = T) ##merge because 3 controls dropped out for having no reads assigned
 ## partition MOTU table to only include taxa
-tax_tab <- p1 %>% select(c(id, kingdom, phylum, class, order, family, genus, species))
+tax_tab <- p1 %>% select(c(id, kingdom, phylum, class, order, family, genus, species)) #%>% 
+                  #replace_na(list(kingdom = "unassigned", phylum = "unassigned", class = "unassigned", order = "unassigned", family = "unassigned", genus = "unassigned", species = "unassigned"))
 
 # create phyloseq object
 OTU = otu_table(as.matrix(count_tab), taxa_are_rows = FALSE)
@@ -51,6 +52,15 @@ TAX = tax_table(as.matrix(tax_tab))
 SAM = sample_data(sample_info_tab)
 dataset <- merge_phyloseq(phyloseq(OTU, TAX), SAM)
 
+# code taken from tutorial: https://benjjneb.github.io/decontam/vignettes/decontam_intro.html#identify-contaminants---frequency
+# inspect library size
+df <- as.data.frame(sample_data(dataset)) # Put sample_data into a ggplot-friendly data.frame
+df$LibrarySize <- sample_sums(dataset)
+df <- df[order(df$LibrarySize),]
+df$Index <- seq(nrow(df))
+ggplot(data=df, aes(x=Index, y=LibrarySize, color=sampletype1)) + geom_point() ## doesn't seem to include unassigned MOTUs
 
-
-
+# identify contaminants through prevalence 
+sample_data(dataset)$is.neg <- sample_data(dataset)$sampletype2 == "negative"
+contamdf.prev <- isContaminant(dataset, method="prevalence", neg="is.neg")
+table(contamdf.prev$contaminant)
