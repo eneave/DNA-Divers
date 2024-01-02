@@ -11,7 +11,7 @@ p1 <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/Ph
 ## elas02 marker
 p2e_aq <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/DNAdivers/divers_methods_experiment_part2/sintax_output_MainTank/e_st_divmeth2_ASVs.csv") #shark tank aquarium
 p2e_uk <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/DNAdivers/divers_methods_experiment_part2/sintax_output_UKreferencedatabase/e_divmeth2_ASVs.csv") #UK samples
-p2e_sk <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/DNAdivers/St.Kilda_andothersamples/Elas02_run/other_sintax/elas_other_ASVs.csv") #UK samples accidently not sequenced/added on to a different project
+p2e_sk <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/DNAdivers/St.Kilda_andothersamples/Elas02_run/other_sintax/elas_other_ASVs.csv") #UK samples accidentally not sequenced/added on to a different project
 ## tele02 marker
 p2t_aq <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/DNAdivers/divers_methods_experiment_part2/sintax_output_CoralCavedatabase/t_cc_divmeth2_ASVs.csv") #coral cave aquarium
 p2t_uk <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/DNAdivers/divers_methods_experiment_part2/sintax_output_UKreferencedatabase/t_divmeth2_ASVs.csv") #UK samples
@@ -149,24 +149,23 @@ rm(contamdf.prev,contamdf.prev05,contamdf.prev05T,contamdf.prevT)
 ## Aquarium Samples - Coral cave tank
 #####
 # Convert to phyloseq objects 
-# partition MOTU table to only include counts
-# don't select extraction blank from June 19 because it's not usable
-View(p2e_aq)
-p2e_aq_v1 <- p2e_aq %>% select(c(id, sample.10Ae60BLUE_MPEtB:sample.11Ce_EBJun_12extblank,sample.11EeBLUE_FBEt_fieldb,sample.11Fe_negativePCRcontrol,sample.8CeBLUE_eDNA_FBblank:sample.9He60BLUE_MPEtA_)) %>%
+# partition MOTU table to only include counts (of samples and negative controls)
+View(p2t_aq)
+count_tab <- p2t_aq %>% select(c(id, sample.5Et10BLUE_MPEtA_:sample.8Dt_EBMay_13extblank)) %>%
   column_to_rownames(var = "id") # make MOTU ids row names
-count_tab <- p2e_aq_v1[rowSums(p2e_aq_v1[])>0,] # remove rows that sum to zero (they are there due to removal of non-aquarium samples)
-p2e_aq_v2 <- count_tab %>% rownames_to_column(var = "id") # have a version of count_tab with a MOTU ID column
-p2e_aq_v3 <- merge(p2e_aq_v2,p2e_aq[c(2:18)], by="id") # add taxonomy back 
+#count_tab <- p2e_aq_v1[rowSums(p2e_aq_v1[])>0,] # remove rows that sum to zero; no need to do this for coral cave; already done manually 
+p2t_aq_v1 <- p2t_aq %>% select(c(id, sample.5Et10BLUE_MPEtA_:sample.8Dt_EBMay_13extblank))# have a version of count_tab with a MOTU ID column
+#p2e_aq_v3 <- merge(p2e_aq_v2,p2e_aq[c(2:18)], by="id") # add taxonomy back; no need since all taxa have been kept
 # list of seq_ids
-p2e_aq_names <- as.data.frame(colnames(p2e_aq_v2[-c(1)])) # 27 samples
-colnames(p2e_aq_names)[1] <- "seq_id" # can use list to compare to sample data to make sure they're in the same order
+p2t_aq_names <- as.data.frame(colnames(p2t_aq_v1[-c(1)])) # 12 samples + negative controls
+colnames(p2t_aq_names)[1] <- "seq_id" # can use list to compare to sample data to make sure they're in the same order
 # read in metadata
-p2e_aq_meta <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/DNAdivers/divers_methods_experiment_part2/p2e_aq_meta.csv")
-colnames(p2e_aq_meta)[1] <- "seq_id"
-sample_info_tab <- merge(p2e_aq_names,p2e_aq_meta, by="seq_id", all.x = T) %>% ##merge to make sure we have metadata for all of your samples
+p2t_aq_meta <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/DNAdivers/divers_methods_experiment_part2/p2t_aq_meta.csv")
+colnames(p2t_aq_meta)[1] <- "seq_id" 
+sample_info_tab <- merge(p2t_aq_names,p2t_aq_meta, by="seq_id", all.x = T) %>% ##merge to make sure we have metadata for all of your samples
   column_to_rownames(var = "seq_id")
 # partition MOTU table to only include taxa
-tax_tab <- p2e_aq_v3 %>% select(c(id, kingdom, phylum, class, order, family, genus, species)) %>% 
+tax_tab <- p2t_aq %>% select(c(id, kingdom, phylum, class, order, family, genus, species)) %>% 
   replace_na(list(kingdom = "unassigned", phylum = "unassigned", class = "unassigned", order = "unassigned", family = "unassigned", genus = "unassigned", species = "unassigned")) %>%
   column_to_rownames(var = "id")
 # create phyloseq object
@@ -193,16 +192,17 @@ contamdf.prev05 <- isContaminant(dataset, method="prevalence", neg="is.neg", thr
 table(contamdf.prev05$contaminant)
 # extract rows which are possible contaminants and merge with taxonomy to inspect
 # 0.1
-contamdf.prevT <- contamdf.prev[contamdf.prev$contaminant == TRUE,]
-contamdf.prevT <- contamdf.prevT %>% rownames_to_column(var = "id")
-contamdf.prevT <- merge(p1, contamdf.prevT, by="id", all.x = F)
+#contamdf.prevT <- contamdf.prev[contamdf.prev$contaminant == TRUE,]
+#contamdf.prevT <- contamdf.prevT %>% rownames_to_column(var = "id")
+#contamdf.prevT <- merge(p1, contamdf.prevT, by="id", all.x = F)
 # 0.5
 contamdf.prev05T <- contamdf.prev05[contamdf.prev05$contaminant == TRUE,]
 contamdf.prev05T <- contamdf.prev05T %>% rownames_to_column(var = "id")
-contamdf.prev05T <- merge(p1, contamdf.prev05T, by="id", all.x = F)
+contamdf.prev05T <- merge(p2t_aq, contamdf.prev05T, by="id", all.x = F)
+View(contamdf.prev05T)
 ## use 0.5 prevalence threshold
-p2e_aq_prev <- p2e_aq_v3[!(p2e_aq_v3$id %in% contamdf.prev05T$id),] ## zero contaminants
-write.csv(p2e_aq_prev, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/DNAdivers/divers_methods_experiment_part2/sintax_output_MainTank/divmeth2_sharktank_MOTU_decontam.csv")
+p2t_aq_prev <- p2t_aq[!(p2t_aq$id %in% contamdf.prev05T$id),] ## 11 contaminants
+write.csv(p2t_aq_prev, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/DNAdivers/divers_methods_experiment_part2/sintax_output_CoralCavedatabase/divmeth2_coralcave_MOTU_decontam.csv")
 ## remove generic named data, since same names will be used for different MOTU tables
 rm(count_tab,sample_info_tab,tax_tab,OTU,TAX,SAM,dataset,df)
 rm(contamdf.prev,contamdf.prev05,contamdf.prev05T,contamdf.prevT)

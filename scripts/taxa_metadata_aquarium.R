@@ -1,15 +1,27 @@
 ################################################
 ## Add Taxonomic metadata to aquarium samples ##
 ################################################
+#####
 ## Shark tank
+#####
 # total reads per MOTU
-p2e_aq_v3 <- p2e_aq_v3 %>% mutate(total_reads = rowSums(.[2:28]))
+p2e_aq_prev <- p2e_aq_prev %>% mutate(total_reads = rowSums(.[2:28]))
 
 # subset elasmobranchs
-p2e_aq_elas <- subset(p2e_aq_v3, class=="Elasmobranchii")
+p2e_aq_elas <- subset(p2e_aq_prev, class=="Elasmobranchii")
 
 # subset species identity >0.95
 p2e_aq_elas95 <- subset(p2e_aq_elas, s.id>0.95)
+
+# assign best-match taxonomy for Elasmobranchs
+p2e_aq_elas95$manual_taxo <- ifelse(p2e_aq_elas95$species=="Chiloscyllium  griseum", "Chiloscyllium sp.",
+                                    ifelse(p2e_aq_elas95$genus=="Heterodontus", "Heterodontus sp.",
+                                           ifelse(p2e_aq_elas95$genus=="Orectolobus", "Orectolobus sp.",
+                                                  p2e_aq_elas95$species)))
+p2e_aq_elas95$manual_taxo.id <- ifelse(p2e_aq_elas95$species=="Chiloscyllium  griseum", p2e_aq_elas95$g.id,
+                                       ifelse(p2e_aq_elas95$genus=="Heterodontus", p2e_aq_elas95$g.id,
+                                              ifelse(p2e_aq_elas95$genus=="Orectolobus", p2e_aq_elas95$g.id,
+                                                     p2e_aq_elas95$s.id)))
 
 # convert to long dataframe
 long_aq_elas95 <- p2e_aq_elas95 %>%
@@ -21,10 +33,12 @@ long_aq_elas95 <- p2e_aq_elas95 %>%
 long_aq_elas95 <- merge(long_aq_elas95, p2e_aq_meta, by="long_id")
 # remove controls 
 elas95samples <- subset(long_aq_elas95, sampletype1=="sample")
+# add proportional read counts
+elas95samples$prc <- elas95samples$reads/elas95samples$total_reads
 
 ## quick plot of sharks
 windows()
-ggplot(elas95samples , aes(x = long_id, y = prc, fill = species)) + 
+ggplot(elas95samples , aes(x = long_id, y = prc, fill = manual_taxo)) + 
   geom_bar(stat = "identity", color = "black", position = "fill") +
   theme(axis.text.x = element_text(angle = 90))
   
