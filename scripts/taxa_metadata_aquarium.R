@@ -106,6 +106,15 @@ ggplot(all95samples , aes(x = long_id, y = prc, fill = manual_taxo1)) +
 #####
 ## Coral cave tank
 #####
+# FUNKY HEATMAPS TUTORIAL FOR LATER 
+# https://www.youtube.com/watch?v=9XbxL-Is22k
+
+
+
+
+
+
+
 
 
 
