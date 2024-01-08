@@ -306,12 +306,119 @@ column_info <- tribble(
   "Orectolobus sp.",  "Group1",       "Orectolobus sp.",    "funkyrect",  "palette2",  lst(),
   "Stegostoma tigrinum",  "Group1",       "Stegostoma tigrinum",    "funkyrect",  "palette2",  lst()
 )
+
 #####
+# Convert shark reads to percentages
+#####
+## including Teleosts
+hm_e_aqt2$Cm_p <- (hm_e_aqt2[c(1)]/hm_e_aqt2$reads_per_sample)*100
+hm_e_aqt2$Ct_p <- (hm_e_aqt2[c(2)]/hm_e_aqt2$reads_per_sample)*100
+hm_e_aqt2$Cp_p <- (hm_e_aqt2[c(3)]/hm_e_aqt2$reads_per_sample)*100
+hm_e_aqt2$Cg_p <- (hm_e_aqt2[c(4)]/hm_e_aqt2$reads_per_sample)*100
+hm_e_aqt2$food_p <- (hm_e_aqt2[c(5)]/hm_e_aqt2$reads_per_sample)*100
+hm_e_aqt2$Gc_p <- (hm_e_aqt2[c(6)]/hm_e_aqt2$reads_per_sample)*100
+hm_e_aqt2$Glc_p <- (hm_e_aqt2[c(7)]/hm_e_aqt2$reads_per_sample)*100
+hm_e_aqt2$Hg_p <- (hm_e_aqt2[c(8)]/hm_e_aqt2$reads_per_sample)*100
+hm_e_aqt2$Ha_p <- (hm_e_aqt2[c(9)]/hm_e_aqt2$reads_per_sample)*100
+hm_e_aqt2$Og_p <- (hm_e_aqt2[c(10)]/hm_e_aqt2$reads_per_sample)*100
+hm_e_aqt2$St_p <- (hm_e_aqt2[c(11)]/hm_e_aqt2$reads_per_sample)*100
+hm_e_aqt2$T_p <- (hm_e_aqt2[c(12)]/hm_e_aqt2$reads_per_sample)*100
 
+column_info <- tribble(
+  ~id,     ~group,         ~name,                      ~geom,        ~palette,    ~options,
+  "id",    "",             "",                         "text",       NA,          list(hjust = 0, width = 6),
+  "reads_per_sample",   "overall",      "Reads",           "bar",        "palette1",  list(width = 4, legend = FALSE),
+  #"cyl",   "overall",      "Number of cylinders",      "bar",        "palette2",  list(width = 4, legend = FALSE),
+  "Cm_p",  "Group1",       "Carcharhinus melanopterus",    "funkyrect",  "Reds",  lst(),
+  "Ct_p",  "Group1",       "Carcharias taurus",    "funkyrect",  "Reds",  lst(),
+  "Cp_p",  "Group1",       "Chiloscyllium punctatum",    "funkyrect",  "Reds",  lst(),
+  "Cg_p",  "Group1",       "Chiloscyllium sp.",    "funkyrect",  "Reds",  lst(),
+  "Gc_p",  "Group1",       "Ginglymostoma cirratum",    "funkyrect",  "Reds",  lst(),
+  "Glc_p",  "Group1",       "Glaucostegus cemiculus",    "funkyrect",  "Reds",  lst(),
+  "Hg_p",  "Group1",       "Heterodontus sp.",    "funkyrect",  "Reds",  lst(),
+  "Ha_p",  "Group1",       "Hypanus americanus",    "funkyrect",  "Reds",  lst(),
+  "Og_p",  "Group1",       "Orectolobus sp.",    "funkyrect",  "Reds",  lst(),
+  "St_p",  "Group1",       "Stegostoma tigrinum",    "funkyrect",  "Reds",  lst(),
+  "T_p",  "Group1",       "Teleostei",    "funkyrect",  "Reds",  lst(),
+  "food_p",  "Group1",       "Food",    "funkyrect",  "Reds",  lst()
+)
 
-##
+## plot
 windows()
 funky_heatmap(hm_e_aqt2, column_info = column_info, expand = list(xmax = 4))
+
+
+# calculate proportional read counts for just sharks
+hm_e_aqt2$elasreads_per_sample <- rowSums(hm_e_aqt2[c(1:4,6:11)])
+
+hm_e_aqt2$Cm_pe <- (hm_e_aqt2[c(1)]/hm_e_aqt2$elasreads_per_sample)*100
+hm_e_aqt2$Ct_pe <- (hm_e_aqt2[c(2)]/hm_e_aqt2$elasreads_per_sample)*100
+hm_e_aqt2$Cp_pe <- (hm_e_aqt2[c(3)]/hm_e_aqt2$elasreads_per_sample)*100
+hm_e_aqt2$Cg_pe <- (hm_e_aqt2[c(4)]/hm_e_aqt2$elasreads_per_sample)*100
+hm_e_aqt2$Gc_pe <- (hm_e_aqt2[c(6)]/hm_e_aqt2$elasreads_per_sample)*100
+hm_e_aqt2$Glc_pe <- (hm_e_aqt2[c(7)]/hm_e_aqt2$elasreads_per_sample)*100
+hm_e_aqt2$Hg_pe <- (hm_e_aqt2[c(8)]/hm_e_aqt2$elasreads_per_sample)*100
+hm_e_aqt2$Ha_pe <- (hm_e_aqt2[c(9)]/hm_e_aqt2$elasreads_per_sample)*100
+hm_e_aqt2$Og_pe <- (hm_e_aqt2[c(10)]/hm_e_aqt2$elasreads_per_sample)*100
+hm_e_aqt2$St_pe <- (hm_e_aqt2[c(11)]/hm_e_aqt2$elasreads_per_sample)*100
+
+hm_e_aqt3 <- hm_e_aqt2[c(13,28:37)]
+
+
+#funkyheatmap
+
+column_info2 <- tribble(
+  ~id,     ~group,         ~name,                      ~geom,        ~palette,    ~options,
+  "id",    "",             "",                         "text",       NA,          list(hjust = 0, width = 6),
+  #"elasreads_per_sample",   "overall",      "Reads",           "bar",        "palette1",  list(width = 4, legend = FALSE),
+  #"cyl",   "overall",      "Number of cylinders",      "bar",        "palette2",  list(width = 4, legend = FALSE),
+  "Cm_pe",  "Group1",       "Carcharhinus melanopterus",    "funkyrect",  "stability",  lst(),
+  "Ct_pe",  "Group1",       "Carcharias taurus",    "funkyrect",  "stability",  lst(),
+  "Cp_pe",  "Group1",       "Chiloscyllium punctatum",    "funkyrect",  "stability",  lst(),
+  "Cg_pe",  "Group1",       "Chiloscyllium sp.",    "funkyrect",  "stability",  lst(),
+  "Gc_pe",  "Group1",       "Ginglymostoma cirratum",    "funkyrect",  "stability",  lst(),
+  "Glc_pe",  "Group1",       "Glaucostegus cemiculus",    "funkyrect",  "stability",  lst(),
+  "Hg_pe",  "Group1",       "Heterodontus sp.",    "funkyrect",  "stability",  lst(),
+  "Ha_pe",  "Group1",       "Hypanus americanus",    "funkyrect",  "stability",  lst(),
+  "Og_pe",  "Group1",       "Orectolobus sp.",    "funkyrect",  "stability",  lst(),
+  "St_pe",  "Group1",       "Stegostoma tigrinum",    "funkyrect",  "stability",  lst(),
+)
+
+# find suitable color palettes
+data("dynbenchmark_data")
+palettes <- dynbenchmark_data$palettes
+
+windows()
+funky_heatmap(hm_e_aqt3, column_info = column_info2, expand = list(xmax = 4))
+
+#####
+## Bubble plot since funkyheatmaps are proving tricky
+
+# bubbleplot
+
+windows()
+ggplot(elas100samples, aes(x = long_id, y = manual_taxo, size = prc)) +
+  geom_point(pch = 21, fill = "black") +
+  scale_size_continuous(name = "Proportional \nread counts (%)",
+                        range = c(1, 6),
+                        limits = c(0,1),
+                        breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1),
+                        labels = c("< 1%","1-20%","21-40%","41-60%","61%-80%", "> 80%"))  
+
+# convert to long dataframe
+hm_e_aqt3_l <- hm_e_aqt3 %>%
+  pivot_longer(c(2:11), names_to = "elas", values_to = "prc") 
+hm_e_aqt3_l[is.na(hm_e_aqt3_l)] <- 0
+hm_e_aqt3_l$prc <- rowSums(hm_e_aqt3_l[c(3:11),])
+
+windows()
+ggplot(hm_e_aqt3_l, aes(x = id, y = elas, size = prc)) +
+  geom_point(pch = 21, fill = "black") +
+  scale_size_continuous(name = "Proportional \nread counts (%)",
+                        range = c(1, 6),
+                        limits = c(0,1),
+                        breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1),
+                        labels = c("< 1%","1-20%","21-40%","41-60%","61%-80%", "> 80%"))  
 
 
 #####
