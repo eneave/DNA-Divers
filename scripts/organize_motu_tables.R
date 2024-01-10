@@ -7,7 +7,7 @@
 # Disclaimer: some file names have 'ASVs' but the sequences have been clustered into MOTUs
 ## Phase 1 - all samples with tele02 marker
 p1 <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/divmeth1_ASVs.csv")
-p1 <- p1[c(2:80)]
+p1 <- p1[c(2:97)]
 ## Phase 2 
 ## elas02 marker
 p2e_aq <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/DNAdivers/divers_methods_experiment_part2/sintax_output_MainTank/e_st_divmeth2_ASVs.csv") #shark tank aquarium
