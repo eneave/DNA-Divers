@@ -95,8 +95,96 @@ w3 <- w2 %>%
 
 
 #####
-## Prepare data for NMDS plot
+## Prepare data for NMDS
 #####
 library(vegan)
+library(sjmisc)
+library(janitor)
+
+w4 <- w3[c(4:40)]
+w5 <- w4 %>%
+  rotate_df(w4) %>%
+  row_to_names(row_number = 1) 
+colnames(w5)[1] <- "seq_id"
+
+# extract abundance data and prepare for MDS
+dat <- w5[,2:ncol(w5)]
+# convert from character to numeric dataframe
+dat <- as.data.frame(sapply(dat, as.numeric)) 
+
+# presence-absence dataframe
+dat_pa <- as.data.frame(ifelse(dat > 0, 1, 0))
+# Hellinger's standardization
+dat_hell <- decostand(dat, method = "hellinger")
+
+# Calculate distances
+# Bray-Curtis dissimilarity matrix
+bray_dat <- vegdist(dat_hell, method = "bray")
+## Calculate jaccard dissimilariy matrix
+jac_dat <- vegdist(dat_pa, method = "jaccard", binary =  TRUE)
+
+#####
+## NMDS & extract data for plots
+#####
+
+set.seed(1995)
+ord_bray <- metaMDS(bray_dat, distance = "bray", trymax = 1000)
+plot(ord_bray)
+
+set.seed(1996)
+ord_jac <- metaMDS(jac_dat, distance = "jaccard", trymax = 1000)
+plot(ord_jac)
+
+## extract site scores from NMDS and add metadata
+cem_bray <- as.data.frame(scores(ord_bray))  
+cem_bray$seq_id <- w5$seq_id
+cem_bray <- merge(cem_bray, cem_meta, by.x = "seq_id")
+
+cem_jac <- as.data.frame(scores(ord_jac))  
+cem_jac$seq_id <- w5$seq_id
+cem_jac <- merge(cem_jac, cem_meta, by.x = "seq_id")
+
+#####
+## NMDS plots
+#####
+library(ggplot2)
+library(ggthemes)
+
+# basic
+ggplot(cem_bray) +
+  geom_point(aes(x = NMDS1, y = NMDS2, color = location, shape = type))
+
+ggplot(cem_jac) +
+  geom_point(aes(x = NMDS1, y = NMDS2, color = location, shape = type))
+
+#prepare data for more informative plot
+cem_bray$type <- factor(cem_bray$type, levels = c("eDNA", "MP"))
+
+# make more informative
+
+# sample type
+ggplot(cem_bray,
+       aes(x = NMDS1, y = NMDS2)
+       ) +
+  geom_point(aes(fill = location, shape = type), size = 5, alpha = 0.8) +
+  scale_shape_manual(values = c(21, 24)) +
+  scale_color_colorblind()
+# primer type
+ggplot(cem_bray,
+       aes(x = NMDS1, y = NMDS2)
+) +
+  geom_point(aes(fill = location, shape = primer), size = 5, alpha = 0.8) +
+  scale_shape_manual(values = c(21, 24)) +
+  scale_color_colorblind()
+
+
+# have a go at a spider plot
+library(ggordiplots)
+
+gg_ordiplot(ord_bray, groups = cem_bray$location, 
+            spiders=TRUE, ellipse=FALSE, plot=TRUE) # groups aren't labeled properly
+
+gg_ordiplot(ord_jac, groups = cem_bray$location, 
+            spiders=TRUE, ellipse=FALSE, plot=TRUE) # groups aren't labeled properly
 
 
