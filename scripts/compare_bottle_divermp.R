@@ -159,6 +159,9 @@ ggplot(cem_jac) +
 
 #prepare data for more informative plot
 cem_bray$type <- factor(cem_bray$type, levels = c("eDNA", "MP"))
+cem_bray$primer <- factor(cem_bray$primer, levels = c("elas02", "tele02"))
+cem_bray$location <- factor(cem_bray$location, levels = c("Blue Planet", "Liverpool", "Orkney"))
+
 
 # make more informative
 
@@ -177,14 +180,82 @@ ggplot(cem_bray,
   scale_shape_manual(values = c(21, 24)) +
   scale_color_colorblind()
 
-
+#####
 # have a go at a spider plot
-library(ggordiplots)
+#library(ggordiplots)
+#gg_ordiplot(ord_bray, groups = cem_bray$location, 
+#            spiders=TRUE, ellipse=FALSE, plot=TRUE) # groups aren't labeled properly
 
-gg_ordiplot(ord_bray, groups = cem_bray$location, 
-            spiders=TRUE, ellipse=FALSE, plot=TRUE) # groups aren't labeled properly
+#gg_ordiplot(ord_jac, groups = cem_bray$location, 
+#            spiders=TRUE, ellipse=FALSE, plot=TRUE) # groups aren't labeled properly
+#####
 
-gg_ordiplot(ord_jac, groups = cem_bray$location, 
-            spiders=TRUE, ellipse=FALSE, plot=TRUE) # groups aren't labeled properly
+# make plot for paper
+
+# primer is shape, sample type is colour
+#ggplot(cem_bray,  aes(x = NMDS1, y = NMDS2)) + 
+#  geom_point(aes(shape = primer, fill = location, colour = type), alpha= 0.7, size = 4, stroke = 1.5) + 
+#  scale_shape_manual(values = c(24,21),labels = c("Elas02", "Tele02")) +
+#  scale_fill_manual(values = c("#4477AA","#EE6677","#228833"),labels = c("Blue Planet", "Liverpool", "Orkney")) +
+#  scale_colour_manual(values = c("black", "darkgrey"),labels = c("eDNA", "MP")) +
+#  labs(x = "NMDS1", colour = "Sample Type", y = "NMDS2", shape = "Primer") +
+#  guides(fill = guide_legend("Location", override.aes = list(shape = 21, colour = "darkgrey")),
+#         shape = guide_legend("Primer", override.aes = list(fill = "#4477AA", colour = "darkgrey")))
+
+cem_bray_nmds <-
+ggplot(cem_bray,  aes(x = NMDS1, y = NMDS2)) + 
+  geom_point(aes(shape = type, fill = location, colour = primer), alpha= 0.7, size = 4, stroke = 1.5) + 
+  scale_shape_manual(values = c(24,21),labels = c("eDNA", "MP")) +
+  scale_fill_manual(values = c("#4477AA","#EE6677","#228833"),labels = c("Blue Planet", "Liverpool", "Orkney")) +
+  scale_colour_manual(values = c("black", "darkgrey"),labels = c("Elas02", "Tele02")) +
+  labs(x = "NMDS1", colour = "Primer", y = "NMDS2") +
+  guides(fill = guide_legend("Location", override.aes = list(shape = 21, colour = "darkgrey")),
+         shape = guide_legend("Sample Type", override.aes = list(fill = "#4477AA", colour = "darkgrey"))) +
+  theme(axis.text.y = element_text(colour = "black", size = 12, face = "bold"), 
+        axis.text.x = element_text(colour = "black", face = "bold", size = 12), 
+        legend.text = element_text(size = 12, colour ="black"), 
+        legend.position = "right", axis.title.y = element_text(face = "bold", size = 14), 
+        axis.title.x = element_text(face = "bold", size = 14, colour = "black"), 
+        legend.title = element_text(size = 14, colour = "black", face = "bold")) 
+
+ggsave(filename=c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/nmds_bray_cem.jpg"), 
+       plot = cem_bray_nmds, width = 8, height = 6.5, units = "in")
+
+#####
+## Prepare data for richness boxplots
+#####
+
+cem_pa <- cbind(w5[,1], dat_pa)
+colnames(cem_pa)[1] <- "seq_id"
+
+cem_pa$richness <- rowSums(cem_pa[,2:ncol(cem_pa)])
+
+cem_pa <- merge(cem_meta, cem_pa, by = "seq_id")
+
+# make boxplots
+cem_boxplots <-
+ggplot(cem_pa, aes(x = type, y = richness)) + 
+  geom_boxplot(aes(fill = location), alpha = 0.7, outlier.shape = NA) +
+  geom_jitter(shape = 19, position = position_jitter(0.3)) +
+  facet_wrap(~ location) +
+  scale_fill_manual(values = c("#4477AA","#EE6677","#228833"),labels = c("Blue Planet", "Liverpool", "Orkney")) +
+  labs(x = "Sample Type", fill = "Location", y = "Species Richness") +
+  theme(axis.text.y = element_text(colour = "black", size = 12, face = "bold"), 
+        axis.text.x = element_text(colour = "black", face = "bold", size = 12), 
+        legend.text = element_text(size = 12, colour ="black"), 
+        legend.position = "right", axis.title.y = element_text(face = "bold", size = 14), 
+        axis.title.x = element_text(face = "bold", size = 14, colour = "black"), 
+        legend.title = element_text(size = 14, colour = "black", face = "bold"),
+        strip.text = element_text(colour = "black", size = 12, face = "bold"))
+
+ggsave(filename=c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/boxplots_cem.jpg"), 
+       plot = cem_boxplots, width = 8, height = 6.5, units = "in")
+
+
+#####
+## Prepare data for Venn diagrams
+#####
+
+
 
 
