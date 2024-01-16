@@ -256,6 +256,67 @@ ggsave(filename=c("C:/Users/beseneav/OneDrive - Liverpool John Moores University
 ## Prepare data for Venn diagrams
 #####
 
+vcem <- w3
+
+# add together columns by groups
+vcem$ork_bottle <- vcem$sample.7A + vcem$sample.7B +
+                   vcem$sample.7C + vcem$sample.7D +
+                   vcem$sample.6BeORK_eDNAA_bottle1 + vcem$sample.6CeORK_eDNAB_bottle2 +
+                   vcem$sample.6DeORK_eDNAC_bottle3 + vcem$sample.6EeORK_eDNAD_bottle4
+
+vcem$ork_diver <- vcem$sample.7E + vcem$sample.7G +
+                  vcem$sample.8D + vcem$sample.8F +
+                  vcem$sample.9C + vcem$sample.9E +
+                  vcem$sample.6FeORK_MPEtA_kurt + vcem$sample.6GeORK_MPEtB_mike +   
+                  vcem$sample.6HeORK_MPEtC_lisa    
+
+vcem$blue_bottle <- vcem$sample.8DeBLUE_eDNAA_bottle1 + vcem$sample.8EeBLUE_eDNAB_bottle2 +
+                    vcem$sample.8FeBLUE_eDNAC_bottle3 + vcem$sample.8GeBLUE_eDNAD_bottle4
+
+vcem$blue_diver <- vcem$sample.10FeBLUE_MPEtA_RA + vcem$sample.10GeBLUE_MPEtB_RB +
+                   vcem$sample.10HeBLUE_MPEtC_DA + vcem$sample.11AeBLUE_MPEtD_DB +
+                   vcem$sample.8HeBLUE_MPEtA_RA + vcem$sample.9AeBLUE_MPEtB_RB +
+                   vcem$sample.9BeBLUE_MPEtC_DA + vcem$sample.9CeBLUE_MPEtD_DB
+
+vcem$liv_bottle <- vcem$sample.4BtLIV_eDNA_seA_bottle1 + vcem$sample.4CtLIV_eDNA_seB_bottle2 +
+                   vcem$sample.4DtLIV_eDNA_DeC_bottle3 + vcem$sample.4EtLIV_eDNA_DeD_bottle4
+
+vcem$liv_diver <- vcem$sample.4FtLIV_MPEtA_Wendy + vcem$sample.4GtLIV_MPEtB_Rosie +
+                  vcem$sample.5AtLIV_MPEtC_Cath
+
+## group
+vcem_ork <- vcem[c(4,42,43)]
+vcem_ork <- vcem_ork[rowSums(vcem_ork[c(2,3)])>0,] 
+
+vcem_blue <- vcem[c(4,44,45)]
+vcem_blue <- vcem_blue[rowSums(vcem_blue[c(2,3)])>0,] 
+
+vcem_liv <- vcem[c(4,46,47)]
+vcem_liv <- vcem_liv[rowSums(vcem_liv[c(2,3)])>0,] 
+
+## convert to true or false
+vcem_ork$ork_bottle <- ifelse(vcem_ork$ork_bottle==0, FALSE, TRUE)
+vcem_ork$ork_diver <- ifelse(vcem_ork$ork_diver==0, FALSE, TRUE)
+
+vcem_blue$blue_bottle <- ifelse(vcem_blue$blue_bottle==0, FALSE, TRUE)
+vcem_blue$blue_diver <- ifelse(vcem_blue$blue_diver==0, FALSE, TRUE)
+
+vcem_liv$liv_bottle <- ifelse(vcem_liv$liv_bottle==0, FALSE, TRUE)
+vcem_liv$liv_diver <- ifelse(vcem_liv$liv_diver==0, FALSE, TRUE)
 
 
+#####
+## Venn diagrams
+#####
+
+library(ggvenn)
+
+ggvenn(vcem_ork, c(A = "ork_bottle", B = "ork_diver"),
+       set_name_size = 10, text_size = 5) 
+
+ggvenn(vcem_blue, c(A = "blue_bottle", B = "blue_diver"),
+       set_name_size = 10, text_size = 5) 
+
+ggvenn(vcem_liv, c(A = "liv_bottle", B = "liv_diver"),
+       set_name_size = 10, text_size = 5) 
 
