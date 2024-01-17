@@ -82,6 +82,8 @@ elas100samples$prc <- elas100samples$reads/elas100samples$total_reads
 elas100samples$type2 <-ifelse(elas100samples$type=="eDNA", "Syringe Filter", 
                              ifelse(elas100samples$type=="MP" & (elas100samples$time==65|elas100samples$time==50), "Diver MP", "Soak MP"))
 #####
+## Stacked bar plots of sharks
+#####
 
 ## quick stacked bar plot of sharks
 ggplot(elas100samples , aes(x = long_id, y = prc, fill = manual_taxo)) + 
@@ -91,8 +93,24 @@ ggplot(elas100samples , aes(x = long_id, y = prc, fill = manual_taxo)) +
        x ="Sample", y = "Proportional Read Counts (PRC)") +
   theme(axis.text.x = element_text(angle = 90))
 
+library(ggthemes)
+
+## STOPPED HERE; NEED TO FIGURE OUT HOW TO REORDER BAR CHART
+#elas100samples$long_id <- factor(cem_bray$location, levels = c("Blue Planet", "Liverpool", "Orkney"))
+
+## stacked bar plot of sharks
+ggplot(elas100samples , aes(x = long_id, y = prc, fill = manual_taxo)) + 
+  geom_bar(stat = "identity", color = "black", position = "fill") +
+  facet_grid(. ~ type2, scales = "free") +
+  labs(title="Proportional Read counts of Elasmobranchs \ndetected in the Main Tank by different methods \n100% s.id",
+       x ="Sample", y = "Proportional Read Counts (PRC)") +
+  theme(axis.text.x = element_text(angle = 90)) +
+  scale_color_colorblind()
+
+
+
 #####
-# explore data including all detentions
+# explore data including all detections
 #####
 
 # subset species identity >0.95
@@ -393,17 +411,34 @@ funky_heatmap(hm_e_aqt3, column_info = column_info2, expand = list(xmax = 4))
 
 #####
 ## Bubble plot since funkyheatmaps are proving tricky
-
+####
 # bubbleplot
 
-windows()
 ggplot(elas100samples, aes(x = long_id, y = manual_taxo, size = prc)) +
   geom_point(pch = 21, fill = "black") +
   scale_size_continuous(name = "Proportional \nread counts (%)",
                         range = c(1, 6),
                         limits = c(0,1),
                         breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1),
-                        labels = c("< 1%","1-20%","21-40%","41-60%","61%-80%", "> 80%"))  
+                        labels = c("< 1%","1-20%","21-40%","41-60%","61%-80%", "> 80%")) +
+  facet_grid(. ~ type2, scales = "free") +
+  theme(axis.text.x = element_text(angle = 90))
+
+# bubbleplot, add colour
+
+ggplot(elas100samples, aes(x = long_id, y = manual_taxo, size = prc)) +
+  geom_point(pch = 21, aes(fill = prc)) +
+  scale_fill_gradientn(colours = c("#fde725", "#7ad151", "#22a884", "#2a788e", "#414487", "#440154"),
+                       limits = c(0,1), breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1), 
+                       #guide = guide_colourbar(reverse = TRUE, barwidth = 1, barheight = 20), 
+                       name = "Proportional \nread counts (%)") +
+  scale_size_continuous(name = "Proportional \nread counts (%)",
+                        range = c(1, 6),
+                        limits = c(0,1),
+                        breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1),
+                        labels = c("< 1%","1-20%","21-40%","41-60%","61%-80%", "> 80%")) +
+  facet_grid(. ~ type2, scales = "free") +
+  theme(axis.text.x = element_text(angle = 90))
 
 # convert to long dataframe
 hm_e_aqt3_l <- hm_e_aqt3 %>%
