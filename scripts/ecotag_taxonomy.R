@@ -62,9 +62,19 @@ rm(eco_p2e, eco_p2e_v1, eco_p2e_v2, eco_p2e_v3)
 # ALSO UK REFERENCE DATABASE USED ON SAMPLES THAT ARE ALSO FROM THE AQUARIUM
 p2e_uk <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/e_divmeth2_ASVs.csv") 
 
+# remove SWARM sizes of 1 from ecotag since these were not
+# included in SAWRM output counts since d=1
+ecop2e_f <- ecop2e[-(which(ecop2e$size %in% "size=1")),]
+
 # Join the dataframes to make a master motu table
 p2e_merge <- merge(x=ecop2e, y=p2e_uk ,by="id", all.x=TRUE)
+
+p2e_merge_f <- merge(x=ecop2e_f, y=p2e_uk ,by="id", all.x=TRUE)
 
 write.csv(p2e_merge, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/p2_e_masterMOTU.csv")
 ## NEED TO THINK OF HOW TO MERGE WITH THE DIFFERENT SUBSETS OF REFERENCE DATABASES FOR AQUARIUM SAMPLES
 
+write.csv(p2e_merge_f, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/p2_e_masterMOTU_v2.csv")
+# this second version works well
+# could consider adding more sequences to ecotag reference database...
+# just need to automate blastn and then we can add together
