@@ -12,19 +12,29 @@ library(tidyverse)
 # open ecotag output fasta file notepad, copy to excel and sort by motu ids
 # keep motu ids and taxonomic info, remove sequences
 # save as a csv file
-eco <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/e_divemeth2_SWARM1_ecotag_noseq.csv") # sequence run 2, elas02 library
+eco <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/divmeth1_SWARM1_nohuman_ecotag_noseq.csv") # sequence run 1
+#eco <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/e_divemeth2_SWARM1_ecotag_noseq.csv") # sequence run 2, elas02 library
+#eco <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/t_divemeth2_SWARM1_ecotag_noseq.csv") # sequence run 2, tele02 library
+
 
 # sintax
 # Read .tsv file generated from using the sintax option in vsearch
-tax <- read.csv(file = "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/e_SWARM1_sintax_output_ALL.tsv", sep = ';', header = FALSE) # sequence run 2, elas02 library
+tax <- read.csv(file = "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/SWARM1_sintax_v2_26_1_v258.tsv", sep = ';', header = FALSE) # sequence run 1
+#tax <- read.csv(file = "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/e_SWARM1_sintax_output_ALL.tsv", sep = ';', header = FALSE) # sequence run 2, elas02 library
+#tax <- read.csv(file = "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/NEEDTODO.tsv", sep = ';', header = FALSE) # sequence run 2, tele02 library
 
 # blastn
 # Read .tsv file generated from using the blastn option in blastn with a word size of 7
-bn <- read.csv(file = "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/elas02_divers2_blast_v3.tsv", sep = "", header = TRUE) # sequence run 2, elas02 library
+bn <- read.csv(file = "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/NEEDTODO.tsv", sep = "", header = TRUE) # sequence run 1
+#bn <- read.csv(file = "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/elas02_divers2_blast_v3.tsv", sep = "", header = TRUE) # sequence run 2, elas02 library
 
 # read counts
 # Read count data csv file generated from obitab into R
-abund <- read.delim("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/e_divmeth2_SWARM1_output.counts.csv", sep=";", header=T) # sequence run 2, elas02 library
+abund <- read.delim("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/divmeth1_SWARM1_output.counts.csv", sep=";", header=T) # sequence run 1
+#abund <- read.delim("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/e_divmeth2_SWARM1_output.counts.csv", sep=";", header=T) # sequence run 2, elas02 library
+#abund <- read.delim("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/e_divmeth2_SWARM1_output.counts.csv", sep=";", header=T) # sequence run 2, elas02 library
+#abund <- read.delim("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/e_other_SWARM1_output.counts.csv", sep=";", header=T) # sequence run 3
+
 
 #####
 ## Process ecotag output
