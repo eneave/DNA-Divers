@@ -9,8 +9,9 @@ library(tidyverse)
 ## Load data
 #####
 # ecotag
-# open ecotag output fasta file notepad, copy to excel and sort by motu ids
+# open ecotag output fasta file in notepad, copy to excel and sort by motu ids
 # keep motu ids and taxonomic info, remove sequences
+# add id column name (in first row)
 # save as a csv file
 eco <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/e_divemeth2_SWARM1_ecotag_noseq.csv") # sequence run 2, elas02 library
 
@@ -203,11 +204,13 @@ motu_all_ident <- subset(motu_all, motu_all$best_identity>0.70)
 
 # filter human
 motu_all_ident$final_name1 <- ifelse((motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$order_name=="Primates") |
-                                (motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$blastPident==100), "Homo sapiens", NA)
+                                       (motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$blastPident==100), "Homo sapiens", NA)
 motu_all_ident$pid1 <- ifelse((motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$order_name=="Primates") |
                                 (motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$blastPident==100), motu_all_ident$blastPident/100, NA)
 motu_all_ident$rank1 <- ifelse((motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$order_name=="Primates") |
                                  (motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$blastPident==100), "species", NA)
+motu_all_ident$method1 <- ifelse((motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$order_name=="Primates") |
+                                   (motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$blastPident==100), "human_assign", NA)
 
 # filter three-way consensus
 # species level
@@ -216,7 +219,9 @@ motu_all_ident$final_name2 <- ifelse(motu_all_ident$scientific_name== motu_all_i
 motu_all_ident$pid2 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$species & motu_all_ident$species== motu_all_ident$taxaBlast,
                               motu_all_ident$s.id, NA)
 motu_all_ident$rank2 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$species & motu_all_ident$species== motu_all_ident$taxaBlast,
-                              "species", NA)
+                               "species", NA)
+motu_all_ident$method2 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$species & motu_all_ident$species== motu_all_ident$taxaBlast,
+                                 "threecon", NA)
 # genus level
 motu_all_ident$final_name3 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$genus & motu_all_ident$genus== motu_all_ident$taxaBlast,
                                      motu_all_ident$genus, NA)
@@ -224,35 +229,57 @@ motu_all_ident$pid3 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$ge
                               motu_all_ident$best_identity, NA)
 motu_all_ident$rank3 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$genus & motu_all_ident$genus== motu_all_ident$taxaBlast,
                                "genus", NA)
+motu_all_ident$method3 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$genus & motu_all_ident$genus== motu_all_ident$taxaBlast,
+                                 "threecon", NA)
 
 # filter two-way consensus
 # sintax and blast - species level
 motu_all_ident$final_name4 <- ifelse(motu_all_ident$s.id>0.95 & motu_all_ident$species==motu_all_ident$taxaBlast,
                                      motu_all_ident$species, NA)
 motu_all_ident$pid4 <- ifelse(motu_all_ident$s.id>0.95 & motu_all_ident$species==motu_all_ident$taxaBlast,
-                                     motu_all_ident$s.id, NA)
+                              motu_all_ident$s.id, NA)
 motu_all_ident$rank4 <- ifelse(motu_all_ident$s.id>0.95 & motu_all_ident$species==motu_all_ident$taxaBlast,
-                                     "species", NA)
+                               "species", NA)
+motu_all_ident$method4 <- ifelse(motu_all_ident$s.id>0.95 & motu_all_ident$species==motu_all_ident$taxaBlast,
+                                 "twocon", NA)
+# sintax and blast - genus level
+motu_all_ident$final_name5 <- ifelse(motu_all_ident$g.id>0.95 & motu_all_ident$genus==motu_all_ident$taxaBlast,
+                                     motu_all_ident$genus, NA)
+motu_all_ident$pid5 <- ifelse(motu_all_ident$g.id>0.95 & motu_all_ident$genus==motu_all_ident$taxaBlast,
+                              motu_all_ident$g.id, NA)
+motu_all_ident$rank5 <- ifelse(motu_all_ident$g.id>0.95 & motu_all_ident$genus==motu_all_ident$taxaBlast,
+                               "genus", NA)
+motu_all_ident$method5 <- ifelse(motu_all_ident$g.id>0.95 & motu_all_ident$genus==motu_all_ident$taxaBlast,
+                                 "twocon", NA)
 
 # Compile filters into master taxonomy
 # collapse filters above
 motu_all_ident$final_name <- ifelse(is.na(motu_all_ident$final_name1)==FALSE, motu_all_ident$final_name1, 
                                     ifelse(is.na(motu_all_ident$final_name2)==FALSE, motu_all_ident$final_name2, 
                                            ifelse(is.na(motu_all_ident$final_name3)==FALSE, motu_all_ident$final_name3, 
-                                                  motu_all_ident$final_name4)))
+                                                  ifelse(is.na(motu_all_ident$final_name4)==FALSE, motu_all_ident$final_name4,
+                                                         motu_all_ident$final_name5))))
 motu_all_ident$pid <- ifelse(is.na(motu_all_ident$pid1)==FALSE, motu_all_ident$pid1, 
-                                    ifelse(is.na(motu_all_ident$pid2)==FALSE, motu_all_ident$pid2, 
-                                           ifelse(is.na(motu_all_ident$pid3)==FALSE, motu_all_ident$pid3, 
-                                                  motu_all_ident$pid4)))
+                             ifelse(is.na(motu_all_ident$pid2)==FALSE, motu_all_ident$pid2, 
+                                    ifelse(is.na(motu_all_ident$pid3)==FALSE, motu_all_ident$pid3, 
+                                           ifelse(is.na(motu_all_ident$pid4)==FALSE, motu_all_ident$pid4,
+                                                  motu_all_ident$pid5))))
 motu_all_ident$final_rank <- ifelse(is.na(motu_all_ident$rank1)==FALSE, motu_all_ident$rank1, 
-                             ifelse(is.na(motu_all_ident$rank2)==FALSE, motu_all_ident$rank2, 
-                                    ifelse(is.na(motu_all_ident$rank3)==FALSE, motu_all_ident$rank3, 
-                                           motu_all_ident$rank4)))
+                                    ifelse(is.na(motu_all_ident$rank2)==FALSE, motu_all_ident$rank2, 
+                                           ifelse(is.na(motu_all_ident$rank3)==FALSE, motu_all_ident$rank3, 
+                                                  ifelse(is.na(motu_all_ident$rank4)==FALSE, motu_all_ident$rank4, 
+                                                         motu_all_ident$rank5))))
+motu_all_ident$method_assign <- ifelse(is.na(motu_all_ident$method1)==FALSE, motu_all_ident$method1, 
+                                       ifelse(is.na(motu_all_ident$method2)==FALSE, motu_all_ident$method2, 
+                                              ifelse(is.na(motu_all_ident$method3)==FALSE, motu_all_ident$method3,
+                                                     ifelse(is.na(motu_all_ident$method4)==FALSE, motu_all_ident$method4,
+                                                            motu_all_ident$method5))))
 
 # any remaining NAs are filled with results from ecotag
 motu_all_ident$final_name <- ifelse(is.na(motu_all_ident$final_name)==TRUE, motu_all_ident$scientific_name, motu_all_ident$final_name)
 motu_all_ident$pid <- ifelse(is.na(motu_all_ident$pid)==TRUE, motu_all_ident$best_identity, motu_all_ident$pid)
 motu_all_ident$final_rank <- ifelse(is.na(motu_all_ident$final_rank)==TRUE, motu_all_ident$rank, motu_all_ident$final_rank)
+motu_all_ident$method_assign <- ifelse(is.na(motu_all_ident$method_assign)==TRUE, "ecotag", motu_all_ident$method_assign)
 
 # save as a csv file
 #write.csv(motu_all_ident, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu_all_CHANGE.csv")
@@ -265,16 +292,17 @@ write.csv(motu_all_ident, "C:/Users/beseneav/OneDrive - Liverpool John Moores Un
 motu98 <- subset(motu_all_ident, motu_all_ident$pid>=0.98)
 # remove unnecessary columns
 motu98 <- subset(motu98, select = -c(best_match, spcies_list, scientific_name,
-                                             best_identity, rank, species_name, genus_name, 
-                                             family_name, order_name, qc_assign_70, kingdom,
-                                             k.id, phylum, p.id, class, c.id, order, o.id, 
-                                             family, f.id, genus, g.id, species, s.id, n,
-                                             blastEvalue, blastLength, blastPident, blastNident, 
-                                             blastScore, blastBitscore, taxaBlast, final_name1,
-                                             final_name2, final_name3, final_name4, pid1, pid2,
-                                             pid3, pid4, rank1, rank2, rank3, rank4))
+                                     best_identity, rank, species_name, genus_name, 
+                                     family_name, order_name, qc_assign_70, kingdom,
+                                     k.id, phylum, p.id, class, c.id, order, o.id, 
+                                     family, f.id, genus, g.id, species, s.id, n,
+                                     blastEvalue, blastLength, blastPident, blastNident, 
+                                     blastScore, blastBitscore, taxaBlast, final_name1,
+                                     final_name2, final_name3, final_name4, final_name5, pid1, pid2,
+                                     pid3, pid4, pid5, rank1, rank2, rank3, rank4, rank5,
+                                     method1, method2, method3, method4, method5))
 # reorder columns
-motu98 <- motu98 %>% relocate(c(final_name, pid, final_rank, total_reads, sequence), .after = id)
+motu98 <- motu98 %>% relocate(c(final_name, pid, final_rank, method_assign, total_reads, sequence), .after = id)
 # save as a csv file
 #write.csv(motu98, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu98_final_CHANGE.csv")
 write.csv(motu98, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu98_final_p2e.csv") # sequence run 2, elas02 library
