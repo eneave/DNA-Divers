@@ -45,7 +45,7 @@ p2t_uk <- subset(p2t, select = -c(sample.5Et10BLUE_MPEtA_, sample.5Ft10BLUE_MPEt
                                  sample.6Dt120BLUE_MPEtB, sample.6Et240BLUE_MPEtA,
                                  sample.6Ft240BLUE_MPEtB, sample.6GtBLUE_FBEtblank,
                                  sample.4Ht_positivePCRcontrol))  
-## Phase 1 - all samples with elas02 marker
+## Phase 3 - all samples with elas02 marker
 #p3 <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu98_final_p3.csv")
 
 #######

@@ -16,11 +16,11 @@ eco <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/P
 
 # sintax
 # Read .tsv file generated from using the sintax option in vsearch
-#tax <- read.csv(file = "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/NEEDTODO.tsv", sep = ';', header = FALSE) # sequence run 3
+tax <- read.csv(file = "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/divmeth3_SWARM1_sintax_ALL.tsv", sep = ';', header = FALSE) # sequence run 3
 
 # blastn
 # Read .tsv file generated from using the blastn option in blastn with a word size of 7
-#bn <- read.csv(file = "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/NEEDTODO.tsv", sep = "", header = TRUE) # sequence run 3
+bn <- read.csv(file = "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/divers3_blast.tsv", sep = "", header = TRUE) # sequence run 3
 
 # read counts
 # Read count data csv file generated from obitab into R
@@ -189,20 +189,18 @@ abund <- subset(abund, select = -c(definition, ali_length, count, cut, direction
 
 # Join the dataframes to make raw motu table 
 # put all data frames into list
-#df_list <- list(eco_clean, tax_clean, bn_clean, abund)
+df_list <- list(eco_clean, tax_clean, bn_clean, abund)
 
-df_list <- list(eco_clean, abund) ##edit to just merge ecotag assignment
 # merge all data frames in list
 motu_all <- df_list %>% reduce(full_join, by="id")
 
 # save as a csv file
-#write.csv(motu_all, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu_all_3.csv") # sequence run 3
+write.csv(motu_all, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu_all_p3.csv") # sequence run 3
 
 #####
 ## Filter to assign final taxonomy
 #####
-#motu_all_ident <- subset(motu_all, motu_all$best_identity>0.70) 
-motu_all_ident <- subset(motu_all, motu_all$best_identity>0.98) ## run this line and skip everything else
+motu_all_ident <- subset(motu_all, motu_all$best_identity>0.70) 
 
 
 # filter human
@@ -285,7 +283,7 @@ motu_all_ident$final_rank <- ifelse(is.na(motu_all_ident$final_rank)==TRUE, motu
 motu_all_ident$method_assign <- ifelse(is.na(motu_all_ident$method_assign)==TRUE, "ecotag", motu_all_ident$method_assign)
 
 # save as a csv file
-#write.csv(motu_all_ident, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu70_all_p3.csv") # sequence run 3
+write.csv(motu_all_ident, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu70_all_p3.csv") # sequence run 3
 
 #####
 ## Final motu table (not collapsed or decontaminated)
@@ -306,8 +304,7 @@ motu98 <- subset(motu98, select = -c(best_match, spcies_list, scientific_name,
 # reorder columns
 motu98 <- motu98 %>% relocate(c(final_name, pid, final_rank, method_assign, total_reads, sequence), .after = id)
 # save as a csv file
-#write.csv(motu98, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu98_final_p3.csv") # sequence run 3
-write.csv(motu_all_ident, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu98_justecotag_p3.csv") # sequence run 3
+write.csv(motu98, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu98_final_p3.csv") # sequence run 3
 
 #####
 # Calculate taxonomy & assignment statistics
