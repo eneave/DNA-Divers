@@ -73,7 +73,7 @@ eco_clean <- eco_v3 %>%
          order_name = order_name_2)
 
 #####
-## Process sintax output ##skip this for now
+## Process sintax output 
 #####
 tax2 <- tax %>%
   unnest(V1) %>%
@@ -81,6 +81,21 @@ tax2 <- tax %>%
            sep = "\\+", convert = TRUE, extra = "merge")
 
 tax3 <- tax2 %>% separate(all_assign, c("id", "assign"), sep = 14)
+
+# Add in order level for taxa which it is missing
+# This is specific to these samples
+# run script without this and look at output to find which taxa need fixing
+tax3$assign<-gsub("f:Embiotocidae", "o:unranked(0.0),f:Embiotocidae", as.character(tax3$assign))
+#tax3$assign<-gsub("f:Platyrhinidae", "o:unranked(0.0),f:Platyrhinidae", as.character(tax3$assign))
+#tax3$assign<-gsub("f:Squatinidae", "o:unranked(0.0),f:Squatinidae", as.character(tax3$assign))
+#tax3$assign<-gsub("f:Sciaenidae", "o:unranked(0.0),f:Sciaenidae", as.character(tax3$assign))
+#tax3$assign<-gsub("f:Moronidae", "o:unranked(0.0),f:Moronidae", as.character(tax3$assign))
+#tax3$assign<-gsub("f:Pomacentridae", "o:unranked(0.0),f:Pomacentridae", as.character(tax3$assign))
+#tax3$assign<-gsub("f:Malacanthidae", "o:unranked(0.0),f:Malacanthidae", as.character(tax3$assign))
+tax3$assign<-gsub("f:Polynemidae,g:Polydactylus,s:Polydactylus_approximans", "o:unranked(0.0),f:Polynemidaeg:Polydactylus,s:Polydactylus_approximans", as.character(tax3$assign))
+#tax3$assign<-gsub("f:Sphyraenidae", "o:unranked(0.0),f:Sphyraenidae", as.character(tax3$assign))
+#tax3$assign<-gsub("f:Pomacanthidae", "o:unranked(0.0),f:Pomacanthidae", as.character(tax3$assign))
+
 
 tax4 <- tax3 %>%
   select(id, assign, qc_assign_70) %>%
@@ -108,6 +123,7 @@ tax5$species_1<-gsub("s:","",as.character(tax5$species_1))
 tax5$species_2<-gsub(")","",as.character(tax5$species_2))
 tax5$species_1<-gsub("_"," ",as.character(tax5$species_1))
 
+
 # rename columns to meaningful names
 tax_clean <- tax5 %>% 
   rename(
@@ -128,7 +144,7 @@ tax_clean <- tax5 %>%
   )
 
 #####
-## Process blastn output ##skip this for now
+## Process blastn output 
 #####
 bn1 <- bn %>%
   select(id, blastDbid, blastEvalue, blastLength, blastPident, blastNident, blastScore, blastBitscore) %>%
