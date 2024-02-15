@@ -227,6 +227,12 @@ motu_all_ident$rank1 <- ifelse((motu_all_ident$taxaBlast=="Homo sapiens" & motu_
                                  (motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$blastPident==100), "species", NA)
 motu_all_ident$method1 <- ifelse((motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$order_name=="Primates") |
                                  (motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$blastPident==100), "human_assign", NA)
+motu_all_ident$genus1 <- ifelse((motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$order_name=="Primates") |
+                                   (motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$blastPident==100), "Homo", NA)
+motu_all_ident$order1 <- ifelse((motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$order_name=="Primates") |
+                                  (motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$blastPident==100), "Primates", NA)
+motu_all_ident$class1 <- ifelse((motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$order_name=="Primates") |
+                                   (motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$blastPident==100), "Mammalia", NA)
 
 # filter three-way consensus
 # species level
@@ -238,6 +244,13 @@ motu_all_ident$rank2 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$s
                               "species", NA)
 motu_all_ident$method2 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$species & motu_all_ident$species== motu_all_ident$taxaBlast,
                                "threecon", NA)
+motu_all_ident$genus2 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$species & motu_all_ident$species== motu_all_ident$taxaBlast,
+                                motu_all_ident$genus, NA)
+motu_all_ident$order2 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$species & motu_all_ident$species== motu_all_ident$taxaBlast,
+                                motu_all_ident$order, NA)
+motu_all_ident$class2 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$species & motu_all_ident$species== motu_all_ident$taxaBlast,
+                                motu_all_ident$class, NA)
+
 # genus level
 motu_all_ident$final_name3 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$genus & motu_all_ident$genus== motu_all_ident$taxaBlast,
                                      motu_all_ident$genus, NA)
@@ -247,6 +260,13 @@ motu_all_ident$rank3 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$g
                                "genus", NA)
 motu_all_ident$method3 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$genus & motu_all_ident$genus== motu_all_ident$taxaBlast,
                                "threecon", NA)
+motu_all_ident$genus3 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$genus & motu_all_ident$genus== motu_all_ident$taxaBlast,
+                                motu_all_ident$genus, NA)
+motu_all_ident$order3 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$genus & motu_all_ident$genus== motu_all_ident$taxaBlast,
+                                motu_all_ident$order, NA)
+motu_all_ident$class3 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$genus & motu_all_ident$genus== motu_all_ident$taxaBlast,
+                                motu_all_ident$class, NA)
+
 
 # filter two-way consensus
 # sintax and blast - species level
@@ -258,6 +278,13 @@ motu_all_ident$rank4 <- ifelse(motu_all_ident$s.id>0.95 & motu_all_ident$species
                                      "species", NA)
 motu_all_ident$method4 <- ifelse(motu_all_ident$s.id>0.95 & motu_all_ident$species==motu_all_ident$taxaBlast,
                                  "twocon", NA)
+motu_all_ident$genus4 <- ifelse(motu_all_ident$s.id>0.95 & motu_all_ident$species==motu_all_ident$taxaBlast,
+                                motu_all_ident$genus, NA)
+motu_all_ident$order4 <- ifelse(motu_all_ident$s.id>0.95 & motu_all_ident$species==motu_all_ident$taxaBlast,
+                                motu_all_ident$order, NA)
+motu_all_ident$class4 <- ifelse(motu_all_ident$s.id>0.95 & motu_all_ident$species==motu_all_ident$taxaBlast,
+                                motu_all_ident$class, NA)
+
 # sintax and blast - genus level
 motu_all_ident$final_name5 <- ifelse(motu_all_ident$g.id>0.95 & motu_all_ident$genus==motu_all_ident$taxaBlast,
                                      motu_all_ident$genus, NA)
@@ -267,6 +294,13 @@ motu_all_ident$rank5 <- ifelse(motu_all_ident$g.id>0.95 & motu_all_ident$genus==
                                "genus", NA)
 motu_all_ident$method5 <- ifelse(motu_all_ident$g.id>0.95 & motu_all_ident$genus==motu_all_ident$taxaBlast,
                                  "twocon", NA)
+motu_all_ident$genus5 <- ifelse(motu_all_ident$g.id>0.95 & motu_all_ident$genus==motu_all_ident$taxaBlast,
+                                motu_all_ident$genus, NA)
+motu_all_ident$order5 <- ifelse(motu_all_ident$g.id>0.95 & motu_all_ident$genus==motu_all_ident$taxaBlast,
+                                motu_all_ident$order, NA)
+motu_all_ident$class5 <- ifelse(motu_all_ident$g.id>0.95 & motu_all_ident$genus==motu_all_ident$taxaBlast,
+                                motu_all_ident$class, NA)
+
 
 # Compile filters into master taxonomy
 # collapse filters above
@@ -290,15 +324,52 @@ motu_all_ident$method_assign <- ifelse(is.na(motu_all_ident$method1)==FALSE, mot
                                            ifelse(is.na(motu_all_ident$method3)==FALSE, motu_all_ident$method3,
                                                   ifelse(is.na(motu_all_ident$method4)==FALSE, motu_all_ident$method4,
                                                   motu_all_ident$method5))))
+motu_all_ident$final_genus <- ifelse(is.na(motu_all_ident$genus1)==FALSE, motu_all_ident$genus1, 
+                                       ifelse(is.na(motu_all_ident$genus2)==FALSE, motu_all_ident$genus2, 
+                                              ifelse(is.na(motu_all_ident$genus3)==FALSE, motu_all_ident$genus3,
+                                                     ifelse(is.na(motu_all_ident$genus4)==FALSE, motu_all_ident$genus4,
+                                                            motu_all_ident$genus5))))
+motu_all_ident$final_order <- ifelse(is.na(motu_all_ident$order1)==FALSE, motu_all_ident$order1, 
+                                     ifelse(is.na(motu_all_ident$order2)==FALSE, motu_all_ident$order2, 
+                                            ifelse(is.na(motu_all_ident$order3)==FALSE, motu_all_ident$order3,
+                                                   ifelse(is.na(motu_all_ident$order4)==FALSE, motu_all_ident$order4,
+                                                          motu_all_ident$order5))))
+motu_all_ident$final_class <- ifelse(is.na(motu_all_ident$class1)==FALSE, motu_all_ident$class1, 
+                                     ifelse(is.na(motu_all_ident$class2)==FALSE, motu_all_ident$class2, 
+                                            ifelse(is.na(motu_all_ident$class3)==FALSE, motu_all_ident$class3,
+                                                   ifelse(is.na(motu_all_ident$class4)==FALSE, motu_all_ident$class4,
+                                                          motu_all_ident$class5))))
 
 # any remaining NAs are filled with results from ecotag
 motu_all_ident$final_name <- ifelse(is.na(motu_all_ident$final_name)==TRUE, motu_all_ident$scientific_name, motu_all_ident$final_name)
 motu_all_ident$pid <- ifelse(is.na(motu_all_ident$pid)==TRUE, motu_all_ident$best_identity, motu_all_ident$pid)
 motu_all_ident$final_rank <- ifelse(is.na(motu_all_ident$final_rank)==TRUE, motu_all_ident$rank, motu_all_ident$final_rank)
 motu_all_ident$method_assign <- ifelse(is.na(motu_all_ident$method_assign)==TRUE, "ecotag", motu_all_ident$method_assign)
+motu_all_ident$final_genus <- ifelse(is.na(motu_all_ident$final_genus)==TRUE, motu_all_ident$genus_name, motu_all_ident$final_genus)
+motu_all_ident$final_order <- ifelse(is.na(motu_all_ident$final_order)==TRUE, motu_all_ident$order_name, motu_all_ident$final_order)
+
+# class level is complicated...inspect and change as needed for projects
+
+## always check that these two have worked for new motu tables // need to look up marine mammal classes
+motu_all_ident$final_class <- ifelse(is.na(motu_all_ident$final_class)==TRUE &
+                                     (motu_all_ident$order_name=="Primates" |
+                                      motu_all_ident$order_name=="Carnivora" |
+                                        motu_all_ident$order_name=="Artiodactyla" |
+                                          motu_all_ident$order_name=="Rodentia"), "Mammalia", motu_all_ident$final_class )
+## NEED to edit the bird section/ NEED to make this sections nested within the section above otherwise the code will overwrite
+motu_all_ident$final_class <- ifelse(is.na(motu_all_ident$final_class)==TRUE &
+                                       (motu_all_ident$order_name=="Galliformes" |
+                                          motu_all_ident$order_name=="" |
+                                          motu_all_ident$order_name=="" |
+                                          motu_all_ident$order_name==""), "Aves", motu_all_ident$final_class )
+motu_all_ident$final_class <- ifelse(is.na(motu_all_ident$final_class)==TRUE &
+                                       (motu_all_ident$order_name=="Myliobatiformes" |
+                                          motu_all_ident$order_name=="Carcharhiniformes" |
+                                          motu_all_ident$order_name=="Rajiformes" |
+                                          motu_all_ident$order_name==""), "Elasmobranchii", "Actinopterygii")
 
 # save as a csv file
-#write.csv(motu_all_ident, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu_all_CHANGE.csv")
+write.csv(motu_all_ident, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/test.csv")
 #write.csv(motu_all_ident, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu70_all_p2e.csv") # sequence run 2, elas02 library
 
 #####
