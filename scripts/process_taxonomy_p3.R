@@ -143,6 +143,7 @@ tax_clean <- tax5 %>%
     s.id = species_2 
   )
 
+
 #####
 ## Process blastn output 
 #####
@@ -209,6 +210,20 @@ df_list <- list(eco_clean, tax_clean, bn_clean, abund)
 
 # merge all data frames in list
 motu_all <- df_list %>% reduce(full_join, by="id")
+
+#####
+# Manually correct Taeniura and Taeniurops synonym issue
+#####
+# fix sintax genus column so that Taeniura is updated to the accepted name Taeniurops
+motu_all$genus <- ifelse(motu_all$genus=="Taeniura", "Taeniurops", motu_all$genus)
+# fix sintax species column so that Taeniura is updated to the accepted name Taeniurops
+motu_all$species <- ifelse(motu_all$species=="Taeniura meyeni", "Taeniurops meyeni", motu_all$species)
+motu_all$species <- ifelse(motu_all$species=="Taeniura grabatus", "Taeniurops grabatus", motu_all$species)
+# fix blast results for Taeniura, which was being set to genus level for Taeniurops meyeni because of the genus synonym
+motu_all$taxaBlast <- ifelse(motu_all$species=="Taeniurops meyeni" & motu_all$taxaBlast=="Taeniura", "Taeniurops meyeni", motu_all$taxaBlast)
+# note that this was not the case for Taeniura grabata so those blast results were not fixed
+motu_all$taxaBlast <- ifelse(motu_all$species=="Taeniurops grabatus" & motu_all$taxaBlast=="Taeniura", "Taeniurops", motu_all$taxaBlast)
+
 
 # save as a csv file
 write.csv(motu_all, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu_all_p3.csv") # sequence run 3

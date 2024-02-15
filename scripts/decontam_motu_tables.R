@@ -46,7 +46,8 @@ p2t_uk <- subset(p2t, select = -c(sample.5Et10BLUE_MPEtA_, sample.5Ft10BLUE_MPEt
                                  sample.6Ft240BLUE_MPEtB, sample.6GtBLUE_FBEtblank,
                                  sample.4Ht_positivePCRcontrol))  
 ## Phase 3 - all samples with elas02 marker
-#p3 <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu98_final_p3.csv")
+p3 <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu98_final_p3.csv")
+p3 <- p3[c(2:51)]
 
 #######
 ## Remove contamination from MOTU tables using decontam prevalence method
@@ -69,7 +70,7 @@ colnames(p1_names)[1] <- "seq_id" # can use list to compare to sample data to ma
 # make MOTU ids row names
 count_tab <- count_tab %>%  column_to_rownames(var = "id")
 # read in metadata
-p1_meta <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/DNAdivers/divers_methods_experiment/p1_meta.csv")
+p1_meta <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/metadata/p1_meta.csv")
 colnames(p1_meta)[1] <- "seq_id"
 sample_info_tab <- merge(p1_names,p1_meta, by="seq_id", all.x = T) %>% ##merge because 3 controls dropped out for having no reads assigned
                    column_to_rownames(var = "seq_id")
