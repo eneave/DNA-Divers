@@ -354,19 +354,21 @@ motu_all_ident$final_order <- ifelse(is.na(motu_all_ident$final_order)==TRUE, mo
 motu_all_ident$final_class <- ifelse(is.na(motu_all_ident$final_class)==TRUE &
                                      (motu_all_ident$order_name=="Primates" |
                                       motu_all_ident$order_name=="Carnivora" |
-                                        motu_all_ident$order_name=="Artiodactyla" |
-                                          motu_all_ident$order_name=="Rodentia"), "Mammalia", motu_all_ident$final_class )
-## NEED to edit the bird section/ NEED to make this sections nested within the section above otherwise the code will overwrite
-motu_all_ident$final_class <- ifelse(is.na(motu_all_ident$final_class)==TRUE &
+                                      motu_all_ident$order_name=="Artiodactyla" |
+                                      motu_all_ident$order_name=="Rodentia" |
+                                      motu_all_ident$order_name=="Cetacea" |
+                                      motu_all_ident$order_name=="Pinnipedia"), "Mammalia", 
+                              ifelse(is.na(motu_all_ident$final_class)==TRUE &
                                        (motu_all_ident$order_name=="Galliformes" |
-                                          motu_all_ident$order_name=="" |
-                                          motu_all_ident$order_name=="" |
-                                          motu_all_ident$order_name==""), "Aves", motu_all_ident$final_class )
-motu_all_ident$final_class <- ifelse(is.na(motu_all_ident$final_class)==TRUE &
+                                          motu_all_ident$order_name=="Anseriformes" |
+                                          motu_all_ident$order_name=="Charadriiformes" |
+                                          motu_all_ident$order_name=="Procellariiformes" |
+                                          motu_all_ident$order_name=="Pelecaniformes"), "Aves", 
+                              ifelse(is.na(motu_all_ident$final_class)==TRUE &
                                        (motu_all_ident$order_name=="Myliobatiformes" |
                                           motu_all_ident$order_name=="Carcharhiniformes" |
                                           motu_all_ident$order_name=="Rajiformes" |
-                                          motu_all_ident$order_name==""), "Elasmobranchii", "Actinopterygii")
+                                          motu_all_ident$order_name==""), "Elasmobranchii", "Actinopterygii")))
 
 # save as a csv file
 write.csv(motu_all_ident, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/test.csv")
