@@ -211,6 +211,12 @@ motu_all_ident$rank1 <- ifelse((motu_all_ident$taxaBlast=="Homo sapiens" & motu_
                                  (motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$blastPident==100), "species", NA)
 motu_all_ident$method1 <- ifelse((motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$order_name=="Primates") |
                                    (motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$blastPident==100), "human_assign", NA)
+motu_all_ident$genus1 <- ifelse((motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$order_name=="Primates") |
+                                  (motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$blastPident==100), "Homo", NA)
+motu_all_ident$order1 <- ifelse((motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$order_name=="Primates") |
+                                  (motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$blastPident==100), "Primates", NA)
+motu_all_ident$class1 <- ifelse((motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$order_name=="Primates") |
+                                  (motu_all_ident$taxaBlast=="Homo sapiens" & motu_all_ident$blastPident==100), "Mammalia", NA)
 
 # filter three-way consensus
 # species level
@@ -222,6 +228,13 @@ motu_all_ident$rank2 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$s
                                "species", NA)
 motu_all_ident$method2 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$species & motu_all_ident$species== motu_all_ident$taxaBlast,
                                  "threecon", NA)
+motu_all_ident$genus2 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$species & motu_all_ident$species== motu_all_ident$taxaBlast,
+                                motu_all_ident$genus, NA)
+motu_all_ident$order2 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$species & motu_all_ident$species== motu_all_ident$taxaBlast,
+                                motu_all_ident$order, NA)
+motu_all_ident$class2 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$species & motu_all_ident$species== motu_all_ident$taxaBlast,
+                                motu_all_ident$class, NA)
+
 # genus level
 motu_all_ident$final_name3 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$genus & motu_all_ident$genus== motu_all_ident$taxaBlast,
                                      motu_all_ident$genus, NA)
@@ -231,6 +244,13 @@ motu_all_ident$rank3 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$g
                                "genus", NA)
 motu_all_ident$method3 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$genus & motu_all_ident$genus== motu_all_ident$taxaBlast,
                                  "threecon", NA)
+motu_all_ident$genus3 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$genus & motu_all_ident$genus== motu_all_ident$taxaBlast,
+                                motu_all_ident$genus, NA)
+motu_all_ident$order3 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$genus & motu_all_ident$genus== motu_all_ident$taxaBlast,
+                                motu_all_ident$order, NA)
+motu_all_ident$class3 <- ifelse(motu_all_ident$scientific_name== motu_all_ident$genus & motu_all_ident$genus== motu_all_ident$taxaBlast,
+                                motu_all_ident$class, NA)
+
 
 # filter two-way consensus
 # sintax and blast - species level
@@ -242,6 +262,13 @@ motu_all_ident$rank4 <- ifelse(motu_all_ident$s.id>0.95 & motu_all_ident$species
                                "species", NA)
 motu_all_ident$method4 <- ifelse(motu_all_ident$s.id>0.95 & motu_all_ident$species==motu_all_ident$taxaBlast,
                                  "twocon", NA)
+motu_all_ident$genus4 <- ifelse(motu_all_ident$s.id>0.95 & motu_all_ident$species==motu_all_ident$taxaBlast,
+                                motu_all_ident$genus, NA)
+motu_all_ident$order4 <- ifelse(motu_all_ident$s.id>0.95 & motu_all_ident$species==motu_all_ident$taxaBlast,
+                                motu_all_ident$order, NA)
+motu_all_ident$class4 <- ifelse(motu_all_ident$s.id>0.95 & motu_all_ident$species==motu_all_ident$taxaBlast,
+                                motu_all_ident$class, NA)
+
 # sintax and blast - genus level
 motu_all_ident$final_name5 <- ifelse(motu_all_ident$g.id>0.95 & motu_all_ident$genus==motu_all_ident$taxaBlast,
                                      motu_all_ident$genus, NA)
@@ -251,6 +278,13 @@ motu_all_ident$rank5 <- ifelse(motu_all_ident$g.id>0.95 & motu_all_ident$genus==
                                "genus", NA)
 motu_all_ident$method5 <- ifelse(motu_all_ident$g.id>0.95 & motu_all_ident$genus==motu_all_ident$taxaBlast,
                                  "twocon", NA)
+motu_all_ident$genus5 <- ifelse(motu_all_ident$g.id>0.95 & motu_all_ident$genus==motu_all_ident$taxaBlast,
+                                motu_all_ident$genus, NA)
+motu_all_ident$order5 <- ifelse(motu_all_ident$g.id>0.95 & motu_all_ident$genus==motu_all_ident$taxaBlast,
+                                motu_all_ident$order, NA)
+motu_all_ident$class5 <- ifelse(motu_all_ident$g.id>0.95 & motu_all_ident$genus==motu_all_ident$taxaBlast,
+                                motu_all_ident$class, NA)
+
 
 # Compile filters into master taxonomy
 # collapse filters above
@@ -274,12 +308,61 @@ motu_all_ident$method_assign <- ifelse(is.na(motu_all_ident$method1)==FALSE, mot
                                               ifelse(is.na(motu_all_ident$method3)==FALSE, motu_all_ident$method3,
                                                      ifelse(is.na(motu_all_ident$method4)==FALSE, motu_all_ident$method4,
                                                             motu_all_ident$method5))))
+motu_all_ident$final_genus <- ifelse(is.na(motu_all_ident$genus1)==FALSE, motu_all_ident$genus1, 
+                                     ifelse(is.na(motu_all_ident$genus2)==FALSE, motu_all_ident$genus2, 
+                                            ifelse(is.na(motu_all_ident$genus3)==FALSE, motu_all_ident$genus3,
+                                                   ifelse(is.na(motu_all_ident$genus4)==FALSE, motu_all_ident$genus4,
+                                                          motu_all_ident$genus5))))
+motu_all_ident$final_order <- ifelse(is.na(motu_all_ident$order1)==FALSE, motu_all_ident$order1, 
+                                     ifelse(is.na(motu_all_ident$order2)==FALSE, motu_all_ident$order2, 
+                                            ifelse(is.na(motu_all_ident$order3)==FALSE, motu_all_ident$order3,
+                                                   ifelse(is.na(motu_all_ident$order4)==FALSE, motu_all_ident$order4,
+                                                          motu_all_ident$order5))))
+motu_all_ident$final_class <- ifelse(is.na(motu_all_ident$class1)==FALSE, motu_all_ident$class1, 
+                                     ifelse(is.na(motu_all_ident$class2)==FALSE, motu_all_ident$class2, 
+                                            ifelse(is.na(motu_all_ident$class3)==FALSE, motu_all_ident$class3,
+                                                   ifelse(is.na(motu_all_ident$class4)==FALSE, motu_all_ident$class4,
+                                                          motu_all_ident$class5))))
+
 
 # any remaining NAs are filled with results from ecotag
 motu_all_ident$final_name <- ifelse(is.na(motu_all_ident$final_name)==TRUE, motu_all_ident$scientific_name, motu_all_ident$final_name)
 motu_all_ident$pid <- ifelse(is.na(motu_all_ident$pid)==TRUE, motu_all_ident$best_identity, motu_all_ident$pid)
 motu_all_ident$final_rank <- ifelse(is.na(motu_all_ident$final_rank)==TRUE, motu_all_ident$rank, motu_all_ident$final_rank)
 motu_all_ident$method_assign <- ifelse(is.na(motu_all_ident$method_assign)==TRUE, "ecotag", motu_all_ident$method_assign)
+motu_all_ident$final_genus <- ifelse(is.na(motu_all_ident$final_genus)==TRUE, motu_all_ident$genus_name, motu_all_ident$final_genus)
+motu_all_ident$final_order <- ifelse(is.na(motu_all_ident$final_order)==TRUE, motu_all_ident$order_name, motu_all_ident$final_order)
+
+# class level is complicated...inspect and change as needed for projects
+
+# always check that these have worked for new motu tables // need to look up marine mammal classes
+motu_all_ident$final_class <- ifelse(#is.na(motu_all_ident$final_class)==TRUE &
+  (motu_all_ident$order_name=="Primates" |
+     motu_all_ident$final_order=="Primates" |
+     motu_all_ident$order_name=="Carnivora" |
+     motu_all_ident$order_name=="Artiodactyla" |
+     motu_all_ident$order_name=="Rodentia" |
+     motu_all_ident$order_name=="Cetacea" |
+     motu_all_ident$order_name=="Pinnipedia"), "Mammalia", 
+  ifelse(#is.na(motu_all_ident$final_class)==TRUE &
+    (motu_all_ident$order_name=="Galliformes" |
+       motu_all_ident$order_name=="Anseriformes" |
+       motu_all_ident$order_name=="Charadriiformes" |
+       motu_all_ident$order_name=="Procellariiformes" |
+       motu_all_ident$order_name=="Pelecaniformes"), "Aves", 
+    ifelse(#is.na(motu_all_ident$final_class)==TRUE &
+      (motu_all_ident$order_name=="Myliobatiformes" |
+         motu_all_ident$order_name=="Carcharhiniformes" |
+         motu_all_ident$order_name=="Rajiformes" |
+         motu_all_ident$order_name=="Squaliformes" |
+         motu_all_ident$order_name=="Torpediniformes" |
+         motu_all_ident$order_name=="Squatiniformes" |
+         motu_all_ident$order_name=="Pristiophoriformes" |
+         motu_all_ident$order_name=="Pristiformes" |
+         motu_all_ident$order_name=="Orectolobiformes" |
+         motu_all_ident$order_name=="Lamniformes" |
+         motu_all_ident$order_name=="Hexanchiformes" |
+         motu_all_ident$order_name=="Heterodontiformes"), "Elasmobranchii", "Actinopterygii")))
 
 # save as a csv file
 #write.csv(motu_all_ident, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu_all_CHANGE.csv")
@@ -300,9 +383,14 @@ motu98 <- subset(motu98, select = -c(best_match, spcies_list, scientific_name,
                                      blastScore, blastBitscore, taxaBlast, final_name1,
                                      final_name2, final_name3, final_name4, final_name5, pid1, pid2,
                                      pid3, pid4, pid5, rank1, rank2, rank3, rank4, rank5,
-                                     method1, method2, method3, method4, method5))
+                                     method1, method2, method3, method4, method5, genus1,
+                                     genus2, genus3, genus4, genus5, order1, order2, order3,
+                                     order4, order5, class1, class2, class3,
+                                     class4, class5))
+
 # reorder columns
-motu98 <- motu98 %>% relocate(c(final_name, pid, final_rank, method_assign, total_reads, sequence), .after = id)
+motu98 <- motu98 %>% relocate(c(final_name, final_genus, final_order, final_class, pid, final_rank, method_assign, total_reads, sequence), .after = id)
+
 # save as a csv file
 #write.csv(motu98, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu98_final_CHANGE.csv")
 write.csv(motu98, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu98_final_p2e.csv") # sequence run 2, elas02 library
@@ -310,7 +398,6 @@ write.csv(motu98, "C:/Users/beseneav/OneDrive - Liverpool John Moores University
 #####
 # Calculate taxonomy & assignment statistics
 #####
-
 # taxonomy stats
 # names of statistics calculated
 stat_all <- c("total_motus", "lib_reads", NA, NA)
@@ -347,29 +434,71 @@ stat <- c("motus70","species_3way", "percentmotuspecies_3way", "genus_3way", "pe
           "species_2way", "percentmotuspecies_2way", "human", "percentmotu_human",
           "ecotag", "percentmotu_ecotag")
 
+stat2 <- c("motus98", "species_98", "percentmotuspecies_98", "genus_98", "percentmotugenus_98",
+           "other_98", "percentmotuother_98", "method3way98", "percentmotu_3way98",
+           "method2way98", "percentmotu_2way98", "human98", "percentmotu_human98",
+           "ecotag98", "percentmotu_ecotag98")
+
+
 # value calculations
 # 3 way consensus
+# 70 pid
 species_3way = sum(!is.na(motu_all_ident$final_name2))
 percentmotuspecies_3way = (species_3way/motus70) * 100
 genus_3way = sum(!is.na(motu_all_ident$final_name3))
 percentmotugenus_3way = (genus_3way/motus70) * 100
+# 98 pid
+method3way98 = sum(motu98$method_assign=="threecon")
+percentmotu_3way98 = (method3way98/motus98) * 100
+
+# 98 species, genus, etc.
+motu98_species <- subset(motu98, motu98$final_rank=="species")
+species_98 = sum(!is.na(motu98_species$final_name))
+percentmotuspecies_98 = (species_98/motus98) * 100
+motu98_genus <- subset(motu98, motu98$final_rank=="genus")
+genus_98 = sum(!is.na(motu98_genus$final_name))
+percentmotugenus_98 = (genus_98/motus98) * 100
+other_98 = motus98 - (species_98 + genus_98)
+percentmotuother_98 = (other_98/motus98) * 100
+
 # 2 way consensus
+# 70 pid
 species_2way = sum(!is.na(motu_all_ident$final_name4))
 percentmotuspecies_2way = (species_2way/motus70) * 100
+# 98 pid
+method2way98 = sum(motu98$method_assign=="twocon")
+percentmotu_2way98 = (method2way98/motus98) * 100
+
 # human
+# 70 pid
 human = sum(!is.na(motu_all_ident$final_name1))
 percentmotu_human = (human/motus70) * 100
+# 98 pid
+human98 = sum(motu98$method_assign=="human_assign")
+percentmotu_human98 = (human98/motus98) * 100
+
 # default to ecotag
+# 70 pid
 ecotag = motus70 - (species_3way + genus_3way + species_2way + human)
 percentmotu_ecotag = (ecotag/motus70) * 100
+# 98 pid
+ecotag98 = motus98 - (method3way98 + method2way98 + human98)
+percentmotu_ecotag98 = (ecotag98/motus98) * 100
 
 value <- c(motus70, species_3way, percentmotuspecies_3way, genus_3way, percentmotugenus_3way,
            species_2way, percentmotuspecies_2way, human, percentmotu_human,
            ecotag, percentmotu_ecotag)
 
+value2 <- c(motus98, species_98, percentmotuspecies_98, genus_98, percentmotugenus_98,
+            other_98, percentmotuother_98, method3way98, percentmotu_3way98,
+            method2way98, percentmotu_2way98, human98, percentmotu_human98,
+            ecotag98, percentmotu_ecotag98)
+
 df2 <- data.frame(stat, value)
+df3 <- data.frame(stat2, value2)
 
 print(df2)
+print(df3)
 
 #####
 # clean up (optional)

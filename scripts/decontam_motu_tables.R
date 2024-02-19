@@ -7,17 +7,17 @@
 # Disclaimer: some file names have 'ASVs' but the sequences have been clustered into MOTUs
 ## Phase 1 - all samples with tele02 marker
 p1 <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu98_final_p1.csv")
-p1 <- p1[c(2:87)]
+p1 <- p1[c(2:90)]
 ## Phase 2 
 ## elas02 marker
 p2e <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu98_final_p2e.csv")
-p2e <- p2e[c(2:46)]
+p2e <- p2e[c(2:49)]
 p2e_aq <- subset(p2e, select = -c(sample.6AeORK_eDNA_FBblank,sample.6BeORK_eDNAA_bottle1,
                                   sample.6CeORK_eDNAB_bottle2, sample.6DeORK_eDNAC_bottle3,
                                   sample.6EeORK_eDNAD_bottle4, sample.6FeORK_MPEtA_kurt,
                                   sample.6GeORK_MPEtB_mike, sample.6HeORK_MPEtC_lisa,
                                   sample.8AeORK_MPbB_mike, sample.8BeORK_MPbC_lisa))
-p2e_uk <- subset(p2e, select = c(id, final_name, pid, final_rank, 
+p2e_uk <- subset(p2e, select = c(id, final_name, final_genus, final_order, final_class, pid, final_rank, 
                                   method_assign,total_reads, sequence,
                                   sample.11Be_EBMay_13extblank, sample.11Ce_EBJun_12extblank,  
                                   sample.11De_EBJun_19extblank,   
@@ -29,8 +29,9 @@ p2e_uk <- subset(p2e, select = c(id, final_name, pid, final_rank,
 
 ## tele02 marker
 p2t <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu98_final_p2t.csv")
-p2t <- p2t[c(2:47)]
-p2t_aq <- subset(p2t, select = c(id, final_name, pid, final_rank, method_assign,                 
+p2t <- p2t[c(2:50)]
+p2t_aq <- subset(p2t, select = c(id, final_name,final_genus, final_order, final_class, 
+                                 pid, final_rank, method_assign,                 
                                  total_reads, sequence, sample.5Et10BLUE_MPEtA_,
                                  sample.5Ft10BLUE_MPEtB_, sample.5Gt30BLUE_MPEtA_,        
                                  sample.5Ht30BLUE_MPEtB_, sample.6At60BLUE_MPEtA_,
@@ -47,7 +48,7 @@ p2t_uk <- subset(p2t, select = -c(sample.5Et10BLUE_MPEtA_, sample.5Ft10BLUE_MPEt
                                  sample.4Ht_positivePCRcontrol))  
 ## Phase 3 - all samples with elas02 marker
 p3 <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu98_final_p3.csv")
-p3 <- p3[c(2:51)]
+p3 <- p3[c(2:54)]
 
 #######
 ## Remove contamination from MOTU tables using decontam prevalence method
@@ -70,6 +71,7 @@ colnames(p1_names)[1] <- "seq_id" # can use list to compare to sample data to ma
 # make MOTU ids row names
 count_tab <- count_tab %>%  column_to_rownames(var = "id")
 # read in metadata
+## LOOK at supp table1 and decide if I should be subsetting metadata from that table
 p1_meta <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/metadata/p1_meta.csv")
 colnames(p1_meta)[1] <- "seq_id"
 sample_info_tab <- merge(p1_names,p1_meta, by="seq_id", all.x = T) %>% ##merge because 3 controls dropped out for having no reads assigned
