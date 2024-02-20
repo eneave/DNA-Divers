@@ -1,84 +1,84 @@
-﻿seq_id,short_id,long_id,location_abbreviation,location,site,type,sampletype1,sampletype2,perservation,replicate,PCR_primer_well,extraction,weight_range_mg,weight_g,weight_class,weight_class_abrv,primer,time
-sample.1A,PLYM_53,PLYM_53_MPEt2A,PLYM,Mount Batton,north side,MP,sample,sample,Et,2A,1A,QBT,20-40,0.25,standard,s,tele02,60
-sample.1B,PLYM_54,PLYM_54_MPEt2B,PLYM,Mount Batton,north side,MP,sample,sample,Et,2B,1B,QBT,20-40,0.2,standard,s,tele02,60
-sample.1C,PLYM_55,PLYM_55_MPEt2C,PLYM,Mount Batton,north side,MP,sample,sample,Et,2C,1C,QBT,20-40,0.4,standard,s,tele02,60
-sample.1D,PLYM_56,PLYM_56_MPEt3A,PLYM,Mount Batton,north side,MP,sample,sample,Et,3A,1D,QBT,20-40,0.31,standard,s,tele02,60
-sample.1E,PLYM_57,PLYM_57_MPEt3B,PLYM,Mount Batton,north side,MP,sample,sample,Et,3B,1E,QBT,20-40,0.27,standard,s,tele02,60
-sample.1F,PLYM_58,PLYM_58_MPEt3C,PLYM,Mount Batton,north side,MP,sample,sample,Et,3C,1F,QBT,20-40,0.31,standard,s,tele02,60
-sample.1G,PLYM_59,PLYM_59_MPEt4A,PLYM,Mount Batton,north side,MP,sample,sample,Et,4A,1G,QBT,20-40,0.21,standard,s,tele02,60
-sample.1H,positivePCR,positivePCR,NA,NA,NA,positivePCR,control,positive,NA,control,1H,NA,NA,NA,NA,NA,tele02,NA
-sample.2A,PLYM_60,PLYM_60_MPEt4B,PLYM,Mount Batton,north side,MP,sample,sample,Et,4B,2A,QBT,20-40,0.22,standard,s,tele02,60
-sample.2B,PLYM_61,PLYM_61_MPEt4C,PLYM,Mount Batton,north side,MP,sample,sample,Et,4C,2B,QBT,20-40,0.36,standard,s,tele02,60
-sample.2C,DOR_62,DOR_62_MPEt5A,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,5A,2C,QBT,20-40,0.2,standard,s,tele02,77
-sample.2D,DOR_63,DOR_63_MPEt5B,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,5B,2D,QBT,20-40,0.26,standard,s,tele02,77
-sample.2E,DOR_64,DOR_64_MPEt5C,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,5C,2E,QBT,20-40,0.2,standard,s,tele02,77
-sample.2F,DOR_65,DOR_65_MPEt6A,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,6A,2F,QBT,20-40,0.28,standard,s,tele02,90
-sample.2G,DOR_66,DOR_66_MPEt6B,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,6B,2G,QBT,20-40,0.4,standard,s,tele02,90
-sample.2H,DOR_67,DOR_67_MPEt6C,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,6C,2H,QBT,20-40,0.21,standard,s,tele02,90
-sample.3A,DOR_68,DOR_68_MPEt7A,DOR,Studland Bay,south beach,MP,sample,sample,Et,7A,3A,QBT,20-40,0.38,standard,s,tele02,73
-sample.3B,DOR_69,DOR_69_MPEt7B,DOR,Studland Bay,south beach,MP,sample,sample,Et,7B,3B,QBT,20-40,0.22,standard,s,tele02,73
-sample.3C,DOR_70,DOR_70_MPEt7C,DOR,Studland Bay,south beach,MP,sample,sample,Et,7C,3C,QBT,20-40,0.23,standard,s,tele02,73
-sample.3D,DOR_71,DOR_71_MPEt8A,DOR,Studland Bay,south beach,MP,sample,sample,Et,8A,3D,QBT,20-40,0.38,standard,s,tele02,73
-sample.3E,DOR_72,DOR_72_MPEt8B,DOR,Studland Bay,south beach,MP,sample,sample,Et,8B,3E,QBT,20-40,0.2,standard,s,tele02,73
-sample.3F,DOR_73,DOR_73_MPEt8C,DOR,Studland Bay,south beach,MP,sample,sample,Et,8C,3F,QBT,20-40,0.4,standard,s,tele02,73
-sample.3G,PLYM_56,PLYM_56_MPEt3A,PLYM,Mount Batton,north side,MP,sample,sample,Et,3A,3G,MUT,20-40,exact weight not recorded,standard,s,tele02,60
-sample.3H,PLYM_57,PLYM_57_MPEt3B,PLYM,Mount Batton,north side,MP,sample,sample,Et,3B,3H,MUT,20-40,exact weight not recorded,standard,s,tele02,60
-sample.4A,negative PCR,negative PCR,NA,NA,NA,negative PCR,control,negative,NA,control,4A,NA,NA,NA,NA,NA,tele02,NA
-sample.4B,PLYM_58,PLYM_58_MPEt3C,PLYM,Mount Batton,north side,MP,sample,sample,Et,3C,4B,MUT,20-40,exact weight not recorded,standard,s,tele02,60
-sample.4C,PLYM_59,PLYM_59_MPEt4A,PLYM,Mount Batton,north side,MP,sample,sample,Et,4A,4C,MUT,20-40,exact weight not recorded,standard,s,tele02,60
-sample.4D,PLYM_60,PLYM_60_MPEt4B,PLYM,Mount Batton,north side,MP,sample,sample,Et,4B,4D,MUT,20-40,exact weight not recorded,standard,s,tele02,60
-sample.4E,PLYM_61,PLYM_61_MPEt4C,PLYM,Mount Batton,north side,MP,sample,sample,Et,4C,4E,MUT,20-40,exact weight not recorded,standard,s,tele02,60
-sample.4F,DOR_62,DOR_62_MPEt5A,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,5A,4F,MUT,20-40,0.31,standard,s,tele02,77
-sample.4G,DOR_63,DOR_63_MPEt5B,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,5B,4G,MUT,20-40,0.21,standard,s,tele02,77
-sample.4H,DOR_64,DOR_64_MPEt5C,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,5C,4H,MUT,20-40,0.2,standard,s,tele02,77
-sample.5A,DOR_65,DOR_65_MPEt6A,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,6A,5A,MUT,20-40,0.24,standard,s,tele02,90
-sample.5B,DOR_66,DOR_66_MPEt6B,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,6B,5B,MUT,20-40,0.24,standard,s,tele02,90
-sample.5C,DOR_67,DOR_67_MPEt6C,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,6C,5C,MUT,20-40,0.32,standard,s,tele02,90
-sample.5D,DOR_62,DOR_62_MPEt5A,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,5A,5D,MUT,60-80,0.79,medium,m,tele02,77
-sample.5E,DOR_63,DOR_63_MPEt5B,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,5B,5E,MUT,60-80,0.61,medium,m,tele02,77
-sample.5F,DOR_64,DOR_64_MPEt5C,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,5C,5F,MUT,60-80,0.78,medium,m,tele02,77
-sample.5G,DOR_65,DOR_65_MPEt6A,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,6A,5G,MUT,60-80,0.61,medium,m,tele02,90
-sample.5H,DOR_66,DOR_66_MPEt6B,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,6B,5H,MUT,60-80,0.64,medium,m,tele02,90
-sample.6A,negative PCR,negative PCR,NA,NA,NA,negative PCR,control,negative,NA,control,6A,NA,NA,NA,NA,NA,tele02,NA
-sample.6B,DOR_67,DOR_67_MPEt6C,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,6C,6B,MUT,60-80,0.7,medium,m,tele02,90
-sample.6C,DOR_62,DOR_62_MPEt5A,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,5A,6C,MUT,90-110,1.05,high,h,tele02,77
-sample.6D,DOR_63,DOR_63_MPEt5B,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,5B,6D,MUT,90-110,1.03,high,h,tele02,77
-sample.6E,DOR_64,DOR_64_MPEt5C,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,5C,6E,MUT,90-110,1,high,h,tele02,77
-sample.6F,DOR_65,DOR_65_MPEt6A,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,6A,6F,MUT,90-110,1.04,high,h,tele02,90
-sample.6G,DOR_66,DOR_66_MPEt6B,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,6B,6G,MUT,90-110,1.1,high,h,tele02,90
-sample.6H,DOR_67,DOR_67_MPEt6C,DOR,Studland Bay,offshore of south beach,MP,sample,sample,Et,6C,6H,MUT,90-110,1.01,high,h,tele02,90
-sample.7A,ORK_1,ORK_1_eDNAA,ORK,Orkney,Bayern,eDNA,sample,sample,NA,A,7A,QBT,NA,NA,NA,NA,tele02,NA
-sample.7B,ORK_2,ORK_2_eDNAB,ORK,Orkney,Bayern,eDNA,sample,sample,NA,B,7B,QBT,NA,NA,NA,NA,tele02,NA
-sample.7C,ORK_3,ORK_3_eDNAC,ORK,Orkney,Bayern,eDNA,sample,sample,NA,C,7C,QBT,NA,NA,NA,NA,tele02,NA
-sample.7D,ORK_4,ORK_4_eDNAD,ORK,Orkney,Bayern,eDNA,sample,sample,NA,D,7D,QBT,NA,NA,NA,NA,tele02,NA
-sample.7E,ORK_5,ORK_5_MPEtA,ORK,Orkney,Bayern,MP,sample,sample,Et,A,7E,QBT,20-40,0.23,standard,s,tele02,NA
-sample.7F,ORK_5,ORK_5_MPEtA,ORK,Orkney,Bayern,MP,sample,sample,Et,A,7F,MUT,20-40,0.2,standard,s,tele02,NA
-sample.7G,ORK_6,ORK_6_MPEtA,ORK,Orkney,Bayern,MP,sample,sample,Et,A,7G,QBT,20-40,0.27,standard,s,tele02,NA
-sample.7H,ORK_6,ORK_6_MPEtA,ORK,Orkney,Bayern,MP,sample,sample,Et,A,7H,MUT,20-40,0.2,standard,s,tele02,NA
-sample.8A,positivePCR,positivePCR,NA,NA,NA,positivePCR,control,positive,NA,control,8A,NA,NA,NA,NA,NA,tele02,NA
-sample.8B,ORK_7,ORK_7_MPbA,ORK,Orkney,Bayern,MP,sample,sample,b,A,8B,QBT,20-40,0.08,standard,s,tele02,NA
-sample.8C,ORK_7,ORK_7_MPbA,ORK,Orkney,Bayern,MP,sample,sample,b,A,8C,MUT,20-40,0.06,standard,s,tele02,NA
-sample.8D,ORK_8,ORK_8_MPEtB,ORK,Orkney,Bayern,MP,sample,sample,Et,B,8D,QBT,20-40,0.27,standard,s,tele02,NA
-sample.8E,ORK_8,ORK_8_MPEtB,ORK,Orkney,Bayern,MP,sample,sample,Et,B,8E,MUT,20-40,0.23,standard,s,tele02,NA
-sample.8F,ORK_9,ORK_9_MPEtB,ORK,Orkney,Bayern,MP,sample,sample,Et,B,8F,QBT,20-40,0.32,standard,s,tele02,NA
-sample.8G,ORK_9,ORK_9_MPEtB,ORK,Orkney,Bayern,MP,sample,sample,Et,B,8G,MUT,20-40,0.29,standard,s,tele02,NA
-sample.8H,ORK_10,ORK_10_MPbB,ORK,Orkney,Bayern,MP,sample,sample,b,B,8H,QBT,20-40,0.08,standard,s,tele02,NA
-sample.9A,positivePCR,positivePCR,NA,NA,NA,positivePCR,control,positive,NA,control,9A,NA,NA,NA,NA,NA,tele02,NA
-sample.9B,ORK_10,ORK_10_MPbB,ORK,Orkney,Bayern,MP,sample,sample,b,B,9B,MUT,20-40,0.08,standard,s,tele02,NA
-sample.9C,ORK_11,ORK_11_MPEtC,ORK,Orkney,Bayern,MP,sample,sample,Et,C,9C,QBT,20-40,0.2,standard,s,tele02,NA
-sample.9D,ORK_11,ORK_11_MPEtC,ORK,Orkney,Bayern,MP,sample,sample,Et,C,9D,MUT,20-40,0.2,standard,s,tele02,NA
-sample.9E,ORK_12,ORK_12_MPEtC,ORK,Orkney,Bayern,MP,sample,sample,Et,C,9E,QBT,20-40,0.36,standard,s,tele02,NA
-sample.9F,ORK_12,ORK_12_MPEtC,ORK,Orkney,Bayern,MP,sample,sample,Et,C,9F,MUT,20-40,0.26,standard,s,tele02,NA
-sample.9G,ORK_13,ORK_13_MPbC,ORK,Orkney,Bayern,MP,sample,sample,b,C,9G,QBT,20-40,0.15,standard,s,tele02,NA
-sample.9H,ORK_13,ORK_13_MPbC,ORK,Orkney,Bayern,MP,sample,sample,b,C,9H,MUT,20-40,0.13,standard,s,tele02,NA
-sample.10A,ORK_14,ORK_14_MP_FBEt,ORK,Orkney,Bayern,MP_FB,control,negative,Et,blank,10A,QBT,20-40,0.26,standard,s,tele02,NA
-sample.10B,ORK_14,ORK_14_MP_FBEt,ORK,Orkney,Bayern,MP_FB,control,negative,Et,blank,10B,MUT,20-40,0.2,standard,s,tele02,NA
-sample.10C,ORK_15,ORK_15_MP_FBb,ORK,Orkney,Bayern,MP_FB,control,negative,b,blank,10C,QBT,20-40,0.12,standard,s,tele02,NA
-sample.10D,ORK_15,ORK_15_MP_FBb,ORK,Orkney,Bayern,MP_FB,control,negative,b,blank,10D,MUT,20-40,0.6,standard,s,tele02,NA
-sample.10E,negativePCR,negativePCR,NA,NA,NA,negativePCR,control,negative,NA,control,10E,NA,NA,NA,NA,NA,tele02,NA
-sample.10F,1601,EB_1601,NA,NA,NA,extraction_blank,control,negative,NA,extblank,10F,NA,NA,NA,NA,NA,tele02,NA
-sample.10G,1701,EB_1701,NA,NA,NA,extraction_blank,control,negative,NA,extblank,10G,NA,NA,NA,NA,NA,tele02,NA
-sample.10H,1801,EB_1801,NA,NA,NA,extraction_blank,control,negative,NA,extblank,10H,QBT,NA,NA,NA,NA,tele02,NA
-sample.11A,2301,EB_2301,NA,NA,NA,extraction_blank,control,negative,NA,extblank,11A,NA,NA,NA,NA,NA,tele02,NA
-sample.11B,ORK_0,ORK_0_eDNA_FB,ORK,Orkney,Bayern,eDNA_FB,control,negative,NA,blank,11B,QBT,NA,NA,NA,NA,tele02,NA
-sample.11C,1801,EB_2303,NA,NA,NA,extraction_blank,control,negative,NA,extblank,11C,MUT,NA,NA,NA,NA,tele02,NA
+﻿seq_id,type,sampletype1,sampletype2
+sample.1A,MP,sample,sample
+sample.1B,MP,sample,sample
+sample.1C,MP,sample,sample
+sample.1D,MP,sample,sample
+sample.1E,MP,sample,sample
+sample.1F,MP,sample,sample
+sample.1G,MP,sample,sample
+sample.1H,positivePCR,control,positive
+sample.2A,MP,sample,sample
+sample.2B,MP,sample,sample
+sample.2C,MP,sample,sample
+sample.2D,MP,sample,sample
+sample.2E,MP,sample,sample
+sample.2F,MP,sample,sample
+sample.2G,MP,sample,sample
+sample.2H,MP,sample,sample
+sample.3A,MP,sample,sample
+sample.3B,MP,sample,sample
+sample.3C,MP,sample,sample
+sample.3D,MP,sample,sample
+sample.3E,MP,sample,sample
+sample.3F,MP,sample,sample
+sample.3G,MP,sample,sample
+sample.3H,MP,sample,sample
+sample.4A,negative PCR,control,negative
+sample.4B,MP,sample,sample
+sample.4C,MP,sample,sample
+sample.4D,MP,sample,sample
+sample.4E,MP,sample,sample
+sample.4F,MP,sample,sample
+sample.4G,MP,sample,sample
+sample.4H,MP,sample,sample
+sample.5A,MP,sample,sample
+sample.5B,MP,sample,sample
+sample.5C,MP,sample,sample
+sample.5D,MP,sample,sample
+sample.5E,MP,sample,sample
+sample.5F,MP,sample,sample
+sample.5G,MP,sample,sample
+sample.5H,MP,sample,sample
+sample.6A,negative PCR,control,negative
+sample.6B,MP,sample,sample
+sample.6C,MP,sample,sample
+sample.6D,MP,sample,sample
+sample.6E,MP,sample,sample
+sample.6F,MP,sample,sample
+sample.6G,MP,sample,sample
+sample.6H,MP,sample,sample
+sample.7A,eDNA,sample,sample
+sample.7B,eDNA,sample,sample
+sample.7C,eDNA,sample,sample
+sample.7D,eDNA,sample,sample
+sample.7E,MP,sample,sample
+sample.7F,MP,sample,sample
+sample.7G,MP,sample,sample
+sample.7H,MP,sample,sample
+sample.8A,positivePCR,control,positive
+sample.8B,MP,sample,sample
+sample.8C,MP,sample,sample
+sample.8D,MP,sample,sample
+sample.8E,MP,sample,sample
+sample.8F,MP,sample,sample
+sample.8G,MP,sample,sample
+sample.8H,MP,sample,sample
+sample.9A,positivePCR,control,positive
+sample.9B,MP,sample,sample
+sample.9C,MP,sample,sample
+sample.9D,MP,sample,sample
+sample.9E,MP,sample,sample
+sample.9F,MP,sample,sample
+sample.9G,MP,sample,sample
+sample.9H,MP,sample,sample
+sample.10A,MP_FB,control,negative
+sample.10B,MP_FB,control,negative
+sample.10C,MP_FB,control,negative
+sample.10D,MP_FB,control,negative
+sample.10E,negativePCR,control,negative
+sample.10F,extraction_blank,control,negative
+sample.10G,extraction_blank,control,negative
+sample.10H,extraction_blank,control,negative
+sample.11A,extraction_blank,control,negative
+sample.11B,eDNA_FB,control,negative
+sample.11C,extraction_blank,control,negative

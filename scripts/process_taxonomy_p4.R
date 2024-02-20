@@ -12,38 +12,20 @@ library(tidyverse)
 # open ecotag output fasta file notepad, copy to excel and sort by motu ids
 # keep motu ids and taxonomic info, remove sequences
 # save as a csv file
-#eco <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/divmeth1_SWARM1_nohuman_ecotag_noseq.csv") # sequence run 1
-#colnames(eco) <- "id"
-#eco <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/e_divemeth2_SWARM1_ecotag_noseq.csv") # sequence run 2, elas02 library
-#eco <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/t_divemeth2_SWARM1_nohuman_ecotag_noseq.csv") # sequence run 2, tele02 library
-#eco <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/divemeth3_SWARM1_ecotag_noseq.csv") # sequence run 3
 eco <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/divers1_nohuman_ecotag_noseq.csv") # sequence run 4
 
 # sintax
 # Read .tsv file generated from using the sintax option in vsearch
-#tax <- read.csv(file = "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/SWARM1_sintax_v2_26_1_v258.tsv", sep = ';', header = FALSE) # sequence run 1
-#tax <- read.csv(file = "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/e_SWARM1_sintax_output_ALL.tsv", sep = ';', header = FALSE) # sequence run 2, elas02 library
-#tax <- read.csv(file = "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/t_SWARM1_sintax_output_ALL.tsv", sep = ';', header = FALSE) # sequence run 2, tele02 library
-#tax <- read.csv(file = "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/divmeth3_SWARM1_sintax_ALL.tsv", sep = ';', header = FALSE) # sequence run 3
 tax <- read.csv(file = "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/diversphase1_SWARM1_sintax_output.tsv", sep = ';', header = FALSE) # sequence run 4
 
 
 # blastn
 # Read .tsv file generated from using the blastn option in blastn with a word size of 7
-#bn <- read.csv(file = "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/divers1_blast.tsv", sep = "", header = TRUE) # sequence run 1
-#bn <- read.csv(file = "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/elas02_divers2_blast_v3.tsv", sep = "", header = TRUE) # sequence run 2, elas02 library
-#bn <- read.csv(file = "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/tele02_divers2_blast.tsv", sep = "", header = TRUE) # sequence run 2, tele02 library
-#bn <- read.csv(file = "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/diver3_blast.tsv", sep = "", header = TRUE) # sequence run 3
 bn <- read.csv(file = "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/diversphase1_p4_blast.tsv", sep = "", header = TRUE) # sequence run 4
 
 # read counts
 # Read count data csv file generated from obitab into R
-#abund <- read.delim("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/divmeth1_SWARM1_output.counts.csv", sep=";", header=T) # sequence run 1
-#abund <- read.delim("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/e_divmeth2_SWARM1_output.counts.csv", sep=";", header=T) # sequence run 2, elas02 library
-#abund <- read.delim("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/t_divmeth2_SWARM1_output.counts.csv", sep=";", header=T) # sequence run 2, tele02 library
-#abund <- read.delim("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/e_other_SWARM1_output.counts.csv", sep=";", header=T) # sequence run 3
 abund <- read.delim("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/divers1_SWARM1_output.counts.csv", sep=";", header=T) # sequence run 4
-
 
 #####
 ## Process ecotag output
@@ -212,9 +194,7 @@ df_list <- list(eco_clean, tax_clean, bn_clean, abund)
 motu_all <- df_list %>% reduce(full_join, by="id")
 
 # save as a csv file
-#write.csv(motu_all, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu_all_CHANGE.csv")
-#write.csv(motu_all, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu_all_p2e.csv") # sequence run 2, elas02 library
-#write.csv(motu_all, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu_all_p2t.csv") # sequence run 2, tele02 library
+write.csv(motu_all, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu_all_p4.csv") # sequence run 4
 
 #####
 ## Filter to assign final taxonomy
@@ -383,8 +363,7 @@ motu_all_ident$final_class <- ifelse(#is.na(motu_all_ident$final_class)==TRUE &
                                           motu_all_ident$order_name=="Heterodontiformes"), "Elasmobranchii", "Actinopterygii")))
 
 # save as a csv file
-write.csv(motu_all_ident, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/test.csv")
-#write.csv(motu_all_ident, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu70_all_p2e.csv") # sequence run 2, elas02 library
+write.csv(motu_all_ident, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu70_all_p4.csv")
 
 #####
 ## Final motu table (not collapsed or decontaminated)
@@ -411,8 +390,7 @@ motu98 <- motu98 %>% relocate(c(final_name, final_genus, final_order, final_clas
 
 
 # save as a csv file
-write.csv(motu98, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/test.csv")
-#write.csv(motu98, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu98_final_p2e.csv") # sequence run 2, elas02 library
+write.csv(motu98, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu98_final_p4.csv") # sequence run 4
 
 #####
 # Calculate taxonomy & assignment statistics

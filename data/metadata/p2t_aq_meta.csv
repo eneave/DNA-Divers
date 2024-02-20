@@ -1,0 +1,14 @@
+﻿seq_id,type,sampletype1,sampletype2
+sample.4Ht_positivePCRcontrol,positivePCR,control,positive
+sample.5Et10BLUE_MPEtA_,MP,sample,sample
+sample.5Ft10BLUE_MPEtB_,MP,sample,sample
+sample.5Gt30BLUE_MPEtA_,MP,sample,sample
+sample.5Ht30BLUE_MPEtB_,MP,sample,sample
+sample.6At60BLUE_MPEtA_,MP,sample,sample
+sample.6Bt60BLUE_MPEtB_,MP,sample,sample
+sample.6Ct120BLUE_MPEtA,MP,sample,sample
+sample.6Dt120BLUE_MPEtB,MP,sample,sample
+sample.6Et240BLUE_MPEtA,MP,sample,sample
+sample.6Ft240BLUE_MPEtB,MP,sample,sample
+sample.6GtBLUE_FBEtblank,MP_FB,control,negative
+sample.8Dt_EBMay_13extblank,extraction_blank,control,negative
