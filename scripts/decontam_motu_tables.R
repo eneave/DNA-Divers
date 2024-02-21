@@ -385,22 +385,19 @@ rm(contamdf.prev,contamdf.prev05,contamdf.prev05T,contamdf.prevT)
 #####
 # Convert to phyloseq objects 
 # partition MOTU table to only include counts
-count_tab <- p3 %>% select(c(id, sample.10A:sample.9H)) ## THIS IS WHERE I GOT TO
+count_tab <- p3 %>% select(c(id, sample.10A_SAtra1001:sample.9H_SA_SL7F2A_c)) 
 # list of seq_ids
-p1_names <- as.data.frame(colnames(count_tab[-c(1)])) # 79 samples
-colnames(p1_names)[1] <- "seq_id" # can use list to compare to sample data to make sure they're in the same order
+p3_names <- as.data.frame(colnames(count_tab[-c(1)])) # 43 samples
+colnames(p3_names)[1] <- "seq_id" # can use list to compare to sample data to make sure they're in the same order
 # make MOTU ids row names
 count_tab <- count_tab %>%  column_to_rownames(var = "id")
 # read in metadata; just sampletype info
-p1_meta <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/metadata/p1_meta.csv")
-colnames(p1_meta)[1] <- "seq_id"
-sample_info_tab <- merge(p1_names,p1_meta, by="seq_id", all.x = T) %>% ##merge because 3 controls dropped out for having no reads assigned
+p3_meta <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/metadata/p3_meta.csv")
+colnames(p3_meta)[1] <- "seq_id"
+sample_info_tab <- merge(p3_names,p3_meta, by="seq_id", all.x = T) %>% ##merge in case of sample dropout, all samples represented
   column_to_rownames(var = "seq_id")
 # partition MOTU table to only include taxa
-#tax_tab <- p1 %>% select(c(id, kingdom, phylum, class, order, family, genus, species)) %>% 
-#                  replace_na(list(kingdom = "unassigned", phylum = "unassigned", class = "unassigned", order = "unassigned", family = "unassigned", genus = "unassigned", species = "unassigned")) %>%
-#                  column_to_rownames(var = "id")
-tax_tab <- p1 %>% select(c(id, final_class, final_order, final_genus, final_name)) %>% 
+tax_tab <- p3 %>% select(c(id, final_class, final_order, final_genus, final_name)) %>% 
   column_to_rownames(var = "id")
 # create phyloseq object
 OTU = otu_table(as.matrix(count_tab), taxa_are_rows = TRUE)
@@ -433,10 +430,19 @@ contamdf.prev05T <- contamdf.prev05[contamdf.prev05$contaminant == TRUE,]
 contamdf.prev05T <- contamdf.prev05T %>% rownames_to_column(var = "id")
 contamdf.prev05T <- merge(p1, contamdf.prev05T, by="id", all.x = F)
 ## use 0.5 prevalence threshold
-p1_prev <- p1[!(p1$id %in% contamdf.prev05T$id),]
-write.csv(p1_prev, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p1_decontam.csv")
+p3_prev <- p3[!(p1$id %in% contamdf.prev05T$id),] 
+write.csv(p3_prev, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p3_decontam.csv")
 ## save a list of the identified contaminants
-write.csv(contamdf.prev05T, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p1_contamdf_prev05T.csv")
+write.csv(contamdf.prev05T, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p3_contamdf_prev05T.csv")
 ## remove generic named data, since same names will be used for different MOTU tables
 rm(count_tab,sample_info_tab,tax_tab,OTU,TAX,SAM,dataset,df)
 rm(contamdf.prev,contamdf.prev05,contamdf.prev05T,contamdf.prevT)
+
+#####
+## 4th (1st) Sequencing Run - All Samples - tele02 primer
+#####
+
+
+
+
+
