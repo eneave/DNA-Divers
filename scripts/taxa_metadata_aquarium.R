@@ -9,106 +9,95 @@ library(janitor)
 #####
 ## Shark tank
 #####
+p2e_aq_prev <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p2e_aq_decontam.csv")
+#p2t_aq_prev <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p2t_aq_decontam.csv")
 # total reads per MOTU
-p2e_aq_prev <- p2e_aq_prev %>% mutate(total_reads = rowSums(.[2:28]))
+p2e_aq_prev <- p2e_aq_prev %>% mutate(total_reads = rowSums(.[3:30]))
 
 #####
 # subset elasmobranchs
 #####
-p2e_aq_elas <- subset(p2e_aq_prev, class=="Elasmobranchii")
-
-##### 
-#95% identity to species-level
-#####
-# subset species identity >0.95
-p2e_aq_elas95 <- subset(p2e_aq_elas, s.id>0.95)
-
-# assign best-match taxonomy for Elasmobranchs
-p2e_aq_elas95$manual_taxo <- ifelse(p2e_aq_elas95$species=="Chiloscyllium griseum", "Chiloscyllium sp.",
-                                    ifelse(p2e_aq_elas95$genus=="Heterodontus", "Heterodontus sp.",
-                                           ifelse(p2e_aq_elas95$genus=="Orectolobus", "Orectolobus sp.",
-                                                  p2e_aq_elas95$species)))
-p2e_aq_elas95$manual_taxo.id <- ifelse(p2e_aq_elas95$species=="Chiloscyllium griseum", p2e_aq_elas95$g.id,
-                                       ifelse(p2e_aq_elas95$genus=="Heterodontus", p2e_aq_elas95$g.id,
-                                              ifelse(p2e_aq_elas95$genus=="Orectolobus", p2e_aq_elas95$g.id,
-                                                     p2e_aq_elas95$s.id)))
-
+# fix known mislabeling in taxonomy
+p2e_aq_prev$final_class <- ifelse(p2e_aq_prev$final_order=="Myliobatiformes",
+                                  "Elasmobranchii",
+                                  p2e_aq_prev$final_class)
+# subset Elasmobranchs
+p2e_aq_elas <- subset(p2e_aq_prev, final_class=="Elasmobranchii")
+# Remove genus-level assignments for species detected (low amount of reads)
+p2e_aq_elas <- subset(p2e_aq_elas, final_name!="Dipturus" & final_name!="Hypanus")
+# Remove contamination from aquarium (tide pool exhibit) or other samples
+p2e_aq_elas <- subset(p2e_aq_elas, final_name!="Scyliorhinus canicula")
 # convert to long dataframe
-long_aq_elas95 <- p2e_aq_elas95 %>%
+long_aq_elas <- p2e_aq_elas %>%
   pivot_longer(cols = sample.10Ae60BLUE_MPEtB:sample.9He60BLUE_MPEtA_,
-               names_to = "long_id",
-               names_prefix = "sample.",
+               names_to = "seq_id",
                values_to = "reads")
 # add metadata to long dataframe
-long_aq_elas95 <- merge(long_aq_elas95, p2e_aq_meta, by="long_id")
-# remove controls 
-elas95samples <- subset(long_aq_elas95, sampletype1=="sample")
+meta <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/metadata/supp_table_1.csv")
+long_aq_elas <- merge(long_aq_elas, meta, by="seq_id")
+
 # add proportional read counts
-elas95samples$prc <- elas95samples$reads/elas95samples$total_reads
+long_aq_elas$prc <- long_aq_elas$reads/long_aq_elas$total_reads
 # specify sample type more clearly
-elas95samples$type2 <-ifelse(elas95samples$type=="eDNA", "Syringe Filter", 
-                              ifelse(elas95samples$type=="MP" & (elas95samples$time==65|elas95samples$time==50), "Diver MP", "Soak MP"))
-#####
+long_aq_elas$type2 <-ifelse(long_aq_elas$type=="eDNA", "Syringe Filter", 
+                              ifelse(long_aq_elas$type=="MP" & (long_aq_elas$time==65|long_aq_elas$time==50), "Diver MP", "Soak MP"))
 
-##### 
-#100% identity to species level
-#####
-# subset species identity = 1
-p2e_aq_elas100 <- subset(p2e_aq_elas, s.id==1)
 
-# assign best-match taxonomy for Elasmobranchs
-p2e_aq_elas100$manual_taxo <- ifelse(p2e_aq_elas100$species=="Chiloscyllium griseum", "Chiloscyllium sp.",
-                                    ifelse(p2e_aq_elas100$genus=="Heterodontus", "Heterodontus sp.",
-                                           ifelse(p2e_aq_elas100$genus=="Orectolobus", "Orectolobus sp.",
-                                                  p2e_aq_elas100$species)))
-p2e_aq_elas100$manual_taxo.id <- ifelse(p2e_aq_elas100$species=="Chiloscyllium griseum", p2e_aq_elas100$g.id,
-                                       ifelse(p2e_aq_elas100$genus=="Heterodontus", p2e_aq_elas100$g.id,
-                                              ifelse(p2e_aq_elas100$genus=="Orectolobus", p2e_aq_elas100$g.id,
-                                                     p2e_aq_elas100$s.id)))
+# Fix taxonomy based on inventory knowledge 
+long_aq_elas$manual_name <- ifelse(long_aq_elas$final_name=="Chiloscyllium griseum", "Chiloscyllium sp.",
+                                    ifelse(long_aq_elas$final_name=="Heterodontus", "Heterodontus sp.",
+                                           ifelse(long_aq_elas$final_name=="Orectolobus japonicus", "Orectolobus sp.",
+                                                  long_aq_elas$final_name)))
 
-# convert to long dataframe
-long_aq_elas100 <- p2e_aq_elas100 %>%
-  pivot_longer(cols = sample.10Ae60BLUE_MPEtB:sample.9He60BLUE_MPEtA_,
-               names_to = "long_id",
-               names_prefix = "sample.",
-               values_to = "reads")
-# add metadata to long dataframe
-long_aq_elas100 <- merge(long_aq_elas100, p2e_aq_meta, by="long_id")
-# remove controls 
-elas100samples <- subset(long_aq_elas100, sampletype1=="sample")
-# add proportional read counts
-elas100samples$prc <- elas100samples$reads/elas100samples$total_reads
-# specify sample type more clearly
-elas100samples$type2 <-ifelse(elas100samples$type=="eDNA", "Syringe Filter", 
-                             ifelse(elas100samples$type=="MP" & (elas100samples$time==65|elas100samples$time==50), "Diver MP", "Soak MP"))
-#####
-## Stacked bar plots of sharks
-#####
-
-## quick stacked bar plot of sharks
-ggplot(elas100samples , aes(x = long_id, y = prc, fill = manual_taxo)) + 
+# quick stacked bar plot of sharks
+windows()
+ggplot(long_aq_elas , aes(x = seq_id, y = prc, fill = manual_name)) + 
   geom_bar(stat = "identity", color = "black", position = "fill") +
   facet_grid(. ~ type2, scales = "free") +
-  labs(title="Proportional Read counts of Elasmobranchs \ndetected in the Main Tank by different methods \n100% s.id",
+  labs(title="Proportional Read counts of Elasmobranchs \ndetected in the Ocean display by different methods",
        x ="Sample", y = "Proportional Read Counts (PRC)") +
   theme(axis.text.x = element_text(angle = 90))
 
-library(ggthemes)
+#####
 
-## STOPPED HERE; NEED TO FIGURE OUT HOW TO REORDER BAR CHART
-#elas100samples$long_id <- factor(cem_bray$location, levels = c("Blue Planet", "Liverpool", "Orkney"))
+#####
+## Subset and prepare other detections to add to the stacked bar charts
+#####
 
-## stacked bar plot of sharks
-ggplot(elas100samples , aes(x = long_id, y = prc, fill = manual_taxo)) + 
-  geom_bar(stat = "identity", color = "black", position = "fill") +
-  facet_grid(. ~ type2, scales = "free") +
-  labs(title="Proportional Read counts of Elasmobranchs \ndetected in the Main Tank by different methods \n100% s.id",
-       x ="Sample", y = "Proportional Read Counts (PRC)") +
-  theme(axis.text.x = element_text(angle = 90)) +
-  scale_color_colorblind()
+p2e_aq_notelas <- subset(p2e_aq_prev, final_class!="Elasmobranchii")
+# Remove domestic species (low amount of reads)
+p2e_aq_notelas <- subset(p2e_aq_notelas, final_order!="Artiodactyla" & final_order!="Galliformes"
+                      & final_order!="Carnivora" & final_order!="Pelecaniformes")
+
+# NEED TO FIGURE OUT WHICH FISH ARE FOOD AND WHICH ARE TANK RESIDENTS
+
+# Remove contamination from aquarium (tide pool exhibit) or other samples
+p2e_aq_elas <- subset(p2e_aq_elas, final_name!="Scyliorhinus canicula")
+# convert to long dataframe
+long_aq_elas <- p2e_aq_elas %>%
+  pivot_longer(cols = sample.10Ae60BLUE_MPEtB:sample.9He60BLUE_MPEtA_,
+               names_to = "seq_id",
+               values_to = "reads")
+# add metadata to long dataframe
+meta <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/metadata/supp_table_1.csv")
+long_aq_elas <- merge(long_aq_elas, meta, by="seq_id")
+
+# add proportional read counts
+long_aq_elas$prc <- long_aq_elas$reads/long_aq_elas$total_reads
+# specify sample type more clearly
+long_aq_elas$type2 <-ifelse(long_aq_elas$type=="eDNA", "Syringe Filter", 
+                            ifelse(long_aq_elas$type=="MP" & (long_aq_elas$time==65|long_aq_elas$time==50), "Diver MP", "Soak MP"))
+
+# Fix taxonomy based on inventory knowledge 
+long_aq_elas$manual_name <- ifelse(long_aq_elas$final_name=="Chiloscyllium griseum", "Chiloscyllium sp.",
+                                   ifelse(long_aq_elas$final_name=="Heterodontus", "Heterodontus sp.",
+                                          ifelse(long_aq_elas$final_name=="Orectolobus japonicus", "Orectolobus sp.",
+                                                 long_aq_elas$final_name)))
 
 
 
+#####
+# OLD CODE BELOW HERE
 #####
 # explore data including all detections
 #####

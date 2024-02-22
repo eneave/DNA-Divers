@@ -441,6 +441,63 @@ rm(contamdf.prev,contamdf.prev05,contamdf.prev05T,contamdf.prevT)
 #####
 ## 4th (1st) Sequencing Run - All Samples - tele02 primer
 #####
+# Convert to phyloseq objects 
+# partition MOTU table to only include counts
+count_tab <- p4 %>% select(c(id, sample.1A_B_CLASNOR_Jul22:sample.pcr_positive_2_Jul22))
+# list of seq_ids
+p4_names <- as.data.frame(colnames(count_tab[-c(1)])) # 34 samples
+colnames(p4_names)[1] <- "seq_id" # can use list to compare to sample data to make sure they're in the same order
+# make MOTU ids row names
+count_tab <- count_tab %>%  column_to_rownames(var = "id")
+# read in metadata; just sampletype info
+p4_meta <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/metadata/p4_meta.csv")
+colnames(p4_meta)[1] <- "seq_id"
+sample_info_tab <- merge(p4_names,p4_meta, by="seq_id", all.x = T) %>% ##merge because 3 controls dropped out for having no reads assigned
+  column_to_rownames(var = "seq_id")
+# partition MOTU table to only include taxa
+#tax_tab <- p1 %>% select(c(id, kingdom, phylum, class, order, family, genus, species)) %>% 
+#                  replace_na(list(kingdom = "unassigned", phylum = "unassigned", class = "unassigned", order = "unassigned", family = "unassigned", genus = "unassigned", species = "unassigned")) %>%
+#                  column_to_rownames(var = "id")
+tax_tab <- p4 %>% select(c(id, final_class, final_order, final_genus, final_name)) %>% 
+  column_to_rownames(var = "id")
+# create phyloseq object
+OTU = otu_table(as.matrix(count_tab), taxa_are_rows = TRUE)
+TAX = tax_table(as.matrix(tax_tab))
+SAM = sample_data(sample_info_tab)
+dataset <- merge_phyloseq(phyloseq(OTU, TAX), SAM)
+# code taken from tutorial: https://benjjneb.github.io/decontam/vignettes/decontam_intro.html#identify-contaminants---frequency
+# inspect library size
+df <- as.data.frame(sample_data(dataset)) # Put sample_data into a ggplot-friendly data.frame
+df$SampleReads <- sample_sums(dataset)
+df <- df[order(df$SampleReads),]
+df$Index <- seq(nrow(df))
+ggplot(data=df, aes(x=Index, y=SampleReads, color=sampletype2)) + geom_point() 
+# identify contaminants through prevalence 
+sample_data(dataset)$is.neg <- sample_data(dataset)$sampletype2 == "negative"
+# Default prevalence threshold of 0.1
+contamdf.prev <- isContaminant(dataset, method="prevalence", neg="is.neg")
+table(contamdf.prev$contaminant)
+head(which(contamdf.prev$contaminant))
+# Prevalence threshold of 0.5
+contamdf.prev05 <- isContaminant(dataset, method="prevalence", neg="is.neg", threshold=0.5)
+table(contamdf.prev05$contaminant)
+# extract rows which are possible contaminants and merge with taxonomy to inspect
+# 0.1
+contamdf.prevT <- contamdf.prev[contamdf.prev$contaminant == TRUE,]
+contamdf.prevT <- contamdf.prevT %>% rownames_to_column(var = "id")
+contamdf.prevT <- merge(p1, contamdf.prevT, by="id", all.x = F)
+# 0.5
+contamdf.prev05T <- contamdf.prev05[contamdf.prev05$contaminant == TRUE,]
+contamdf.prev05T <- contamdf.prev05T %>% rownames_to_column(var = "id")
+contamdf.prev05T <- merge(p1, contamdf.prev05T, by="id", all.x = F)
+## use 0.5 prevalence threshold
+p4_prev <- p4[!(p1$id %in% contamdf.prev05T$id),]
+write.csv(p4_prev, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p4_decontam.csv")
+## save a list of the identified contaminants
+write.csv(contamdf.prev05T, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p4_contamdf_prev05T.csv")
+## remove generic named data, since same names will be used for different MOTU tables
+rm(count_tab,sample_info_tab,tax_tab,OTU,TAX,SAM,dataset,df)
+rm(contamdf.prev,contamdf.prev05,contamdf.prev05T,contamdf.prevT)
 
 
 

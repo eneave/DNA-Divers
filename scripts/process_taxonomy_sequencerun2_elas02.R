@@ -362,7 +362,8 @@ motu_all_ident$final_class <- ifelse(#is.na(motu_all_ident$final_class)==TRUE &
          motu_all_ident$order_name=="Orectolobiformes" |
          motu_all_ident$order_name=="Lamniformes" |
          motu_all_ident$order_name=="Hexanchiformes" |
-         motu_all_ident$order_name=="Heterodontiformes"), "Elasmobranchii", "Actinopterygii")))
+         motu_all_ident$order_name=="Heterodontiformes" |
+         motu_all_ident$order_name=="Rhinopristiformes"), "Elasmobranchii", "Actinopterygii")))
 
 # save as a csv file
 #write.csv(motu_all_ident, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/motu_all_CHANGE.csv")
