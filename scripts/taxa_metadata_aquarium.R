@@ -11,8 +11,35 @@ library(janitor)
 #####
 p2e_aq_prev <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p2e_aq_decontam.csv")
 #p2t_aq_prev <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p2t_aq_decontam.csv")
+
+# calculate total reads and number of reads to remove
+all_reads <- p2e_aq_prev %>%
+        mutate(sum = rowSums(across(c(sample.10Ae60BLUE_MPEtB:sample.9He60BLUE_MPEtA_))))
+total <- sum(all_reads$sum)
+# calculate 0.001% of reads
+remove <- total*0.00001
+rm(all_reads)
+
+# replace 0.001% of reads with zero
+var <- c("sample.10Ae60BLUE_MPEtB", "sample.10Be120BLUE_MPEtA",      
+        "sample.10Ce120BLUE_MPEtB", "sample.10De240BLUE_MPEtB",      
+         "sample.10Ee240BLUE_MPEtA", "sample.10FeBLUE_MPEtA_RA",      
+          "sample.10GeBLUE_MPEtB_RB", "sample.10HeBLUE_MPEtC_DA",      
+          "sample.11AeBLUE_MPEtD_DB", "sample.11Be_EBMay_13extblank",  
+          "sample.11Ce_EBJun_12extblank", "sample.11De_EBJun_19extblank",  
+          "sample.11EeBLUE_FBEt_fieldb", "sample.11Fe_negativePCRcontrol",
+          "sample.8CeBLUE_eDNA_FBblank", "sample.8DeBLUE_eDNAA_bottle1",  
+          "sample.8EeBLUE_eDNAB_bottle2", "sample.8FeBLUE_eDNAC_bottle3",  
+          "sample.8GeBLUE_eDNAD_bottle4", "sample.8HeBLUE_MPEtA_RA",       
+           "sample.9AeBLUE_MPEtB_RB", "sample.9BeBLUE_MPEtC_DA",       
+          "sample.9CeBLUE_MPEtD_DB", "sample.9De10BLUE_MPEtA_",       
+         "sample.9Ee10BLUE_MPEtB_", "sample.9Fe30BLUE_MPEtA_",       
+          "sample.9Ge30BLUE_MPEtB_", "sample.9He60BLUE_MPEtA_")
+p2e_aq_prev[,var][p2e_aq_prev[,var] <= 5] <- 0
+
 # total reads per MOTU
 p2e_aq_prev <- p2e_aq_prev %>% mutate(total_reads = rowSums(.[3:30]))
+p2e_aq_prev <- subset(p2e_aq_prev, p2e_aq_prev$total_reads>0)
 
 #####
 # subset elasmobranchs
@@ -68,38 +95,124 @@ p2e_aq_notelas <- subset(p2e_aq_prev, final_class!="Elasmobranchii")
 # Remove domestic species (low amount of reads)
 p2e_aq_notelas <- subset(p2e_aq_notelas, final_order!="Artiodactyla" & final_order!="Galliformes"
                       & final_order!="Carnivora" & final_order!="Pelecaniformes")
+# Remove contamination from aquarium (tide pool exhibit) or other samples or could be food but we don't know
+p2e_aq_notelas <- subset(p2e_aq_notelas, final_name!="Dicentrarchus labrax" |
+                           final_name!="Hypophthalmichthys" |
+                           final_name!="Molva molva" |
+                           final_name!="Salmo salar" |
+                           final_name!="Trisopterus minutus")
 
-# NEED TO FIGURE OUT WHICH FISH ARE FOOD AND WHICH ARE TANK RESIDENTS
-
-# Remove contamination from aquarium (tide pool exhibit) or other samples
-p2e_aq_elas <- subset(p2e_aq_elas, final_name!="Scyliorhinus canicula")
 # convert to long dataframe
-long_aq_elas <- p2e_aq_elas %>%
+long_aq_notelas <- p2e_aq_notelas %>%
   pivot_longer(cols = sample.10Ae60BLUE_MPEtB:sample.9He60BLUE_MPEtA_,
                names_to = "seq_id",
                values_to = "reads")
 # add metadata to long dataframe
-meta <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/metadata/supp_table_1.csv")
-long_aq_elas <- merge(long_aq_elas, meta, by="seq_id")
+meta2 <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/metadata/supp_table_2.csv")
+long_aq_notelas <- merge(long_aq_notelas, meta, by="seq_id")
+long_aq_notelas <- merge(long_aq_notelas, meta2, by="final_name")
+
 
 # add proportional read counts
-long_aq_elas$prc <- long_aq_elas$reads/long_aq_elas$total_reads
+long_aq_notelas$prc <- long_aq_notelas$reads/long_aq_notelas$total_reads
 # specify sample type more clearly
-long_aq_elas$type2 <-ifelse(long_aq_elas$type=="eDNA", "Syringe Filter", 
-                            ifelse(long_aq_elas$type=="MP" & (long_aq_elas$time==65|long_aq_elas$time==50), "Diver MP", "Soak MP"))
+long_aq_notelas$type2 <-ifelse(long_aq_notelas$type=="eDNA", "Syringe Filter", 
+                            ifelse(long_aq_notelas$type=="MP" & (long_aq_notelas$time==65|long_aq_notelas$time==50), "Diver MP", "Soak MP"))
 
-# Fix taxonomy based on inventory knowledge 
-long_aq_elas$manual_name <- ifelse(long_aq_elas$final_name=="Chiloscyllium griseum", "Chiloscyllium sp.",
-                                   ifelse(long_aq_elas$final_name=="Heterodontus", "Heterodontus sp.",
-                                          ifelse(long_aq_elas$final_name=="Orectolobus japonicus", "Orectolobus sp.",
-                                                 long_aq_elas$final_name)))
+
+# quick stacked bar plot of fish
+windows()
+ggplot(long_aq_notelas , aes(x = seq_id, y = prc, fill = final_name)) + 
+  geom_bar(stat = "identity", color = "black", position = "fill") +
+  facet_grid(. ~ type2, scales = "free") +
+  labs(title="Proportional Read counts of Teleosts \ndetected in the Ocean display by different methods",
+       x ="Sample", y = "Proportional Read Counts (PRC)") +
+  theme(axis.text.x = element_text(angle = 90))
+
+# quick stacked bar plot of category fish
+windows()
+ggplot(long_aq_notelas , aes(x = seq_id, y = prc, fill = category2)) + 
+  geom_bar(stat = "identity", color = "black", position = "fill") +
+  facet_grid(. ~ type2, scales = "free") +
+  labs(title="Proportional Read counts of Teleosts \ndetected in the Ocean display by different methods",
+       x ="Sample", y = "Proportional Read Counts (PRC)") +
+  theme(axis.text.x = element_text(angle = 90))
+
+
+#####
+## Make a combined long dataframe of Elasmobranchs, Teleosts and Human
+#####
+long_aq <- bind_rows(long_aq_notelas, long_aq_elas)
+# make manual taxonomy for teleosts category 2
+long_aq$manual_name <- if_else(is.na(long_aq$manual_name), long_aq$category2, long_aq$manual_name)
+# fix proportional read counts
+long_aq$prc <- long_aq$reads/long_aq$total_reads
+
+# quick stacked bar plot of ocean display
+windows()
+ggplot(long_aq , aes(x = seq_id, y = prc, fill = manual_name)) + 
+  geom_bar(stat = "identity", color = "black", position = "fill") +
+  facet_grid(. ~ type2, scales = "free") +
+  labs(x ="Sample", y = "Proportional Read Counts (PRC)") +
+  theme(axis.text.x = element_text(angle = 90))
+
+long_aq$manual_name2 <- ifelse(long_aq$manual_name=="human", "Human",
+                               ifelse(long_aq$manual_name=="food", "Food",
+                                      ifelse(long_aq$manual_name=="inventory", "Teleost",
+                                            "Elasmobranch")))
+ 
+# quick stacked bar plot of ocean display with manual name two
+windows()
+ggplot(long_aq , aes(x = seq_id, y = prc, fill = manual_name2)) + 
+  geom_bar(stat = "identity", color = "black", position = "fill") +
+  facet_grid(. ~ type2, scales = "free") +
+  labs(x ="Sample", y = "Proportional Read Counts (PRC)") +
+  theme(axis.text.x = element_text(angle = 90))
+
+
+#####
+## Make a combined long dataframe of Elasmobranchs, and previous combined long dataframe
+#####
+# make a column that you will facet_grid with
+long_aq$df_from <- "Ocean Display"
+long_aq_elas$df_from <- "Elasmobranchs"
+# master long df
+master_aq <- bind_rows(long_aq, long_aq_elas)
+# update manual name 2
+master_aq$manual_name2 <- if_else(is.na(master_aq$manual_name2), master_aq$manual_name, master_aq$manual_name2)
+
+# set up levels for factors
+levels(master_aq$df_from) <- c("Elasmobranchs", "Ocean Display")
+levels(master_aq$manual_name2) <-c("Carcharhinus melanopterus", "Carcharias taurus",
+                                   "Chiloscyllium punctatum", "Chiloscyllium sp.",
+                                   "Ginglymostoma cirratum", "Glaucostegus cemiculus",
+                                   "Heterodontus sp.", "Hypanus americanus", "Orectolobus sp.",
+                                   "Stegostoma tigrinum", "Elasmobranch", "Teleost", 
+                                   "Food", "Human")
+levels(master_aq$type2) <- c("Syringe Filter", "Diver MP", "Soak MP")
+levels(master_aq$seq_id) <- c("sample.8DeBLUE_eDNAA_bottle1", "sample.8EeBLUE_eDNAB_bottle2",
+                              "sample.8FeBLUE_eDNAC_bottle3", "sample.8GeBLUE_eDNAD_bottle4",
+                              "sample.8HeBLUE_MPEtA_RA", "sample.9AeBLUE_MPEtB_RB",
+                              "sample.9BeBLUE_MPEtC_DA", "sample.9CeBLUE_MPEtD_DB",
+                              "sample.10FeBLUE_MPEtA_RA", "sample.10GeBLUE_MPEtB_RB",
+                              "sample.10HeBLUE_MPEtC_DA", "sample.11AeBLUE_MPEtD_DB",
+                              "sample.9De10BLUE_MPEtA_", "sample.9Ee10BLUE_MPEtB_",
+                              "sample.9Fe30BLUE_MPEtA_", "sample.9Ge30BLUE_MPEtB_",
+                              "sample.9He60BLUE_MPEtA_", "sample.10Ae60BLUE_MPEtB",
+                              "sample.10Be120BLUE_MPEtA", "sample.10Ce120BLUE_MPEtB",
+                              "sample.10De240BLUE_MPEtB", "sample.10Ee240BLUE_MPEtA")
+## THESE LEVES AREN'T FIXING THE ORDER OF THINGS FOR SOME REASON...
+ggplot(master_aq , aes(x = seq_id, y = prc, fill = manual_name2)) + 
+  geom_bar(stat = "identity", color = "black", position = "fill") +
+  facet_grid(df_from ~ type2, scales = "free") +
+  labs(x ="Sample", y = "Proportional Read Counts (PRC)") +
+  theme(axis.text.x = element_text(angle = 90))
+
 
 
 
 #####
-# OLD CODE BELOW HERE
-#####
-# explore data including all detections
+# explore data including all detections; OLD CODE BELOW HERE
 #####
 
 # subset species identity >0.95

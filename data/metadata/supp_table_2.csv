@@ -1,0 +1,53 @@
+final_name,category,category2
+Abudefduf,inventory,inventory
+Acanthurus,inventory,inventory
+Ammodytes,food,food
+Anisotremus virginicus,inventory,inventory
+Argyrosomus regius,putative inventory,inventory
+Auxis,food,food
+Balistes vetula,inventory,inventory
+Caesio caerulaurea,inventory,inventory
+Caesio cuning,inventory,inventory
+Chrysiptera cyanea,inventory,inventory
+Clupea harengus,food,food
+Clupeinae,food,food
+Coris gaimard,inventory,inventory
+Diodon,inventory,inventory
+Epinephelus,inventory,inventory
+Epinephelus lanceolatus,inventory,inventory
+Euthynnus,food,food
+Gadidae,food,food
+Gadus,food,food
+Gnathanodon speciosus,inventory,inventory
+Grammistes sexlineatus,inventory,inventory
+Gymnothorax funebris,inventory,inventory
+Haemulon sciurus,inventory,inventory
+Heniochus acuminatus,inventory,inventory
+Hippoglossus,food,food
+Labroides dimidiatus,inventory,inventory
+Lutjanus,inventory,inventory
+Lutjanus kasmira,inventory,inventory
+Lutjanus sebae,inventory,inventory
+Megalops atlanticus,inventory,inventory
+Megalops cyprinoides,inventory,inventory
+Melanogrammus,food,food
+Merluccius merluccius,food,food
+Monodactylus argenteus,putative inventory,inventory
+Naso,inventory,inventory
+Naso elegans,putative inventory,inventory
+Odonus niger,inventory,inventory
+Paracanthurus hepatus,inventory,inventory
+Paranthias colonus,inventory,inventory
+Platax,inventory,inventory
+Pomacanthus maculosus,inventory,inventory
+Pseudobalistes fuscus,inventory,inventory
+Pseudocaranx dentex,putative inventory,inventory
+Sardina pilchardus,food,food
+Scomber,food,food
+Scomber scombrus,food,food
+Siganus,inventory,inventory
+Thalassoma,inventory,inventory
+Trachinotus blochii,putative inventory,inventory
+Trachinotus rhodopus,putative inventory,inventory
+Trachurus trachurus,food,food
+Homo sapiens,human,human
