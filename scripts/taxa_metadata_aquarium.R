@@ -5,6 +5,7 @@
 library(ggplot2)
 library(tidyverse)
 library(janitor)
+library(ggthemes)
 
 #####
 ## Shark tank
@@ -175,42 +176,142 @@ ggplot(long_aq , aes(x = seq_id, y = prc, fill = manual_name2)) +
 #####
 # make a column that you will facet_grid with
 long_aq$df_from <- "Ocean Display"
-long_aq_elas$df_from <- "Elasmobranchs"
+long_aq_elas$df_from <- "Elasmobranchs Only"
 # master long df
 master_aq <- bind_rows(long_aq, long_aq_elas)
 # update manual name 2
 master_aq$manual_name2 <- if_else(is.na(master_aq$manual_name2), master_aq$manual_name, master_aq$manual_name2)
-
-# set up levels for factors
+  
+# set up factors
 levels(master_aq$df_from) <- c("Elasmobranchs", "Ocean Display")
-levels(master_aq$manual_name2) <-c("Carcharhinus melanopterus", "Carcharias taurus",
-                                   "Chiloscyllium punctatum", "Chiloscyllium sp.",
-                                   "Ginglymostoma cirratum", "Glaucostegus cemiculus",
-                                   "Heterodontus sp.", "Hypanus americanus", "Orectolobus sp.",
-                                   "Stegostoma tigrinum", "Elasmobranch", "Teleost", 
-                                   "Food", "Human")
-levels(master_aq$type2) <- c("Syringe Filter", "Diver MP", "Soak MP")
-levels(master_aq$seq_id) <- c("sample.8DeBLUE_eDNAA_bottle1", "sample.8EeBLUE_eDNAB_bottle2",
-                              "sample.8FeBLUE_eDNAC_bottle3", "sample.8GeBLUE_eDNAD_bottle4",
-                              "sample.8HeBLUE_MPEtA_RA", "sample.9AeBLUE_MPEtB_RB",
-                              "sample.9BeBLUE_MPEtC_DA", "sample.9CeBLUE_MPEtD_DB",
-                              "sample.10FeBLUE_MPEtA_RA", "sample.10GeBLUE_MPEtB_RB",
-                              "sample.10HeBLUE_MPEtC_DA", "sample.11AeBLUE_MPEtD_DB",
-                              "sample.9De10BLUE_MPEtA_", "sample.9Ee10BLUE_MPEtB_",
-                              "sample.9Fe30BLUE_MPEtA_", "sample.9Ge30BLUE_MPEtB_",
-                              "sample.9He60BLUE_MPEtA_", "sample.10Ae60BLUE_MPEtB",
-                              "sample.10Be120BLUE_MPEtA", "sample.10Ce120BLUE_MPEtB",
-                              "sample.10De240BLUE_MPEtB", "sample.10Ee240BLUE_MPEtA")
-## THESE LEVES AREN'T FIXING THE ORDER OF THINGS FOR SOME REASON...
-ggplot(master_aq , aes(x = seq_id, y = prc, fill = manual_name2)) + 
-  geom_bar(stat = "identity", color = "black", position = "fill") +
+master_aq$manual_name2 <- factor(master_aq$manual_name2, levels = c("Carcharhinus melanopterus", "Carcharias taurus",
+                                                                    "Chiloscyllium punctatum", "Chiloscyllium sp.",
+                                                                    "Ginglymostoma cirratum", "Glaucostegus cemiculus",
+                                                                    "Heterodontus sp.", "Hypanus americanus", "Orectolobus sp.",
+                                                                    "Stegostoma tigrinum", "Elasmobranch", "Teleost", 
+                                                                    "Food", "Human"))
+master_aq$type2 <- factor(master_aq$type2, levels = c("Syringe Filter", "Diver MP", "Soak MP"))
+# set colours
+# colourblind safe colour palettes
+# https://davidmathlogic.com/colorblind/#%23332288-%23117733-%2344AA99-%2388CCEE-%23DDCC77-%23CC6677-%23AA4499-%23882255-%234c0268-%23D99B0B
+
+cols <- c("Carcharhinus melanopterus" = "#332288", 
+          "Carcharias taurus" = "#117733",
+          "Chiloscyllium punctatum" = "#44AA99", 
+          "Chiloscyllium sp." = "#88CCEE",
+          "Ginglymostoma cirratum" = "#D99B0B", 
+          "Glaucostegus cemiculus" = "#DDCC77",
+          "Heterodontus sp." = "#CC6677", 
+          "Hypanus americanus" = "#AA4499", 
+          "Orectolobus sp." = "#882255",
+          "Stegostoma tigrinum" = "#4C0268", 
+          "Elasmobranch" = "#000000", 
+          "Teleost" = "#404040", 
+          "Food" = "#808080", 
+          "Human" = "#ffffff")
+
+
+# version 1
+#windows()
+ggplot(master_aq, aes(x = reorder(seq_id, time), y = prc, fill = manual_name2)) + 
+  geom_bar(stat = "identity", position = "fill") +
+  #geom_bar(stat = "identity", color = "black", position = "fill") +
+  scale_fill_manual(values = c(cols)) +
   facet_grid(df_from ~ type2, scales = "free") +
   labs(x ="Sample", y = "Proportional Read Counts (PRC)") +
-  theme(axis.text.x = element_text(angle = 90))
+  theme(axis.text.x = element_text(angle = 90)) 
+
+
+master_aq <- mutate(master_aq,
+                    seq_id2 = case_when(
+                      replicate =="1A_RA" ~ "Dive 1A", 
+                      replicate =="1B_RB" ~ "Dive 1B", 
+                      replicate =="1C_DA" ~ "Dive 1C", 
+                      replicate =="1D_DB" ~ "Dive 1D",
+                      replicate =="2A_RA" ~ "Dive 2A", 
+                      replicate =="2B_RB" ~ "Dive 2B",
+                      replicate =="2C_DA" ~ "Dive 2C", 
+                      replicate =="2D_DB" ~ "Dive 2D", 
+                      time == 10 & replicate=="A" ~ "10 A",
+                      time == 10 & replicate=="B" ~ "10 B",
+                      time == 30 & replicate=="A" ~ "30 A",
+                      time == 30 & replicate=="B" ~ "30 B",
+                      time == 60 & replicate=="A" ~ "60 A",
+                      time == 60 & replicate=="B" ~ "60 B",
+                      time == 120 & replicate=="A" ~ "120 A",
+                      time == 120 & replicate=="B" ~ "120 B",
+                      time == 240 & replicate=="A" ~ "240 A",
+                      time == 240 & replicate=="B" ~ "240 B",
+                      type == "eDNA" & replicate== "A" ~ "Bottle A",
+                      type == "eDNA" & replicate== "B" ~ "Bottle B",
+                      type == "eDNA" & replicate== "C" ~ "Bottle C",
+                      type == "eDNA" & replicate== "D" ~ "Bottle D",
+                      TRUE ~ NA # This is for all other values 
+                    ))                # not covered by the above.
+
+
+
+# version 2
+#aq_barplot2 <-
+aq_barplot2a <-
+ggplot(master_aq, aes(x = reorder(seq_id2, time), y = prc, fill = manual_name2)) + 
+  geom_bar(stat = "identity", position = "fill") + #2a
+  #geom_bar(stat = "identity", color = "black", position = "fill") + #2
+  scale_fill_manual(values = c(cols)) +
+  facet_grid(df_from ~ type2, scales = "free") +
+  labs(x ="Sample", y = "Proportional Read Counts (PRC)") +
+  theme(axis.text.x = element_text(angle = 90)) 
+#ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/aq_barplot2.jpg"),
+#       plot = aq_barplot2,  width = 7, height = 7, units = "in")
+ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/aq_barplot2a.jpg"),
+       plot = aq_barplot2a,  width = 7, height = 7, units = "in")
+
+
+master_aq <- mutate(master_aq,
+                  seq_id3 = case_when(
+                    replicate =="1A_RA" | replicate =="1B_RB"  ~ "Dive 1A", 
+                    replicate =="1C_DA" | replicate =="1D_DB"  ~ "Dive 1B", 
+                    replicate =="2A_RA" | replicate =="2B_RB"  ~ "Dive 2A", 
+                    replicate =="2C_DA" | replicate =="2D_DB"  ~ "Dive 2B", 
+                    time == 10 ~ "10",
+                    time == 30 ~ "30",
+                    time == 60 ~ "60",
+                    time == 120 ~ "120",
+                    time == 240 ~ "240",
+                    type == "eDNA" & replicate== "A" ~ "Bottle A",
+                    type == "eDNA" & replicate== "B" ~ "Bottle B",
+                    type == "eDNA" & replicate== "C" ~ "Bottle C",
+                    type == "eDNA" & replicate== "D" ~ "Bottle D",
+                    TRUE ~ NA # This is for all other values 
+                  ))                # not covered by the above.
+
+
+# version 3
+#aq_barplot3 <-
+aq_barplot3a <-  
+ggplot(master_aq, aes(x = reorder(seq_id3, time), y = prc, fill = manual_name2)) + 
+  geom_bar(stat = "identity", position = "fill") + #3a
+  #geom_bar(stat = "identity", color = "black", position = "fill") + #3
+  scale_fill_manual(values = c(cols)) +
+  facet_grid(df_from ~ type2, scales = "free") +
+  labs(x ="Sample", y = "Proportional Read Counts (PRC)") +
+  theme(axis.text.x = element_text(angle = 90)) 
+#ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/aq_barplot3.jpg"),
+#       plot = aq_barplot3,  width = 7, height = 7, units = "in")
+ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/aq_barplot3a.jpg"),
+       plot = aq_barplot3a,  width = 7, height = 7, units = "in")
+
+
+#####
+## Plot Motu Richness, Species richness, & reads per sample
+#####
+
+## Need to calculate these values
 
 
 
 
+## OLD CODE BELOW
 #####
 # explore data including all detections; OLD CODE BELOW HERE
 #####
