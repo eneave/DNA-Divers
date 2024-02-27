@@ -63,9 +63,13 @@ long_aq_elas <- p2e_aq_elas %>%
 # add metadata to long dataframe
 meta <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/metadata/supp_table_1.csv")
 long_aq_elas <- merge(long_aq_elas, meta, by="seq_id")
-
-# add proportional read counts
-long_aq_elas$prc <- long_aq_elas$reads/long_aq_elas$total_reads
+# Calculate total sample reads
+# CHECK TO SEE IF THIS IS CORRECT
+long_aq_elas %>% 
+  group_by(seq_id) %>% 
+  summarise(total_sample_reads = sum(reads))
+# add proportional read counts NOT CALCULATED CORRECTLY - NEEDS TOTAL SAMPLE READS
+#long_aq_elas$prc <- long_aq_elas$reads/long_aq_elas$total_reads
 # specify sample type more clearly
 long_aq_elas$type2 <-ifelse(long_aq_elas$type=="eDNA", "Syringe Filter", 
                               ifelse(long_aq_elas$type=="MP" & (long_aq_elas$time==65|long_aq_elas$time==50), "Diver MP", "Soak MP"))
@@ -79,14 +83,13 @@ long_aq_elas$manual_name <- ifelse(long_aq_elas$final_name=="Chiloscyllium grise
 
 # quick stacked bar plot of sharks
 windows()
-ggplot(long_aq_elas , aes(x = seq_id, y = prc, fill = manual_name)) + 
+ggplot(long_aq_elas , aes(x = seq_id, y = reads, fill = manual_name)) + 
+#ggplot(long_aq_elas , aes(x = seq_id, y = prc, fill = manual_name)) + 
   geom_bar(stat = "identity", color = "black", position = "fill") +
   facet_grid(. ~ type2, scales = "free") +
   labs(title="Proportional Read counts of Elasmobranchs \ndetected in the Ocean display by different methods",
        x ="Sample", y = "Proportional Read Counts (PRC)") +
   theme(axis.text.x = element_text(angle = 90))
-
-#####
 
 #####
 ## Subset and prepare other detections to add to the stacked bar charts
@@ -115,7 +118,7 @@ long_aq_notelas <- merge(long_aq_notelas, meta2, by="final_name")
 
 
 # add proportional read counts
-long_aq_notelas$prc <- long_aq_notelas$reads/long_aq_notelas$total_reads
+#long_aq_notelas$prc <- long_aq_notelas$reads/long_aq_notelas$total_reads NOT CALCULATED CORRECTLY - NEEDS TOTAL SAMPLE READS
 # specify sample type more clearly
 long_aq_notelas$type2 <-ifelse(long_aq_notelas$type=="eDNA", "Syringe Filter", 
                             ifelse(long_aq_notelas$type=="MP" & (long_aq_notelas$time==65|long_aq_notelas$time==50), "Diver MP", "Soak MP"))
@@ -123,7 +126,7 @@ long_aq_notelas$type2 <-ifelse(long_aq_notelas$type=="eDNA", "Syringe Filter",
 
 # quick stacked bar plot of fish
 windows()
-ggplot(long_aq_notelas , aes(x = seq_id, y = prc, fill = final_name)) + 
+ggplot(long_aq_notelas , aes(x = seq_id, y = reads, fill = final_name)) + 
   geom_bar(stat = "identity", color = "black", position = "fill") +
   facet_grid(. ~ type2, scales = "free") +
   labs(title="Proportional Read counts of Teleosts \ndetected in the Ocean display by different methods",
@@ -132,7 +135,7 @@ ggplot(long_aq_notelas , aes(x = seq_id, y = prc, fill = final_name)) +
 
 # quick stacked bar plot of category fish
 windows()
-ggplot(long_aq_notelas , aes(x = seq_id, y = prc, fill = category2)) + 
+ggplot(long_aq_notelas , aes(x = seq_id, y = reads, fill = category2)) + 
   geom_bar(stat = "identity", color = "black", position = "fill") +
   facet_grid(. ~ type2, scales = "free") +
   labs(title="Proportional Read counts of Teleosts \ndetected in the Ocean display by different methods",
@@ -151,7 +154,7 @@ long_aq$prc <- long_aq$reads/long_aq$total_reads
 
 # quick stacked bar plot of ocean display
 windows()
-ggplot(long_aq , aes(x = seq_id, y = prc, fill = manual_name)) + 
+ggplot(long_aq , aes(x = seq_id, y = reads, fill = manual_name)) + 
   geom_bar(stat = "identity", color = "black", position = "fill") +
   facet_grid(. ~ type2, scales = "free") +
   labs(x ="Sample", y = "Proportional Read Counts (PRC)") +
@@ -164,7 +167,7 @@ long_aq$manual_name2 <- ifelse(long_aq$manual_name=="human", "Human",
  
 # quick stacked bar plot of ocean display with manual name two
 windows()
-ggplot(long_aq , aes(x = seq_id, y = prc, fill = manual_name2)) + 
+ggplot(long_aq , aes(x = seq_id, y = reads, fill = manual_name2)) + 
   geom_bar(stat = "identity", color = "black", position = "fill") +
   facet_grid(. ~ type2, scales = "free") +
   labs(x ="Sample", y = "Proportional Read Counts (PRC)") +
@@ -213,7 +216,7 @@ cols <- c("Carcharhinus melanopterus" = "#332288",
 
 # version 1
 #windows()
-ggplot(master_aq, aes(x = reorder(seq_id, time), y = prc, fill = manual_name2)) + 
+ggplot(master_aq, aes(x = reorder(seq_id, time), y = reads, fill = manual_name2)) + 
   geom_bar(stat = "identity", position = "fill") +
   #geom_bar(stat = "identity", color = "black", position = "fill") +
   scale_fill_manual(values = c(cols)) +
@@ -252,19 +255,19 @@ master_aq <- mutate(master_aq,
 
 
 # version 2
-#aq_barplot2 <-
-aq_barplot2a <-
-ggplot(master_aq, aes(x = reorder(seq_id2, time), y = prc, fill = manual_name2)) + 
-  geom_bar(stat = "identity", position = "fill") + #2a
-  #geom_bar(stat = "identity", color = "black", position = "fill") + #2
+aq_barplot2 <-
+#aq_barplot2a <-
+ggplot(master_aq, aes(x = reorder(seq_id2, time), y = reads, fill = manual_name2)) + 
+  #geom_bar(stat = "identity", position = "fill") + #2a
+  geom_bar(stat = "identity", color = "black", position = "fill") + #2
   scale_fill_manual(values = c(cols)) +
   facet_grid(df_from ~ type2, scales = "free") +
   labs(x ="Sample", y = "Proportional Read Counts (PRC)") +
   theme(axis.text.x = element_text(angle = 90)) 
-#ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/aq_barplot2.jpg"),
-#       plot = aq_barplot2,  width = 7, height = 7, units = "in")
-ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/aq_barplot2a.jpg"),
-       plot = aq_barplot2a,  width = 7, height = 7, units = "in")
+ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/aq_barplot2.jpg"),
+       plot = aq_barplot2,  width = 7, height = 7, units = "in")
+#ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/aq_barplot2a.jpg"),
+#       plot = aq_barplot2a,  width = 7, height = 7, units = "in")
 
 
 master_aq <- mutate(master_aq,
@@ -287,134 +290,94 @@ master_aq <- mutate(master_aq,
 
 
 # version 3
-#aq_barplot3 <-
-aq_barplot3a <-  
-ggplot(master_aq, aes(x = reorder(seq_id3, time), y = prc, fill = manual_name2)) + 
-  geom_bar(stat = "identity", position = "fill") + #3a
-  #geom_bar(stat = "identity", color = "black", position = "fill") + #3
+aq_barplot3 <-
+#aq_barplot3a <-  
+ggplot(master_aq, aes(x = reorder(seq_id3, time), y = reads, fill = manual_name2)) + 
+  #geom_bar(stat = "identity", position = "fill") + #3a
+  geom_bar(stat = "identity", color = "black", position = "fill") + #3
   scale_fill_manual(values = c(cols)) +
   facet_grid(df_from ~ type2, scales = "free") +
   labs(x ="Sample", y = "Proportional Read Counts (PRC)") +
   theme(axis.text.x = element_text(angle = 90)) 
-#ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/aq_barplot3.jpg"),
-#       plot = aq_barplot3,  width = 7, height = 7, units = "in")
-ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/aq_barplot3a.jpg"),
-       plot = aq_barplot3a,  width = 7, height = 7, units = "in")
+ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/aq_barplot3.jpg"),
+       plot = aq_barplot3,  width = 7, height = 7, units = "in")
+#ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/aq_barplot3a.jpg"),
+#       plot = aq_barplot3a,  width = 7, height = 7, units = "in")
 
 
 #####
 ## Plot Motu Richness, Species richness, & reads per sample
 #####
+# need to add same grouping variable names to long_aq
+long_aq <- mutate(long_aq,
+                    seq_id2 = case_when(
+                      replicate =="1A_RA" ~ "Dive 1A", 
+                      replicate =="1B_RB" ~ "Dive 1B", 
+                      replicate =="1C_DA" ~ "Dive 1C", 
+                      replicate =="1D_DB" ~ "Dive 1D",
+                      replicate =="2A_RA" ~ "Dive 2A", 
+                      replicate =="2B_RB" ~ "Dive 2B",
+                      replicate =="2C_DA" ~ "Dive 2C", 
+                      replicate =="2D_DB" ~ "Dive 2D", 
+                      time == 10 & replicate=="A" ~ "10 A",
+                      time == 10 & replicate=="B" ~ "10 B",
+                      time == 30 & replicate=="A" ~ "30 A",
+                      time == 30 & replicate=="B" ~ "30 B",
+                      time == 60 & replicate=="A" ~ "60 A",
+                      time == 60 & replicate=="B" ~ "60 B",
+                      time == 120 & replicate=="A" ~ "120 A",
+                      time == 120 & replicate=="B" ~ "120 B",
+                      time == 240 & replicate=="A" ~ "240 A",
+                      time == 240 & replicate=="B" ~ "240 B",
+                      type == "eDNA" & replicate== "A" ~ "Bottle A",
+                      type == "eDNA" & replicate== "B" ~ "Bottle B",
+                      type == "eDNA" & replicate== "C" ~ "Bottle C",
+                      type == "eDNA" & replicate== "D" ~ "Bottle D",
+                      TRUE ~ NA # This is for all other values 
+                    )) 
+long_aq <- mutate(long_aq,
+                    seq_id3 = case_when(
+                      replicate =="1A_RA" | replicate =="1B_RB"  ~ "Dive 1A", 
+                      replicate =="1C_DA" | replicate =="1D_DB"  ~ "Dive 1B", 
+                      replicate =="2A_RA" | replicate =="2B_RB"  ~ "Dive 2A", 
+                      replicate =="2C_DA" | replicate =="2D_DB"  ~ "Dive 2B", 
+                      time == 10 ~ "10",
+                      time == 30 ~ "30",
+                      time == 60 ~ "60",
+                      time == 120 ~ "120",
+                      time == 240 ~ "240",
+                      type == "eDNA" & replicate== "A" ~ "Bottle A",
+                      type == "eDNA" & replicate== "B" ~ "Bottle B",
+                      type == "eDNA" & replicate== "C" ~ "Bottle C",
+                      type == "eDNA" & replicate== "D" ~ "Bottle D",
+                      TRUE ~ NA # This is for all other values 
+                    )) 
+# remove rows where reads = 0
+long_aq2 <- subset(long_aq, long_aq$reads>0)
 
-## Need to calculate these values
+# Calculate unique Motus
+# calculate the number of motus per version 2 grouping
+motus_2 <- long_aq2 %>% count(seq_id2, id, sort = TRUE)
+motus_2 <- motus_2 %>% count(seq_id2, sort = TRUE)
+# calculate the number of motus per version 3 grouping
+motus_3 <- long_aq2 %>% count(seq_id3, id, sort = TRUE)
+motus_3 <- motus_3 %>% count(seq_id3, sort = TRUE)
+
+# Calculate unique taxa
+# calculate the number of taxa per version 2 grouping
+name_2 <- long_aq2 %>% count(seq_id2, final_name, sort = TRUE)
+name_2 <- name_2 %>% count(seq_id2, sort = TRUE)
+# calculate the number of taxa per version 3 grouping
+name_3 <- long_aq2 %>% count(seq_id3, id, sort = TRUE)
+name_3 <- name_3 %>% count(seq_id3, sort = TRUE)
+
+# Caculate reads per sample or per combined replicate
+samp_total <- as.data.frame(colSums(p2e_aq_prev[,c(3:30)]))
 
 
 
-
+#####
 ## OLD CODE BELOW
-#####
-# explore data including all detections; OLD CODE BELOW HERE
-#####
-
-# subset species identity >0.95
-p2e_aq_95 <- subset(p2e_aq_prev, s.id>0.95)
-
-# subset species identity to 1, see if it differs much from >0.95
-p2e_aq_100 <- subset(p2e_aq_prev, s.id==1)
-
-##### 
-#95% identity to species-level
-#####
-# assign taxonomy for presentation for all taxa
-p2e_aq_95$manual_taxo1 <- ifelse(p2e_aq_95$species=="Chiloscyllium griseum", "Chiloscyllium sp.",
-                          ifelse(p2e_aq_95$genus=="Heterodontus", "Heterodontus sp.",
-                          ifelse(p2e_aq_95$genus=="Orectolobus", "Orectolobus sp.",
-                          ifelse(p2e_aq_95$genus=="Scomber", "Food",
-                          ifelse(p2e_aq_95$genus=="Salmo", "Food",
-                          ifelse(p2e_aq_95$genus=="Sprattus", "Food",
-                          ifelse(p2e_aq_95$genus=="Hippoglossus", "Food",
-                          ifelse(p2e_aq_95$genus=="Pseudocaranx", "Food",
-                          ifelse(p2e_aq_95$genus=="Clupea", "Food",
-                          ifelse(p2e_aq_95$genus=="Gadus", "Food",
-                          ifelse(p2e_aq_95$genus=="Melanogrammus", "Food",
-                          ifelse(p2e_aq_95$genus=="Euthynnus", "Food",
-                          ifelse(p2e_aq_95$genus=="Sardina", "Food",
-                          ifelse(p2e_aq_95$species=="Carcharhinus melanopterus", "Carcharhinus melanopterus",
-                          ifelse(p2e_aq_95$species=="Carcharias taurus", "Carcharias taurus",
-                          ifelse(p2e_aq_95$species=="Chiloscyllium punctatum", "Chiloscyllium punctatum",
-                          ifelse(p2e_aq_95$species=="Ginglymostoma cirratum", "Ginglymostoma cirratum",
-                          ifelse(p2e_aq_95$species=="Glaucostegus cemiculus", "Glaucostegus cemiculus",
-                          ifelse(p2e_aq_95$species=="Hypanus americanus", "Hypanus americanus",
-                          ifelse(p2e_aq_95$species=="Stegostoma tigrinum", "Stegostoma tigrinum",
-                                 "Teleostei"))))))))))))))))))))
-
-# convert to long dataframe
-long_aq_95 <- p2e_aq_95 %>%
-  pivot_longer(cols = sample.10Ae60BLUE_MPEtB:sample.9He60BLUE_MPEtA_,
-               names_to = "long_id",
-               names_prefix = "sample.",
-               values_to = "reads")
-# add metadata to long dataframe
-long_aq_95 <- merge(long_aq_95, p2e_aq_meta, by="long_id")
-# remove controls 
-all95samples <- subset(long_aq_95, sampletype1=="sample")
-# add proportional read counts
-all95samples$prc <- all95samples$reads/all95samples$total_reads
-# specify sample type more clearly
-all95samples$type2 <-ifelse(all95samples$type=="eDNA", "Syringe Filter", 
-                             ifelse(all95samples$type=="MP" & (all95samples$time==65|all95samples$time==50), "Diver MP", "Soak MP"))
-#####
-
-##### 
-#100% identity to species-level
-#####
-# assign taxonomy for presentation for all taxa
-p2e_aq_100$manual_taxo1 <- ifelse(p2e_aq_100$species=="Chiloscyllium griseum", "Chiloscyllium sp.",
-                                 ifelse(p2e_aq_100$genus=="Heterodontus", "Heterodontus sp.",
-                                        ifelse(p2e_aq_100$genus=="Orectolobus", "Orectolobus sp.",
-                                               ifelse(p2e_aq_100$genus=="Scomber", "Food",
-                                                      ifelse(p2e_aq_100$genus=="Salmo", "Food",
-                                                             ifelse(p2e_aq_100$genus=="Sprattus", "Food",
-                                                                    ifelse(p2e_aq_100$genus=="Hippoglossus", "Food",
-                                                                           ifelse(p2e_aq_100$genus=="Pseudocaranx", "Food",
-                                                                                  ifelse(p2e_aq_100$genus=="Clupea", "Food",
-                                                                                         ifelse(p2e_aq_100$genus=="Gadus", "Food",
-                                                                                                ifelse(p2e_aq_100$genus=="Melanogrammus", "Food",
-                                                                                                       ifelse(p2e_aq_100$genus=="Euthynnus", "Food",
-                                                                                                              ifelse(p2e_aq_100$genus=="Sardina", "Food",
-                                                                                                                     ifelse(p2e_aq_100$species=="Carcharhinus melanopterus", "Carcharhinus melanopterus",
-                                                                                                                            ifelse(p2e_aq_100$species=="Carcharias taurus", "Carcharias taurus",
-                                                                                                                                   ifelse(p2e_aq_100$species=="Chiloscyllium punctatum", "Chiloscyllium punctatum",
-                                                                                                                                          ifelse(p2e_aq_100$species=="Ginglymostoma cirratum", "Ginglymostoma cirratum",
-                                                                                                                                                 ifelse(p2e_aq_100$species=="Glaucostegus cemiculus", "Glaucostegus cemiculus",
-                                                                                                                                                        ifelse(p2e_aq_100$species=="Hypanus americanus", "Hypanus americanus",
-                                                                                                                                                               ifelse(p2e_aq_100$species=="Stegostoma tigrinum", "Stegostoma tigrinum",
-                                                                                                                                                                      "Teleostei"))))))))))))))))))))
-
-# convert to long dataframe
-long_aq_100 <- p2e_aq_100 %>%
-  pivot_longer(cols = sample.10Ae60BLUE_MPEtB:sample.9He60BLUE_MPEtA_,
-               names_to = "long_id",
-               names_prefix = "sample.",
-               values_to = "reads")
-# add metadata to long dataframe
-long_aq_100 <- merge(long_aq_100, p2e_aq_meta, by="long_id")
-# remove controls 
-all100samples <- subset(long_aq_100, sampletype1=="sample")
-# add proportional read counts
-all100samples$prc <- all100samples$reads/all100samples$total_reads
-# specify sample type more clearly
-all100samples$type2 <-ifelse(all100samples$type=="eDNA", "Syringe Filter", 
-                            ifelse(all100samples$type=="MP" & (all100samples$time==65|all100samples$time==50), "Diver MP", "Soak MP"))
-#####
-
-## quick plot of everything
-ggplot(all100samples , aes(x = long_id, y = prc, fill = manual_taxo1)) + 
-  geom_bar(stat = "identity", color = "black", position = "fill") +
-  facet_grid(. ~ type2, scales = "free") +
-  labs(title="Proportional Read counts of Elasmobranchs & Teleosts \ndetected in the Main Tank by different methods \n 100% s.id",
-       x ="Sample", y = "Proportional Read Counts (PRC)") +
-  theme(axis.text.x = element_text(angle = 90))
 
 #####
 # Funky heatmap for shark tank
@@ -614,7 +577,7 @@ funky_heatmap(hm_e_aqt3, column_info = column_info2, expand = list(xmax = 4))
 
 #####
 ## Bubble plot since funkyheatmaps are proving tricky
-####
+#####
 # bubbleplot
 
 ggplot(elas100samples, aes(x = long_id, y = manual_taxo, size = prc)) +
