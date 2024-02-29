@@ -368,11 +368,74 @@ motus_3 <- motus_3 %>% count(seq_id3, sort = TRUE)
 name_2 <- long_aq2 %>% count(seq_id2, final_name, sort = TRUE)
 name_2 <- name_2 %>% count(seq_id2, sort = TRUE)
 # calculate the number of taxa per version 3 grouping
-name_3 <- long_aq2 %>% count(seq_id3, id, sort = TRUE)
+name_3 <- long_aq2 %>% count(seq_id3, final_name, sort = TRUE)
 name_3 <- name_3 %>% count(seq_id3, sort = TRUE)
 
 # Caculate reads per sample or per combined replicate
-samp_total <- as.data.frame(colSums(p2e_aq_prev[,c(3:30)]))
+## MAYBE COME BACK TO THIS LATER
+#samp_total <- as.data.frame(colSums(p2e_aq_prev[,c(3:30)]))
+
+# Combine motus and unique taxa to make alpha diversity plots
+ad2 <- merge(motus_2, name_2, by="seq_id2")
+colnames(ad2)[2] <- "MOTUs2"
+colnames(ad2)[3] <- "Richness2"
+ad3 <- merge(motus_3, name_3, by="seq_id3")
+colnames(ad3)[2] <- "MOTUs3"
+colnames(ad3)[3] <- "Richness3"
+final_aq <- merge(master_aq, ad2, by="seq_id2")
+final_aq <- merge(final_aq, ad3, by="seq_id3")
+
+# make plot for version 2 sample names, with both MOTU and Reads
+
+#library(patchwork)
+#m2 <-
+#ggplot(final_aq, aes(x=seq_id2, y=MOTUs)) +
+#  geom_segment(aes(x=seq_id2, xend=seq_id2, y=0, yend=MOTUs), color="grey") +
+#  geom_point(aes(x=seq_id2, y=MOTUs), color="orange", size=4) +
+#  facet_grid( ~ type2, scales = "free") +
+#  labs(x ="Sample", y = "MOTUs")
+
+#m3 <-
+#ggplot(final_aq, aes(x=seq_id2, y=Richness)) +
+#  geom_segment( aes(x=seq_id2, xend=seq_id2, y=0, yend=Richness), color="grey") +
+#  geom_point( color="green", size=4) +
+#  facet_grid( ~ type2, scales = "free") +
+#  labs(x ="Sample", y = "Unique Taxa")
+
+# did not work how I wanted it to
+#m2 + m3
+
+## NEED to fix the levels of the soak experiment
+
+# lollipop plot 2
+aq_dotplot2 <-
+ggplot(final_aq) +
+  geom_segment(aes(x=seq_id2, xend=seq_id2, y=0, yend=MOTUs2), color="grey") +
+  geom_point(aes(x=seq_id2, y=MOTUs2, color="MOTUs"), size=4) +
+  geom_point(aes(x=seq_id2, y=Richness2, color="Richness"), size=4) +
+  facet_grid( ~ type2, scales = "free") +
+  labs(x ="Sample", y = "") +
+  theme(axis.text.x = element_text(angle = 90)) 
+ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/aq_dotplot2.jpg"),
+       plot = aq_dotplot2,  width = 7, height = 3.5, units = "in")
+
+# lollipop plot 3
+aq_dotplot3 <-
+  ggplot(final_aq) +
+  geom_segment(aes(x=seq_id3, xend=seq_id3, y=0, yend=MOTUs3), color="grey") +
+  geom_point(aes(x=seq_id3, y=MOTUs3, color="MOTUs"), size=4) +
+  geom_point(aes(x=seq_id3, y=Richness3, color="Richness"), size=4) +
+  facet_grid( ~ type2, scales = "free") +
+  labs(x ="Sample", y = "") +
+  theme(axis.text.x = element_text(angle = 90)) 
+ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/aq_dotplot3.jpg"),
+       plot = aq_dotplot3,  width = 7, height = 3.5, units = "in")
+
+
+
+
+
+
 
 
 
