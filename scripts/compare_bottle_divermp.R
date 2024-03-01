@@ -5,9 +5,9 @@ library(tidyverse)
 
 #load data
 # tele02 Orkney sequence run 1
-p1_prev <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/DNAdivers/divers_methods_experiment/sintax_taxonomy/divmeth1_MOTU_decontam.csv")
+p1_prev <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/divmeth1_MOTU_decontam.csv")
 # elas02 shark tank sequence run 2
-p2e_aq_prev <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/DNAdivers/divers_methods_experiment_part2/sintax_output_MainTank/divmeth2_sharktank_MOTU_decontam.csv")
+p2e_aq_prev <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p2e_aq_decontam_001.csv")
 # tele02 Liverpool sequence run 2
 p2t_uk_prev <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/DNAdivers/divers_methods_experiment_part2/sintax_output_UKreferencedatabase/t_divmeth2_UK_MOTU_decontam.csv")
 # elas02 Orkney sequence run 2

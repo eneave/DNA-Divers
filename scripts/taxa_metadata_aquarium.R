@@ -42,6 +42,8 @@ p2e_aq_prev[,var][p2e_aq_prev[,var] <= 5] <- 0
 p2e_aq_prev <- p2e_aq_prev %>% mutate(total_reads = rowSums(.[3:30]))
 p2e_aq_prev <- subset(p2e_aq_prev, p2e_aq_prev$total_reads>0)
 
+write.csv(p2e_aq_prev, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p2e_aq_decontam_001.csv")
+
 #####
 # subset elasmobranchs
 #####
@@ -294,12 +296,14 @@ aq_barplot3 <-
 #aq_barplot3a <-  
 ggplot(master_aq, aes(x = reorder(seq_id3, time), y = reads, fill = manual_name2)) + 
   #geom_bar(stat = "identity", position = "fill") + #3a
-  geom_bar(stat = "identity", color = "black", position = "fill") + #3
+  geom_bar(stat = "identity", color = "black", size=0.075, position = "fill") + #3
   scale_fill_manual(values = c(cols)) +
   facet_grid(df_from ~ type2, scales = "free") +
-  labs(x ="Sample", y = "Proportional Read Counts (PRC)") +
-  theme(axis.text.x = element_text(angle = 90)) 
-ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/aq_barplot3.jpg"),
+  labs(x ="Sample", y = "Proportional Read Counts per MOTU") +
+  theme(axis.text.x = element_text(angle = 90)) +
+  theme_bw() +
+  guides(fill=guide_legend(title="Taxa"))
+ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/aq_barplot3_BEST.jpg"),
        plot = aq_barplot3,  width = 7, height = 7, units = "in")
 #ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/aq_barplot3a.jpg"),
 #       plot = aq_barplot3a,  width = 7, height = 7, units = "in")
@@ -309,7 +313,7 @@ ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores Universi
 ## Plot Motu Richness, Species richness, & reads per sample
 #####
 # need to add same grouping variable names to long_aq
-long_aq <- mutate(long_aq,
+long_aq2 <- mutate(long_aq,
                     seq_id2 = case_when(
                       replicate =="1A_RA" ~ "Dive 1A", 
                       replicate =="1B_RB" ~ "Dive 1B", 
@@ -335,7 +339,7 @@ long_aq <- mutate(long_aq,
                       type == "eDNA" & replicate== "D" ~ "Bottle D",
                       TRUE ~ NA # This is for all other values 
                     )) 
-long_aq <- mutate(long_aq,
+long_aq2 <- mutate(long_aq,
                     seq_id3 = case_when(
                       replicate =="1A_RA" | replicate =="1B_RB"  ~ "Dive 1A", 
                       replicate =="1C_DA" | replicate =="1D_DB"  ~ "Dive 1B", 
@@ -371,22 +375,36 @@ name_2 <- name_2 %>% count(seq_id2, sort = TRUE)
 name_3 <- long_aq2 %>% count(seq_id3, final_name, sort = TRUE)
 name_3 <- name_3 %>% count(seq_id3, sort = TRUE)
 
-# Caculate reads per sample or per combined replicate
+# Calculate reads per sample or per combined replicate
 ## MAYBE COME BACK TO THIS LATER
 #samp_total <- as.data.frame(colSums(p2e_aq_prev[,c(3:30)]))
 
+# Calculate the number of Elamobrachs
+# subset the elasmobranchs
+long_aq3 <- subset(long_aq2, long_aq2$manual_name2=="Elasmobranch")
+# calculate the number of elas per version 2 grouping
+elas_2 <- long_aq3 %>% count(seq_id2, manual_name, sort = TRUE)
+elas_2 <- elas_2 %>% count(seq_id2, sort = TRUE)
+# calculate the number of elas per version 3 grouping
+elas_3 <- long_aq3 %>% count(seq_id3, manual_name, sort = TRUE)
+elas_3 <- elas_3 %>% count(seq_id3, sort = TRUE)
+
+
 # Combine motus and unique taxa to make alpha diversity plots
 ad2 <- merge(motus_2, name_2, by="seq_id2")
+ad2 <- merge(ad2, elas_2, by="seq_id2")
 colnames(ad2)[2] <- "MOTUs2"
 colnames(ad2)[3] <- "Richness2"
+colnames(ad2)[4] <- "Elas2"
 ad3 <- merge(motus_3, name_3, by="seq_id3")
+ad3 <- merge(ad3, elas_3, by="seq_id3")
 colnames(ad3)[2] <- "MOTUs3"
 colnames(ad3)[3] <- "Richness3"
+colnames(ad3)[4] <- "Elas3"
 final_aq <- merge(master_aq, ad2, by="seq_id2")
 final_aq <- merge(final_aq, ad3, by="seq_id3")
 
 # make plot for version 2 sample names, with both MOTU and Reads
-
 #library(patchwork)
 #m2 <-
 #ggplot(final_aq, aes(x=seq_id2, y=MOTUs)) +
@@ -405,36 +423,52 @@ final_aq <- merge(final_aq, ad3, by="seq_id3")
 # did not work how I wanted it to
 #m2 + m3
 
-## NEED to fix the levels of the soak experiment
+# set factor levels
+final_aq$seq_id2 <- factor(final_aq$seq_id2, levels=c("Bottle A", "Bottle B","Bottle C", "Bottle D",
+                                                      "Dive 1A",  "Dive 1B",  "Dive 1C",  "Dive 1D",
+                                                      "Dive 2A",  "Dive 2B",  "Dive 2C",  "Dive 2D",
+                                                      "10 A", "10 B", "30 A", "30 B", "60 A", "60 B",     
+                                                      "120 A", "120 B", "240 A", "240 B"))
 
 # lollipop plot 2
 aq_dotplot2 <-
 ggplot(final_aq) +
   geom_segment(aes(x=seq_id2, xend=seq_id2, y=0, yend=MOTUs2), color="grey") +
   geom_point(aes(x=seq_id2, y=MOTUs2, color="MOTUs"), size=4) +
-  geom_point(aes(x=seq_id2, y=Richness2, color="Richness"), size=4) +
+  geom_point(aes(x=seq_id2, y=Richness2, color="Taxa"), size=4) +
+  geom_point(aes(x=seq_id2, y=Elas2, color="Elasmobranch"), size=4) +
+  scale_colour_manual(values = c("#FFC20A", "#0C7BDC", "#000000"),
+                      limits = c("MOTUs", "Taxa", "Elasmobranch"),
+                      name = "") +
   facet_grid( ~ type2, scales = "free") +
   labs(x ="Sample", y = "") +
   theme(axis.text.x = element_text(angle = 90)) 
 ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/aq_dotplot2.jpg"),
        plot = aq_dotplot2,  width = 7, height = 3.5, units = "in")
 
+# set factor levels
+final_aq$seq_id3 <- factor(final_aq$seq_id3, levels=c("Bottle A", "Bottle B","Bottle C", "Bottle D",
+                                                      "Dive 1A",  "Dive 1B",  "Dive 2A",  "Dive 2B",
+                                                      "10", "30", "60", "120", "240"))
+
+
+
 # lollipop plot 3
 aq_dotplot3 <-
   ggplot(final_aq) +
   geom_segment(aes(x=seq_id3, xend=seq_id3, y=0, yend=MOTUs3), color="grey") +
   geom_point(aes(x=seq_id3, y=MOTUs3, color="MOTUs"), size=4) +
-  geom_point(aes(x=seq_id3, y=Richness3, color="Richness"), size=4) +
+  geom_point(aes(x=seq_id3, y=Richness3, color="Taxa"), size=4) +
+  geom_point(aes(x=seq_id3, y=Elas3, color="Elasmobranch"), size=4) +
+  scale_colour_manual(values = c("#FFC20A", "#0C7BDC", "#000000"),
+                      limits = c("MOTUs", "Taxa", "Elasmobranch"),
+                      name = "") +
   facet_grid( ~ type2, scales = "free") +
   labs(x ="Sample", y = "") +
-  theme(axis.text.x = element_text(angle = 90)) 
+  theme(axis.text.x = element_text(angle = 90)) +
+  theme_bw() 
 ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/aq_dotplot3.jpg"),
        plot = aq_dotplot3,  width = 7, height = 3.5, units = "in")
-
-
-
-
-
 
 
 
