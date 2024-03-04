@@ -1,64 +1,145 @@
 ##############################################
 ## Compare eDNA bottles to diver metaprobes ##
 ##############################################
+library(plyr)
 library(tidyverse)
 
-#load data
+#####
+# load data
+#####
 # tele02 Orkney sequence run 1
-p1_prev <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/divmeth1_MOTU_decontam.csv")
+p1_prev <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p1_decontam.csv")
 # elas02 shark tank sequence run 2
 p2e_aq_prev <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p2e_aq_decontam_001.csv")
 # tele02 Liverpool sequence run 2
-p2t_uk_prev <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/DNAdivers/divers_methods_experiment_part2/sintax_output_UKreferencedatabase/t_divmeth2_UK_MOTU_decontam.csv")
+p2t_uk_prev <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p2t_uk_decontam.csv")
 # elas02 Orkney sequence run 2
-p2e_uk_prev <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/DNAdivers/divers_methods_experiment_part2/sintax_output_UKreferencedatabase/e_divmeth2_UK_MOTU_decontam.csv")
+p2e_uk_prev <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p2e_uk_decontam.csv")
+# sample metadata
+meta <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/metadata/supp_table_1.csv")
 
+#####
+# extra decontamination step for data 0.001% of reads, read removal
+#####
+# calculate total reads and number of reads to remove
 
-# select metadata of samples for comparison of eDNA and MP
-## might want to add some lines of code to get to samp_meta
-cem_meta <- samp_meta[c("49":"53","55","60","62","67","69","89":"105","114":"120","144":"151"),]
-cem_meta <- cem_meta %>% drop_na(seq_id)
+# tele02 run 1
+# add samples back 
+p1_prev["sample.8C"] <- 0 # sample (bead preserved) has no reads
+p1_prev["sample.3A"] <- 0 # sample has no reads
+all_reads <- p1_prev %>%
+  mutate(sum = rowSums(across(c(sample.10A:sample.8C))))
+total <- sum(all_reads$sum)
+# calculate 0.001% of reads
+remove <- total*0.00001
+rm(all_reads)
+# replace 0.001% of reads with zero
+var <- subset(meta$seq_id, meta$sequence.run==1)
+p1_prev[,var][p1_prev[,var] <= 6] <- 0
+# total reads per MOTU
+p1_prev <- p1_prev %>% mutate(total_reads = rowSums(.[12:92]))
+p1_prev <- subset(p1_prev, p1_prev$total_reads>0)
+# save
+write.csv(p1_prev, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p1_decontam_001.csv")
 
-# list of sample ids
-orkt <- subset(cem_meta$seq_id, cem_meta$site=="Bayern")
-blue <- subset(cem_meta$seq_id, cem_meta$location=="Blue Planet")
-livt <- subset(cem_meta$seq_id, cem_meta$location=="Liverpool")
-orke <- subset(cem_meta$seq_id, cem_meta$site=="SMS Brummer")
-
-# extract data for this visualization
-# tele02 Orkney sequence run 1
-orkt_motu <- p1_prev %>% select("id","class","c.id","order","o.id","family","f.id","genus","g.id","species","s.id",
-                        "sample.7A", "sample.7B", "sample.7C", "sample.7D", "sample.7E", "sample.7G",
-                        "sample.8D", "sample.8F", "sample.9C", "sample.9E") %>%
-                        filter(s.id==1)
 
 # elas02 shark tank sequence run 2
-blue_motu <- p2e_aq_prev %>% select("id","class","c.id","order","o.id","family","f.id","genus","g.id","species","s.id",
-                                    "sample.10FeBLUE_MPEtA_RA",     "sample.10GeBLUE_MPEtB_RB",    
-                                    "sample.10HeBLUE_MPEtC_DA",    "sample.11AeBLUE_MPEtD_DB",    
-                                    "sample.8DeBLUE_eDNAA_bottle1", "sample.8EeBLUE_eDNAB_bottle2",
-                                    "sample.8FeBLUE_eDNAC_bottle3", "sample.8GeBLUE_eDNAD_bottle4",
-                                    "sample.8HeBLUE_MPEtA_RA",      "sample.9AeBLUE_MPEtB_RB",     
-                                    "sample.9BeBLUE_MPEtC_DA",      "sample.9CeBLUE_MPEtD_DB") %>%
-                                    filter(s.id==1)
+# cleaned in taxa_metadata_aquarium.R
 
+
+# tele02 sequence run 2
+all_reads <- p2t_uk_prev %>%
+  mutate(sum = rowSums(across(c(sample.4AtLIV_eDNA_FBblank:sample.8HtLIV_FBEtblank))))
+total <- sum(all_reads$sum)
+# calculate 0.001% of reads
+remove <- total*0.00001
+rm(all_reads)
+# replace 0.001% of reads with zero
+var <- subset(meta$seq_id, meta$sequence.run==2 & meta$primer=="tele02" & meta$location_abbreviation!="BLUE")
+p2t_uk_prev[,var][p2t_uk_prev[,var] <= 8] <- 0
+# total reads per MOTU
+p2t_uk_prev <- p2t_uk_prev %>% mutate(total_reads = rowSums(.[3:29]))
+p2t_uk_prev <- subset(p2t_uk_prev, p2t_uk_prev$total_reads>0)
+# save
+write.csv(p2t_uk_prev, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p2t_uk_decontam_001.csv")
+
+
+# elas02 run 2
+all_reads <- p2e_uk_prev %>%
+  mutate(sum = rowSums(across(c(sample.11Be_EBMay_13extblank:sample.8BeORK_MPbC_lisa))))
+total <- sum(all_reads$sum)
+# calculate 0.001% of reads
+remove <- total*0.00001
+rm(all_reads)
+# replace 0.001% of reads with zero
+var <- subset(meta$seq_id, meta$sequence.run==2 & meta$primer=="elas02" & meta$location_abbreviation!="BLUE")
+p2e_uk_prev[,var][p2e_uk_prev[,var] <= 2] <- 0
+# total reads per MOTU
+p2e_uk_prev <- p2e_uk_prev %>% mutate(total_reads = rowSums(.[3:15]))
+p2e_uk_prev <- subset(p2e_uk_prev, p2e_uk_prev$total_reads>0)
+# save
+write.csv(p2e_uk_prev, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p2e_uk_decontam_001.csv")
+
+
+# elas02 run 3
+p3_prev <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p3_decontam.csv")
+all_reads <- p3_prev %>%
+  mutate(sum = rowSums(across(c(sample.10A_SAtra1001:sample.9H_SA_SL7F2A_c))))
+total <- sum(all_reads$sum)
+# calculate 0.001% of reads
+remove <- total*0.00001
+rm(all_reads)
+# replace 0.001% of reads with zero
+var <- subset(meta$seq_id, meta$sequence.run==3)
+p3_prev[,var][p3_prev[,var] <= 7] <- 0
+# total reads per MOTU
+p3_prev <- p3_prev %>% mutate(total_reads = rowSums(.[12:54]))
+p3_prev <- subset(p3_prev, p3_prev$total_reads>0)
+# save
+write.csv(p3_prev, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p3_decontam_001.csv")
+
+# subset sample that is needed from run 3
+samp <- p3_prev[c("id", "final_name","final_genus","final_order","final_class", 
+                  "pid","final_rank","method_assign","total_reads","sequence",
+                  "sample.12G_ORKMPbA_kurt")]
+
+
+# extract data for this visualization
+# Refine list of samples of relevant for these data visualizations by sample type
+orkt <- subset(meta$seq_id, meta$site.name=="SMS Bayern, Scapa Flow, Orkney" & (meta$type=="eDNA" | (meta$extraction=="QBT" & meta$perservation=="Et")))
+blue <- subset(meta$seq_id, meta$site.name=="Ocean Exhibit, Blue Planet, Ellesmere Port" & (meta$via=="SCUBA" | meta$type=="eDNA"))
+livt <- subset(meta$seq_id, meta$site.name=="Dukes Dock, Liverpool"& (meta$type=="eDNA" | (meta$extraction=="QBT" & meta$perservation=="Et")))
+orke <- subset(meta$seq_id, meta$site.name=="SMS Brummer, Scapa Flow, Orkney" &  (meta$type=="eDNA" | (meta$extraction=="QBT" & meta$perservation=="Et")))
+
+# tele02 Orkney sequence run 1
+
+orkt_motu <- p1_prev %>% select("id","final_name","final_genus","final_order","final_class", 
+                                "pid","final_rank","method_assign","total_reads","sequence",
+                                all_of(orkt)) 
+# elas02 shark tank sequence run 2
+blue_motu <- p2e_aq_prev %>% select("id","final_name","final_genus","final_order","final_class", 
+                                    "pid","final_rank","method_assign","total_reads","sequence",
+                                    all_of(blue)) 
 # tele02 Liverpool sequence run 2
-livt_motu <- p2t_uk_prev %>% select("id","class","c.id","order","o.id","family","f.id","genus","g.id","species","s.id",
-                                    "sample.4BtLIV_eDNA_seA_bottle1", "sample.4CtLIV_eDNA_seB_bottle2",
-                                    "sample.4DtLIV_eDNA_DeC_bottle3", "sample.4EtLIV_eDNA_DeD_bottle4",
-                                    "sample.4FtLIV_MPEtA_Wendy",      "sample.4GtLIV_MPEtB_Rosie",     
-                                    "sample.5AtLIV_MPEtC_Cath") %>%
-                                    filter(s.id==1)
+livt_motu <- p2t_uk_prev %>% select("id","final_name","final_genus","final_order","final_class", 
+                                    "pid","final_rank","method_assign","total_reads","sequence",    
+                                    all_of(livt)) 
 
 # elas02 Orkney sequence run 2
-orke_motu <- p2e_uk_prev %>% select("id","class","c.id","order","o.id","family","f.id","genus","g.id","species","s.id",
-                                    "sample.6BeORK_eDNAA_bottle1", "sample.6CeORK_eDNAB_bottle2",
-                                    "sample.6DeORK_eDNAC_bottle3", "sample.6EeORK_eDNAD_bottle4",
-                                    "sample.6FeORK_MPEtA_kurt",    "sample.6GeORK_MPEtB_mike",   
-                                    "sample.6HeORK_MPEtC_lisa") %>%
-                                    filter(s.id==1)
-rm(p1_prev,p2e_aq_prev,p2t_uk_prev,p2e_uk_prev)
+# adding sample that was left off of run 2, so added to run 3
+p2e_uk_prev["sample.12G_ORKMPbA_kurt"] <- 0
+p2e_uk_prev_1 <- rbind.fill(p2e_uk_prev, samp)
+p2e_uk_prev_1 <- p2e_uk_prev_1 %>% replace(is.na(.), 0)
+p2e_uk_prev_1 <- p2e_uk_prev_1 %>% mutate(total_reads = rowSums(.[3:15]))
+orke_motu <- p2e_uk_prev_1 %>% select("id","final_name","final_genus","final_order","final_class", 
+                                    "pid","final_rank","method_assign","total_reads","sequence",  
+                                    all_of(orke)) 
+rm(p1_prev,p2e_aq_prev,p2t_uk_prev,p2e_uk_prev,p2e_uk_prev_1, samp, p3_prev)
 
+
+#####
+# Preparing data in long format and collapsing for nmds
+#####
 
 # make motu tables long
 l1 <- orkt_motu %>% pivot_longer(cols = sample.7A:sample.9E,
@@ -85,14 +166,22 @@ w1 <- l5 %>% pivot_wider(names_from = "sample",
                    values_from = "reads",
                    values_fill = 0)
 
-w1$total_reads <- rowSums(w1[c(12:47)])
+w1$total_reads <- rowSums(w1[c(11:46)])
 
 w2 <- w1 %>% filter(total_reads > 0)
 
 w3 <- w2 %>%
-  group_by(order,family,genus,species) %>%
-  summarise(across(c(sample.7A:total_reads), sum))
+  group_by(final_rank,final_class,final_order,final_genus,final_name) %>%
+  summarise(across(c(total_reads, sample.7A:sample.6HeORK_MPEtC_lisa), sum))
 
+# group again just by final name because some have different family names
+# due to taxonomic assignment from different references so not collapsing properly
+w4 <- w3 %>%
+  group_by(final_rank,final_class,final_name) %>%
+  summarise(across(c(total_reads, sample.7A:sample.6HeORK_MPEtC_lisa), sum))
+  
+## NEED TO INSPECT FOR "CONTAMINATION"
+## decide what to keep or remove for the NMDS etc.
 
 #####
 ## Prepare data for NMDS
