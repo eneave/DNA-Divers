@@ -83,20 +83,12 @@ write.csv(p2e_uk_prev, "C:/Users/beseneav/OneDrive - Liverpool John Moores Unive
 
 # elas02 run 3
 p3_prev <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p3_decontam.csv")
-all_reads <- p3_prev %>%
-  mutate(sum = rowSums(across(c(sample.10A_SAtra1001:sample.9H_SA_SL7F2A_c))))
-total <- sum(all_reads$sum)
-# calculate 0.001% of reads
-remove <- total*0.00001
-rm(all_reads)
 # replace 0.001% of reads with zero
 var <- subset(meta$seq_id, meta$sequence.run==3)
-p3_prev[,var][p3_prev[,var] <= 7] <- 0
+p3_prev[,var][p3_prev[,var] <= 2] <- 0  ## match elas02 run 2 p2e_uk_prev because only using one sample
 # total reads per MOTU
 p3_prev <- p3_prev %>% mutate(total_reads = rowSums(.[12:54]))
 p3_prev <- subset(p3_prev, p3_prev$total_reads>0)
-# save
-write.csv(p3_prev, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p3_decontam_001.csv")
 
 # subset sample that is needed from run 3
 samp <- p3_prev[c("id", "final_name","final_genus","final_order","final_class", 
@@ -146,10 +138,22 @@ l1 <- orkt_motu %>% pivot_longer(cols = sample.7A:sample.9E,
                            names_to = "sample",
                            names_prefix = "sample.",
                            values_to = "reads")
+# Blue planet
 l2 <- blue_motu %>% pivot_longer(cols = sample.10FeBLUE_MPEtA_RA:sample.9CeBLUE_MPEtD_DB,
                                  names_to = "sample",
                                  names_prefix = "sample.",
                                  values_to = "reads")
+# manually fix elasmobranch taxonomy
+l2$final_name <- ifelse(l2$final_name=="Chiloscyllium griseum", "Chiloscyllium",
+          ifelse(l2$final_name=="Heterodontus", "Heterodontus",
+              ifelse(l2$final_name=="Orectolobus japonicus", "Orectolobus",
+                  l2$final_name)))
+l2 <- subset(l2, l2$final_name!="Dicentrarchus labrax" |
+                           l2$final_name!="Hypophthalmichthys" |
+                           l2$final_name!="Molva molva" |
+                           l2$final_name!="Salmo salar" |
+                           l2$final_name!="Trisopterus minutus")
+
 l3 <- livt_motu %>% pivot_longer(cols = sample.4BtLIV_eDNA_seA_bottle1:sample.5AtLIV_MPEtC_Cath,
                                  names_to = "sample",
                                  names_prefix = "sample.",
@@ -176,12 +180,49 @@ w3 <- w2 %>%
 
 # group again just by final name because some have different family names
 # due to taxonomic assignment from different references so not collapsing properly
+# Pan troglodytes; misassigned human
+w3$final_name <- ifelse(w3$final_name=="Pan troglodytes", "Homo sapiens", w3$final_name)
 w4 <- w3 %>%
   group_by(final_rank,final_class,final_name) %>%
   summarise(across(c(total_reads, sample.7A:sample.6HeORK_MPEtC_lisa), sum))
+w4 <- subset(w4, w4$final_rank=="genus" | w4$final_rank=="species")
+
   
-## NEED TO INSPECT FOR "CONTAMINATION"
-## decide what to keep or remove for the NMDS etc.
+# Inspect for "contamination" or errors in taxonomy 
+# decide what to keep or remove for the NMDS etc.
+
+# Dama dama; not possible in Orkney
+w4 <- subset(w4, w4$final_name!="Dama dama")
+# Bos mutus; not possible in Orkney
+w4 <- subset(w4, w4$final_name!="Bos mutus")
+# Equus asinus; not possible in Liverpool
+w4 <- subset(w4, w4$final_name!="Equus asinus")
+# Columba palumbus and Columba livia; needs to be changed to Aves
+w4$final_class <- ifelse(w4$final_name=="Columba palumbus" | w4$final_name=="Columba livia" |
+                           w4$final_name=="Corvus", "Aves", w4$final_class)
+# fix mammals
+w4$final_class <- ifelse(w4$final_name=="Equus", "Mammalia", w4$final_class)
+# Chimaera monstrosa; unlikely
+w4 <- subset(w4, w4$final_name!="Chimaera monstrosa")
+# Pangasianodon hypophthalmus; positive control
+w4 <- subset(w4, w4$final_name!="Pangasianodon hypophthalmus")
+# Hypanus sp.; genus level assignment was removed during other analysis; low reads
+w4 <- subset(w4, w4$final_name!="Hypanus")
+
+## Make different plots for different purposes
+# remove domestic species
+w4 <- subset(w4, w4$final_name!="Equus")
+w4 <- subset(w4, w4$final_name!="Canis")
+w4 <- subset(w4, w4$final_name!="Ovis")
+w4 <- subset(w4, w4$final_name!="Felis catus")
+w4 <- subset(w4, w4$final_name!="Sus scrofa")
+
+# remove human
+w5 <- subset(w4, w4$final_name!="Homo sapiens")
+
+
+# Interesting to note: 	
+#Osmerus eperlanus; European smelt
 
 #####
 ## Prepare data for NMDS
@@ -190,14 +231,14 @@ library(vegan)
 library(sjmisc)
 library(janitor)
 
-w4 <- w3[c(4:40)]
-w5 <- w4 %>%
-  rotate_df(w4) %>%
+w6 <- w5[c(3,5:40)]
+w7 <- w6 %>%
+  rotate_df(w6) %>%
   row_to_names(row_number = 1) 
-colnames(w5)[1] <- "seq_id"
+colnames(w7)[1] <- "seq_id"
 
 # extract abundance data and prepare for MDS
-dat <- w5[,2:ncol(w5)]
+dat <- w7[,2:ncol(w7)]
 # convert from character to numeric dataframe
 dat <- as.data.frame(sapply(dat, as.numeric)) 
 
@@ -209,7 +250,7 @@ dat_hell <- decostand(dat, method = "hellinger")
 # Calculate distances
 # Bray-Curtis dissimilarity matrix
 bray_dat <- vegdist(dat_hell, method = "bray")
-## Calculate jaccard dissimilariy matrix
+# Calculate jaccard dissimilariy matrix
 jac_dat <- vegdist(dat_pa, method = "jaccard", binary =  TRUE)
 
 #####
@@ -226,12 +267,12 @@ plot(ord_jac)
 
 ## extract site scores from NMDS and add metadata
 cem_bray <- as.data.frame(scores(ord_bray))  
-cem_bray$seq_id <- w5$seq_id
-cem_bray <- merge(cem_bray, cem_meta, by.x = "seq_id")
+cem_bray$seq_id <- w7$seq_id
+cem_bray <- merge(cem_bray, meta, by.x = "seq_id")
 
 cem_jac <- as.data.frame(scores(ord_jac))  
-cem_jac$seq_id <- w5$seq_id
-cem_jac <- merge(cem_jac, cem_meta, by.x = "seq_id")
+cem_jac$seq_id <- w7$seq_id
+cem_jac <- merge(cem_jac, meta, by.x = "seq_id")
 
 #####
 ## NMDS plots
@@ -241,26 +282,36 @@ library(ggthemes)
 
 # basic
 ggplot(cem_bray) +
-  geom_point(aes(x = NMDS1, y = NMDS2, color = location, shape = type))
+  geom_point(aes(x = NMDS1, y = NMDS2, color = site.name, shape = type))
 
 ggplot(cem_jac) +
-  geom_point(aes(x = NMDS1, y = NMDS2, color = location, shape = type))
+  geom_point(aes(x = NMDS1, y = NMDS2, color = site.name, shape = type))
 
 #prepare data for more informative plot
 cem_bray$type <- factor(cem_bray$type, levels = c("eDNA", "MP"))
 cem_bray$primer <- factor(cem_bray$primer, levels = c("elas02", "tele02"))
-cem_bray$location <- factor(cem_bray$location, levels = c("Blue Planet", "Liverpool", "Orkney"))
+cem_bray$site.name <- factor(cem_bray$site.name, levels = c("Ocean Exhibit, Blue Planet, Ellesmere Port",
+                                                            "Dukes Dock, Liverpool",                     
+                                                            "SMS Brummer, Scapa Flow, Orkney",           
+                                                            "SMS Bayern, Scapa Flow, Orkney"))
+#prepare data for more informative plot
+cem_jac$type <- factor(cem_jac$type, levels = c("eDNA", "MP"))
+cem_jac$primer <- factor(cem_jac$primer, levels = c("elas02", "tele02"))
+cem_jac$site.name <- factor(cem_jac$site.name, levels = c("Ocean Exhibit, Blue Planet, Ellesmere Port",
+                                                            "Dukes Dock, Liverpool",                     
+                                                            "SMS Brummer, Scapa Flow, Orkney",           
+                                                            "SMS Bayern, Scapa Flow, Orkney"))
 
-
-# make more informative
-
+# Bray curtis groups so strong that all the points are on top of each other
 # sample type
-ggplot(cem_bray,
-       aes(x = NMDS1, y = NMDS2)
-       ) +
-  geom_point(aes(fill = location, shape = type), size = 5, alpha = 0.8) +
+cem_bray_nmds <-
+ggplot(cem_bray, aes(x = NMDS1, y = NMDS2)) +
+  geom_point(aes(fill = site.name, shape = type), size = 5, alpha = 0.5) +
   scale_shape_manual(values = c(21, 24)) +
   scale_color_colorblind()
+ggsave(filename=c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/nmds_bray_cem.jpg"), 
+       plot = cem_bray_nmds, width = 8, height = 6.5, units = "in")
+
 # primer type
 ggplot(cem_bray,
        aes(x = NMDS1, y = NMDS2)
@@ -269,36 +320,19 @@ ggplot(cem_bray,
   scale_shape_manual(values = c(21, 24)) +
   scale_color_colorblind()
 
-#####
-# have a go at a spider plot
-#library(ggordiplots)
-#gg_ordiplot(ord_bray, groups = cem_bray$location, 
-#            spiders=TRUE, ellipse=FALSE, plot=TRUE) # groups aren't labeled properly
 
-#gg_ordiplot(ord_jac, groups = cem_bray$location, 
-#            spiders=TRUE, ellipse=FALSE, plot=TRUE) # groups aren't labeled properly
-#####
+# prepare plot for paper
 
-# make plot for paper
-
-# primer is shape, sample type is colour
-#ggplot(cem_bray,  aes(x = NMDS1, y = NMDS2)) + 
-#  geom_point(aes(shape = primer, fill = location, colour = type), alpha= 0.7, size = 4, stroke = 1.5) + 
-#  scale_shape_manual(values = c(24,21),labels = c("Elas02", "Tele02")) +
-#  scale_fill_manual(values = c("#4477AA","#EE6677","#228833"),labels = c("Blue Planet", "Liverpool", "Orkney")) +
-#  scale_colour_manual(values = c("black", "darkgrey"),labels = c("eDNA", "MP")) +
-#  labs(x = "NMDS1", colour = "Sample Type", y = "NMDS2", shape = "Primer") +
-#  guides(fill = guide_legend("Location", override.aes = list(shape = 21, colour = "darkgrey")),
-#         shape = guide_legend("Primer", override.aes = list(fill = "#4477AA", colour = "darkgrey")))
-
-cem_bray_nmds <-
-ggplot(cem_bray,  aes(x = NMDS1, y = NMDS2)) + 
-  geom_point(aes(shape = type, fill = location, colour = primer), alpha= 0.7, size = 4, stroke = 1.5) + 
-  scale_shape_manual(values = c(24,21),labels = c("eDNA", "MP")) +
-  scale_fill_manual(values = c("#4477AA","#EE6677","#228833"),labels = c("Blue Planet", "Liverpool", "Orkney")) +
+cem_jac_nmds <-
+ggplot(cem_jac,  aes(x = NMDS1, y = NMDS2)) + 
+  geom_point(aes(shape = type, fill = site.name, colour = primer), alpha= 0.7, size = 4, stroke = 1.5) + 
+  scale_shape_manual(values = c(24,21),labels = c("Syringe Filter", "Diver MP")) +
+  scale_fill_manual(values = c("#1E88E5","#D81B60","#FFC107", "#004D40"),
+                    labels = c("Ocean Exhibit, Blue Planet", "Dukes Dock, Liverpool", 
+                               "SMS Brummer, Orkney","SMS Bayern, Orkney")) +
   scale_colour_manual(values = c("black", "darkgrey"),labels = c("Elas02", "Tele02")) +
   labs(x = "NMDS1", colour = "Primer", y = "NMDS2") +
-  guides(fill = guide_legend("Location", override.aes = list(shape = 21, colour = "darkgrey")),
+  guides(fill = guide_legend("Site", override.aes = list(shape = 21, colour = "darkgrey")),
          shape = guide_legend("Sample Type", override.aes = list(fill = "#4477AA", colour = "darkgrey"))) +
   theme(axis.text.y = element_text(colour = "black", size = 12, face = "bold"), 
         axis.text.x = element_text(colour = "black", face = "bold", size = 12), 
@@ -307,28 +341,39 @@ ggplot(cem_bray,  aes(x = NMDS1, y = NMDS2)) +
         axis.title.x = element_text(face = "bold", size = 14, colour = "black"), 
         legend.title = element_text(size = 14, colour = "black", face = "bold")) 
 
-ggsave(filename=c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/nmds_bray_cem.jpg"), 
-       plot = cem_bray_nmds, width = 8, height = 6.5, units = "in")
+ggsave(filename=c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/nmds_jac_cem.jpg"), 
+       plot = cem_jac_nmds, width = 8, height = 6.5, units = "in")
 
 #####
 ## Prepare data for richness boxplots
 #####
 
-cem_pa <- cbind(w5[,1], dat_pa)
+## NEED TO EDIT THIS SECTION FOR OLD CODE
+
+cem_pa <- cbind(w7[,1], dat_pa)
 colnames(cem_pa)[1] <- "seq_id"
 
 cem_pa$richness <- rowSums(cem_pa[,2:ncol(cem_pa)])
 
-cem_pa <- merge(cem_meta, cem_pa, by = "seq_id")
+cem_pa <- merge(meta, cem_pa, by = "seq_id")
+
+loc.labs <- c("Blue Planet", "Liverpool", "Orkney")
+names(loc.labs) <- c("Blue Planet Aquarium", "Liverpool", "Orkney")
+
+# Might want to change this later, figure out how to
+type.labs <- c("Bottle", "Diver MP")
+names(type.labs) <- c("eDNA", "Diver MP")
 
 # make boxplots
 cem_boxplots <-
 ggplot(cem_pa, aes(x = type, y = richness)) + 
-  geom_boxplot(aes(fill = location), alpha = 0.7, outlier.shape = NA) +
+  geom_boxplot(aes(fill = site.name), alpha = 0.7, outlier.shape = NA) +
   geom_jitter(shape = 19, position = position_jitter(0.3)) +
-  facet_wrap(~ location) +
-  scale_fill_manual(values = c("#4477AA","#EE6677","#228833"),labels = c("Blue Planet", "Liverpool", "Orkney")) +
-  labs(x = "Sample Type", fill = "Location", y = "Species Richness") +
+  facet_wrap(~ location, labeller = labeller(location = loc.labs)) +
+  scale_fill_manual(values = c( "#D81B60", "#1E88E5", "#004D40", "#FFC107"),
+                    labels = c("Dukes Dock, Liverpool", "Ocean Exhibit, Blue Planet",
+                               "SMS Bayern, Orkney", "SMS Brummer, Orkney")) +
+  labs(x = "Sample Type", fill = "Site", y = "Species Richness") +
   theme(axis.text.y = element_text(colour = "black", size = 12, face = "bold"), 
         axis.text.x = element_text(colour = "black", face = "bold", size = 12), 
         legend.text = element_text(size = 12, colour ="black"), 
@@ -345,18 +390,18 @@ ggsave(filename=c("C:/Users/beseneav/OneDrive - Liverpool John Moores University
 ## Prepare data for Venn diagrams
 #####
 
-vcem <- w3
+vcem <- w5
 
 # add together columns by groups
-vcem$ork_bottle <- vcem$sample.7A + vcem$sample.7B +
-                   vcem$sample.7C + vcem$sample.7D +
-                   vcem$sample.6BeORK_eDNAA_bottle1 + vcem$sample.6CeORK_eDNAB_bottle2 +
+vcem$bayern_bottle <- vcem$sample.7A + vcem$sample.7B +
+                   vcem$sample.7C + vcem$sample.7D 
+vcem$brummer_bottle <- vcem$sample.6BeORK_eDNAA_bottle1 + vcem$sample.6CeORK_eDNAB_bottle2 +
                    vcem$sample.6DeORK_eDNAC_bottle3 + vcem$sample.6EeORK_eDNAD_bottle4
 
-vcem$ork_diver <- vcem$sample.7E + vcem$sample.7G +
+vcem$bayern_diver <- vcem$sample.7E + vcem$sample.7G +
                   vcem$sample.8D + vcem$sample.8F +
-                  vcem$sample.9C + vcem$sample.9E +
-                  vcem$sample.6FeORK_MPEtA_kurt + vcem$sample.6GeORK_MPEtB_mike +   
+                  vcem$sample.9C + vcem$sample.9E 
+vcem$brummer_diver <- vcem$sample.6FeORK_MPEtA_kurt + vcem$sample.6GeORK_MPEtB_mike +   
                   vcem$sample.6HeORK_MPEtC_lisa    
 
 vcem$blue_bottle <- vcem$sample.8DeBLUE_eDNAA_bottle1 + vcem$sample.8EeBLUE_eDNAB_bottle2 +
@@ -373,19 +418,25 @@ vcem$liv_bottle <- vcem$sample.4BtLIV_eDNA_seA_bottle1 + vcem$sample.4CtLIV_eDNA
 vcem$liv_diver <- vcem$sample.4FtLIV_MPEtA_Wendy + vcem$sample.4GtLIV_MPEtB_Rosie +
                   vcem$sample.5AtLIV_MPEtC_Cath
 
-## group
-vcem_ork <- vcem[c(4,42,43)]
-vcem_ork <- vcem_ork[rowSums(vcem_ork[c(2,3)])>0,] 
+# group; remove taxa that both == 0
+vcem_bayern <- vcem[c("final_name","bayern_bottle", "bayern_diver")]
+vcem_bayern <- vcem_bayern[rowSums(vcem_bayern[c(2,3)])>0,] 
 
-vcem_blue <- vcem[c(4,44,45)]
+vcem_brummer <- vcem[c("final_name","brummer_bottle", "brummer_diver")]
+vcem_brummer <- vcem_brummer[rowSums(vcem_brummer[c(2,3)])>0,] 
+
+vcem_blue <- vcem[c("final_name","blue_bottle", "blue_diver")]
 vcem_blue <- vcem_blue[rowSums(vcem_blue[c(2,3)])>0,] 
 
-vcem_liv <- vcem[c(4,46,47)]
+vcem_liv <- vcem[c("final_name","liv_bottle", "liv_diver")]
 vcem_liv <- vcem_liv[rowSums(vcem_liv[c(2,3)])>0,] 
 
 ## convert to true or false
-vcem_ork$ork_bottle <- ifelse(vcem_ork$ork_bottle==0, FALSE, TRUE)
-vcem_ork$ork_diver <- ifelse(vcem_ork$ork_diver==0, FALSE, TRUE)
+vcem_bayern$bayern_bottle <- ifelse(vcem_bayern$bayern_bottle==0, FALSE, TRUE)
+vcem_bayern$bayern_diver <- ifelse(vcem_bayern$bayern_diver==0, FALSE, TRUE)
+
+vcem_brummer$brummer_bottle <- ifelse(vcem_brummer$brummer_bottle==0, FALSE, TRUE)
+vcem_brummer$brummer_diver <- ifelse(vcem_brummer$brummer_diver==0, FALSE, TRUE)
 
 vcem_blue$blue_bottle <- ifelse(vcem_blue$blue_bottle==0, FALSE, TRUE)
 vcem_blue$blue_diver <- ifelse(vcem_blue$blue_diver==0, FALSE, TRUE)
@@ -399,13 +450,31 @@ vcem_liv$liv_diver <- ifelse(vcem_liv$liv_diver==0, FALSE, TRUE)
 #####
 
 library(ggvenn)
+library(cowplot)
 
-ggvenn(vcem_ork, c(A = "ork_bottle", B = "ork_diver"),
-       set_name_size = 10, text_size = 5) 
+names(vcem_bayern) <- c("Taxa","Filter (4)","MP (6)")
+v4 <- ggvenn(vcem_bayern, c(A = "Filter (4)", B = "MP (6)"),
+       set_name_size = 5, text_size = 5, 
+       fill_color = c("#004D40", "#99FFEE")) 
 
-ggvenn(vcem_blue, c(A = "blue_bottle", B = "blue_diver"),
-       set_name_size = 10, text_size = 5) 
+names(vcem_brummer) <- c("Taxa","Filter (4)","MP (3)")
+v3 <- ggvenn(vcem_brummer, c(A = "Filter (4)", B = "MP (3)"),
+       set_name_size = 5, text_size = 5, 
+       fill_color = c("#FFC107", "#FFE699")) 
 
-ggvenn(vcem_liv, c(A = "liv_bottle", B = "liv_diver"),
-       set_name_size = 10, text_size = 5) 
+names(vcem_blue) <- c("Taxa","Filter (4)","MP (8)")
+v1 <- ggvenn(vcem_blue, c(A = "Filter (4)", B = "MP (8)"),
+       set_name_size = 5, text_size = 5,
+       fill_color = c("#1E88E5", "#A4CFF4")) 
+
+names(vcem_liv) <- c("Taxa","Filter (4)","MP (3)")
+v2 <- ggvenn(vcem_liv, c(A = "Filter (4)", B = "MP (3)"),
+       set_name_size = 5, text_size = 5,
+       fill_color = c("#D81B60", "#EE77A2")) 
+
+av <- plot_grid(v1,v2,v3,v4, labels = "AUTO", ncol = 2)
+
+ggsave(filename=c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/venn_cem.jpg"), 
+       plot = av, width = 7, height = 8, units = "in")
+
 

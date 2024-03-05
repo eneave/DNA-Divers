@@ -169,41 +169,41 @@ sample.9E_SA_SL7F1A_c,SA,South Africa,"SL7F1, Sodwana Bay, South Africa",South A
 sample.9F_SA_SL7F2A_a,SA,South Africa,"SL7F2, Sodwana Bay, South Africa",South Africa,-27.442,32.717,"July 17, 2022",MP,SCUBA,b,a,9F,QBT,20-40,NA,standard,elas02,NA,3,group,Sharklife Conservation Group,Candice Parkes
 sample.9G_SA_SL7F2A_b,SA,South Africa,"SL7F2, Sodwana Bay, South Africa",South Africa,-27.442,32.717,"July 17, 2022",MP,SCUBA,b,b,9G,QBT,20-40,NA,standard,elas02,NA,3,group,Sharklife Conservation Group,Candice Parkes
 sample.9H_SA_SL7F2A_c,SA,South Africa,"SL7F2, Sodwana Bay, South Africa",South Africa,-27.442,32.717,"July 17, 2022",MP,SCUBA,b,c,9H,QBT,20-40,NA,standard,elas02,NA,3,group,Sharklife Conservation Group,Candice Parkes
-1A_B_CLASNOR_Jul22,NOR,"Ørsta, Norway","Radbod, Ørsta, Norway",Norway,62.200278,6.032778,"June 19, 2022",MP,SCUBA,b,1A,,MUT,20-40,NA,standard,tele02,40,4,Rachael Priest,Halton Charters Ltd,Bob Halton
-1B_B_CLASNOR_Jul22,NOR,"Ørsta, Norway","Radbod, Ørsta, Norway",Norway,62.200278,6.032778,"June 19, 2022",MP,SCUBA,b,1B,,MUT,20-40,NA,standard,tele02,40,4,Rachael Priest,Halton Charters Ltd,Bob Halton
-1C_E_CLASNOR_Jul22,NOR,"Ørsta, Norway","Radbod, Ørsta, Norway",Norway,62.200278,6.032778,"June 19, 2022",MP,SCUBA,b,1C,,MUT,20-40,NA,standard,tele02,40,4,Rachael Priest,Halton Charters Ltd,Bob Halton
-2A_B_CLASNOR_Jul22,NOR,"Måløy, Norway","Måløy, Norway",Norway,61.938889,5.133333,"June 20, 2022",MP,SCUBA,b,2A,,MUT,20-40,NA,standard,tele02,40,4,Rachael Priest,Halton Charters Ltd,Bob Halton
-2B_B_CLASNOR_Jul22,NOR,"Måløy, Norway","Måløy, Norway",Norway,61.938889,5.133333,"June 20, 2022",MP,SCUBA,b,2B,,MUT,20-40,NA,standard,tele02,40,4,Rachael Priest,Halton Charters Ltd,Bob Halton
-2C_E_CLASNOR_Jul22,NOR,"Måløy, Norway","Måløy, Norway",Norway,61.938889,5.133333,"June 20, 2022",MP,SCUBA,b,2C,,MUT,20-40,NA,standard,tele02,40,4,Rachael Priest,Halton Charters Ltd,Bob Halton
-3A_B_CLASNOR_Jul22,NOR,"Bergen, Norway","Dogfish Walk, Bergen, Norway",Norway,60.53167,5.107718,"July 1, 2022",MP,SCUBA,b,3A,,MUT,20-40,NA,standard,tele02,41,4,Natasha Yates,Halton Charters Ltd,Bob Halton
-3B_B_CLASNOR_Jul22,NOR,"Bergen, Norway","Dogfish Walk, Bergen, Norway",Norway,60.53167,5.107718,"July 1, 2022",MP,SCUBA,b,3B,,MUT,20-40,NA,standard,tele02,41,4,Natasha Yates,Halton Charters Ltd,Bob Halton
-3C_E_CLASNOR_Jul22,NOR,"Bergen, Norway","Dogfish Walk, Bergen, Norway",Norway,60.53167,5.107718,"July 1, 2022",MP,SCUBA,b,3C,,MUT,20-40,NA,standard,tele02,41,4,Natasha Yates,Halton Charters Ltd,Bob Halton
-4A_B_CLASNOR_Jul22,NOR,"Bergen, Norway","Dogfish Walk, Bergen, Norway",Norway,60.53167,5.107718,"June 8, 2022",MP,SCUBA,b,4A,,MUT,20-40,NA,standard,tele02,41,4,Natasha Yates,Halton Charters Ltd,Bob Halton
-2A_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,2A,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
-2B_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,2B,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
-2C_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,2C,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
-3A_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,3A,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
-3B_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,3B,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
-3C_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,3C,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
-4A_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,4A,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
-4B_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,4B,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
-4C_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,4C,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
-5A_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,5A,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
-5B_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,5B,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
-5C_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,5C,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
-6A_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,6A,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
-6B_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,6B,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
-6C_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,6C,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
-7A_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,7A,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
-7B_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,7B,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
-7C_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,7C,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
-8A_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,8A,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
-8B_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,8B,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
-8C_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,8C,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
-4B_B_CLAS_NOR_Jul22,NOR,"Bergen, Norway","Dogfish Walk, Bergen, Norway",Norway,60.53167,5.107718,"June 8, 2022",MP,SCUBA,b,4B,,MUT,20-40,NA,standard,tele02,41,4,Natasha Yates,Halton Charters Ltd,Bob Halton
-4C_E_CLAS_NOR_Jul22,NOR,"Bergen, Norway","Dogfish Walk, Bergen, Norway",Norway,60.53167,5.107718,"June 8, 2022",MP,SCUBA,b,4C,,MUT,20-40,NA,standard,tele02,41,4,Natasha Yates,Halton Charters Ltd,Bob Halton
-5A_B_CLAS_NOR_Jul22,NOR,"Bergen, Norway","Dogfish Walk, Bergen, Norway",Norway,60.53167,5.107718,"July 15, 2022",MP,SCUBA,b,5A,,MUT,20-40,NA,standard,tele02,41,4,Natasha Yates,Halton Charters Ltd,Bob Halton
-5B_B_CLAS_NOR_Jul22,NOR,"Bergen, Norway","Dogfish Walk, Bergen, Norway",Norway,60.53167,5.107718,"July 15, 2022",MP,SCUBA,b,5B,,MUT,20-40,NA,standard,tele02,41,4,Natasha Yates,Halton Charters Ltd,Bob Halton
-5C_E_CLAS_NOR_Jul22,NOR,"Bergen, Norway","Dogfish Walk, Bergen, Norway",Norway,60.53167,5.107718,"July 15, 2022",MP,SCUBA,b,5C,,MUT,20-40,NA,standard,tele02,41,4,Natasha Yates,Halton Charters Ltd,Bob Halton
-6A_B_CLAS_NOR_Jul22,NOR,"Florø, Norway","Welheim, Florø, Norway",Norway,61.296415,4.58296,"July 20, 2022",MP,SCUBA,b,6A,,MUT,20-40,NA,standard,tele02,41,4,Natasha Yates,Halton Charters Ltd,Bob Halton
-6B_B_CLAS_NOR_Jul22,NOR,"Florø, Norway","Welheim, Florø, Norway",Norway,61.296415,4.58296,"July 20, 2022",MP,SCUBA,b,6B,,MUT,20-40,NA,standard,tele02,41,4,Natasha Yates,Halton Charters Ltd,Bob Halton
+sample.1A_B_CLASNOR_Jul22,NOR,"Ørsta, Norway","Radbod, Ørsta, Norway",Norway,62.200278,6.032778,"June 19, 2022",MP,SCUBA,b,1A,,MUT,20-40,NA,standard,tele02,40,4,Rachael Priest,Halton Charters Ltd,Bob Halton
+sample.1B_B_CLASNOR_Jul22,NOR,"Ørsta, Norway","Radbod, Ørsta, Norway",Norway,62.200278,6.032778,"June 19, 2022",MP,SCUBA,b,1B,,MUT,20-40,NA,standard,tele02,40,4,Rachael Priest,Halton Charters Ltd,Bob Halton
+sample.1C_E_CLASNOR_Jul22,NOR,"Ørsta, Norway","Radbod, Ørsta, Norway",Norway,62.200278,6.032778,"June 19, 2022",MP,SCUBA,b,1C,,MUT,20-40,NA,standard,tele02,40,4,Rachael Priest,Halton Charters Ltd,Bob Halton
+sample.2A_B_CLASNOR_Jul22,NOR,"Måløy, Norway","Måløy, Norway",Norway,61.938889,5.133333,"June 20, 2022",MP,SCUBA,b,2A,,MUT,20-40,NA,standard,tele02,40,4,Rachael Priest,Halton Charters Ltd,Bob Halton
+sample.2B_B_CLASNOR_Jul22,NOR,"Måløy, Norway","Måløy, Norway",Norway,61.938889,5.133333,"June 20, 2022",MP,SCUBA,b,2B,,MUT,20-40,NA,standard,tele02,40,4,Rachael Priest,Halton Charters Ltd,Bob Halton
+sample.2C_E_CLASNOR_Jul22,NOR,"Måløy, Norway","Måløy, Norway",Norway,61.938889,5.133333,"June 20, 2022",MP,SCUBA,b,2C,,MUT,20-40,NA,standard,tele02,40,4,Rachael Priest,Halton Charters Ltd,Bob Halton
+sample.3A_B_CLASNOR_Jul22,NOR,"Bergen, Norway","Dogfish Walk, Bergen, Norway",Norway,60.53167,5.107718,"July 1, 2022",MP,SCUBA,b,3A,,MUT,20-40,NA,standard,tele02,41,4,Natasha Yates,Halton Charters Ltd,Bob Halton
+sample.3B_B_CLASNOR_Jul22,NOR,"Bergen, Norway","Dogfish Walk, Bergen, Norway",Norway,60.53167,5.107718,"July 1, 2022",MP,SCUBA,b,3B,,MUT,20-40,NA,standard,tele02,41,4,Natasha Yates,Halton Charters Ltd,Bob Halton
+sample.3C_E_CLASNOR_Jul22,NOR,"Bergen, Norway","Dogfish Walk, Bergen, Norway",Norway,60.53167,5.107718,"July 1, 2022",MP,SCUBA,b,3C,,MUT,20-40,NA,standard,tele02,41,4,Natasha Yates,Halton Charters Ltd,Bob Halton
+sample.4A_B_CLASNOR_Jul22,NOR,"Bergen, Norway","Dogfish Walk, Bergen, Norway",Norway,60.53167,5.107718,"June 8, 2022",MP,SCUBA,b,4A,,MUT,20-40,NA,standard,tele02,41,4,Natasha Yates,Halton Charters Ltd,Bob Halton
+sample.2A_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,2A,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
+sample.2B_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,2B,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
+sample.2C_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,2C,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
+sample.3A_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,3A,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
+sample.3B_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,3B,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
+sample.3C_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,3C,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
+sample.4A_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,4A,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
+sample.4B_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,4B,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
+sample.4C_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,4C,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
+sample.5A_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,5A,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
+sample.5B_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,5B,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
+sample.5C_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,5C,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
+sample.6A_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,6A,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
+sample.6B_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,6B,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
+sample.6C_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,6C,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
+sample.7A_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,7A,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
+sample.7B_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,7B,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
+sample.7C_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,7C,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
+sample.8A_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,8A,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
+sample.8B_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,8B,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
+sample.8C_PLYM_Fi_Jul22,PLYM,Plymouth,"Mount Batten, Plymouth",England,50.358,-4.13165,"June 17, 2022",MP,snorkel,Et,8C,,MUT,20-40,NA,standard,tele02,60,4,group,Seasearch,Fiona Crouch
+sample.4B_B_CLAS_NOR_Jul22,NOR,"Bergen, Norway","Dogfish Walk, Bergen, Norway",Norway,60.53167,5.107718,"June 8, 2022",MP,SCUBA,b,4B,,MUT,20-40,NA,standard,tele02,41,4,Natasha Yates,Halton Charters Ltd,Bob Halton
+sample.4C_E_CLAS_NOR_Jul22,NOR,"Bergen, Norway","Dogfish Walk, Bergen, Norway",Norway,60.53167,5.107718,"June 8, 2022",MP,SCUBA,b,4C,,MUT,20-40,NA,standard,tele02,41,4,Natasha Yates,Halton Charters Ltd,Bob Halton
+sample.5A_B_CLAS_NOR_Jul22,NOR,"Bergen, Norway","Dogfish Walk, Bergen, Norway",Norway,60.53167,5.107718,"July 15, 2022",MP,SCUBA,b,5A,,MUT,20-40,NA,standard,tele02,41,4,Natasha Yates,Halton Charters Ltd,Bob Halton
+sample.5B_B_CLAS_NOR_Jul22,NOR,"Bergen, Norway","Dogfish Walk, Bergen, Norway",Norway,60.53167,5.107718,"July 15, 2022",MP,SCUBA,b,5B,,MUT,20-40,NA,standard,tele02,41,4,Natasha Yates,Halton Charters Ltd,Bob Halton
+sample.5C_E_CLAS_NOR_Jul22,NOR,"Bergen, Norway","Dogfish Walk, Bergen, Norway",Norway,60.53167,5.107718,"July 15, 2022",MP,SCUBA,b,5C,,MUT,20-40,NA,standard,tele02,41,4,Natasha Yates,Halton Charters Ltd,Bob Halton
+sample.6A_B_CLAS_NOR_Jul22,NOR,"Florø, Norway","Welheim, Florø, Norway",Norway,61.296415,4.58296,"July 20, 2022",MP,SCUBA,b,6A,,MUT,20-40,NA,standard,tele02,41,4,Natasha Yates,Halton Charters Ltd,Bob Halton
+sample.6B_B_CLAS_NOR_Jul22,NOR,"Florø, Norway","Welheim, Florø, Norway",Norway,61.296415,4.58296,"July 20, 2022",MP,SCUBA,b,6B,,MUT,20-40,NA,standard,tele02,41,4,Natasha Yates,Halton Charters Ltd,Bob Halton
