@@ -1,7 +1,6 @@
 #############################################################
 ## Spotting and displaying species of conservation concern ##
 #############################################################
-
 library(tidyverse)
 
 #####
@@ -21,7 +20,7 @@ p2e_uk_prev <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores Univ
 meta <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/metadata/supp_table_1.csv")
 
 #####
-# load and clean data that has not has 0.001% reads removed
+# load and clean data that has not has 0.001% reads removed; in prep for this plot or other supplement figures
 #####
 # need to remove 0.001% read counts
 # tele02 coral cave sequence run 2
@@ -59,6 +58,7 @@ p3_prev <- subset(p3_prev, p3_prev$total_reads>0)
 # save
 write.csv(p3_prev, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p3_decontam_001.csv")
 
+
 # tele02 sequence run 4
 p4_prev <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p4_decontam.csv")
 # add samples back
@@ -83,4 +83,139 @@ p4_prev <- p4_prev %>% mutate(total_reads = rowSums(.[12:52]))
 p4_prev <- subset(p4_prev, p4_prev$total_reads>0)
 # save
 write.csv(p4_prev, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/decontam/p4_decontam_001.csv")
+
+
+#####
+# Prep data for CCA and presence-absence IUCN vulnerable species
+#####
+
+# make motu tables long
+# sequence run 1 tele02
+l1 <- p1_prev %>% pivot_longer(cols = sample.10A:sample.3A,
+                                 names_to = "sample",
+                                 names_prefix = "sample.",
+                                 values_to = "reads")
+l1 <- subset(l1, select = -c(X.1,X))
+# UK elas02
+l2 <- p2e_uk_prev %>% pivot_longer(cols = sample.11Be_EBMay_13extblank:sample.8BeORK_MPbC_lisa,
+                                 names_to = "sample",
+                                 names_prefix = "sample.",
+                                 values_to = "reads")
+l2 <- subset(l2, select = -c(X.1,X))
+# UK tele02
+l3 <- p2t_uk_prev %>% pivot_longer(cols = sample.4AtLIV_eDNA_FBblank:sample.8HtLIV_FBEtblank,
+                                 names_to = "sample",
+                                 names_prefix = "sample.",
+                                 values_to = "reads")
+l3 <- subset(l3, select = -c(X.1,X))
+# sequence run 3 elas02
+l4 <- p3_prev %>% pivot_longer(cols = sample.10A_SAtra1001:sample.9H_SA_SL7F2A_c,
+                                 names_to = "sample",
+                                 names_prefix = "sample.",
+                                 values_to = "reads")
+l4 <- subset(l4, select = -X)
+# sequence run 4 tele02
+l5 <- p4_prev %>% pivot_longer(cols = sample.1A_B_CLASNOR_Jul22:sample.8A_PLYM_Fi_Jul22,
+                               names_to = "sample",
+                               names_prefix = "sample.",
+                               values_to = "reads")
+l5 <- subset(l5, select = -X)
+
+# combine long datafame
+l6 <- rbind(l1,l2,l3,l4,l5)
+rm(l1,l2,l3,l4,l5)
+
+# wide motu table
+w1 <- l6 %>% pivot_wider(names_from = "sample",
+                         names_prefix = "sample.",
+                         values_from = "reads",
+                         values_fill = 0)
+
+
+# Refine list of samples of relevant for these data visualizations by sample type
+list <- subset(meta$seq_id, (meta$via=="snorkel" | meta$via=="SCUBA") & meta$location_abbreviation!="BLUE")
+
+# Master MOTU table for real-world MP samples from divers/snorkelers
+all_motu <- w1 %>% select("id","final_name","final_genus","final_order","final_class", 
+                                "pid","final_rank","method_assign","total_reads","sequence",
+                                all_of(list)) 
+
+all_motu <- all_motu %>%
+  group_by(final_rank,final_class,final_order,final_genus,final_name) %>%
+  summarise(across(c(total_reads, sample.1A:sample.6B_B_CLAS_NOR_Jul22), sum))
+
+all_motu <- all_motu %>% filter(total_reads > 0)
+
+#####
+# Fix MOTU table taxonomy
+#####
+
+# Remove contaminanats
+# Dama dama; not possible in Orkney
+all_motu <- subset(all_motu, all_motu$final_name!="Dama dama")
+# Bos mutus; not possible in Orkney
+all_motu <- subset(all_motu, all_motu$final_name!="Bos mutus")
+# Equus asinus; not possible in Liverpool
+all_motu <- subset(all_motu, all_motu$final_name!="Equus asinus")
+# Carcharias taurus; not possible in Newcastle
+all_motu <- subset(all_motu, all_motu$final_name!="Carcharias taurus")
+# Galeus melastomus; unlikely for Dorset seagrass beds
+all_motu <- subset(all_motu, all_motu$final_name!="Galeus melastomus")
+# Carcharhinus melanopterus; not in Orkney
+all_motu <- subset(all_motu, all_motu$final_name!="Carcharhinus melanopterus")
+# Columba palumbus and Columba livia and other birds; needs to be changed to Aves
+all_motu$final_class <- ifelse(all_motu$final_name=="Columba palumbus" | all_motu$final_name=="Columba livia" |
+                           all_motu$final_name=="Corvus" | all_motu$final_name=="Gavia stellata", "Aves", all_motu$final_class)
+# Rhynchobatus djiddensis
+all_motu$final_class <- ifelse(all_motu$final_name=="Rhynchobatus djiddensis", "Elasmobranchii", all_motu$final_class) 
+# Caretta caretta - change class, currently with fish
+all_motu$final_class <- ifelse(all_motu$final_name=="Caretta caretta", "Reptilia", all_motu$final_class) 
+# fix mammals
+all_motu$final_class <- ifelse(all_motu$final_name=="Equus", "Mammalia", all_motu$final_class)
+# Chimaera monstrosa; unlikely
+all_motu <- subset(all_motu, all_motu$final_name!="Chimaera monstrosa")
+# fix synonym problem Taeniura meyeni
+all_motu$final_name <- ifelse(all_motu$final_name=="Taeniura meyeni", "Taeniurops meyeni", all_motu$final_name)
+all_motu$final_genus <- ifelse(all_motu$final_genus=="Taeniura", "Taeniurops", all_motu$final_genus)
+# Pangasianodon hypophthalmus; positive control
+all_motu <- subset(all_motu, all_motu$final_name!="Pangasianodon hypophthalmus")
+# Gymnothorax kidako should not be present in the Newcastle sample
+all_motu[all_motu$final_name=="Gymnothorax kidako", "sample.7BtNEW_MPEt2_unis"] <- 0
+
+
+# Subset genus and species level assignments
+final_motu <- subset(all_motu, all_motu$final_rank=="genus" | all_motu$final_rank=="species")
+# Might want to collapse further by species, genus, and class...
+# excluding order since different notation is causing genus detections to not group
+final_motu <- final_motu %>%
+  group_by(final_rank,final_class,final_genus,final_name) %>%
+  summarise(across(c(total_reads, sample.1A:sample.6B_B_CLAS_NOR_Jul22), sum))
+# recalculate total reads column, to be sure...
+library(plyr)
+final_motu <- final_motu %>% mutate(total_reads = rowSums(.[6:151]))
+final_motu <- subset(final_motu, final_motu$total_reads>0)
+
+
+## Make different plots for different purposes
+# remove domestic species
+final_motu <- subset(final_motu, final_motu$final_name!="Equus")
+final_motu <- subset(final_motu, final_motu$final_name!="Canis")
+final_motu <- subset(final_motu, final_motu$final_name!="Ovis")
+final_motu <- subset(final_motu, final_motu$final_name!="Felis catus")
+final_motu <- subset(final_motu, final_motu$final_name!="Sus scrofa")
+
+# remove human
+final_motu <- subset(final_motu, final_motu$final_name!="Homo sapiens")
+final_motu <- subset(final_motu, final_motu$final_name!="Pan troglodytes")
+
+
+write.csv(final_motu, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/final_motu_mp_nature_cca.csv")
+
+
+
+
+
+
+
+
 
