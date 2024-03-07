@@ -179,6 +179,7 @@ all_motu$final_name <- ifelse(all_motu$final_name=="Taeniura meyeni", "Taeniurop
 all_motu$final_genus <- ifelse(all_motu$final_genus=="Taeniura", "Taeniurops", all_motu$final_genus)
 # Pangasianodon hypophthalmus; positive control
 all_motu <- subset(all_motu, all_motu$final_name!="Pangasianodon hypophthalmus")
+all_motu <- subset(all_motu, all_motu$final_name!="Hypanus americanus")
 # Gymnothorax kidako should not be present in the Newcastle sample
 all_motu[all_motu$final_name=="Gymnothorax kidako", "sample.7BtNEW_MPEt2_unis"] <- 0
 
@@ -211,11 +212,88 @@ final_motu <- subset(final_motu, final_motu$final_name!="Pan troglodytes")
 
 write.csv(final_motu, "C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/final_motu_mp_nature_cca.csv")
 
+#####
+## Prepare data for plot
+#####
+
+# iucn information
+stat <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/metadata/supp_table_3.csv")
+
+# subset species
+sp_motu <- subset(final_motu, final_motu$final_rank=="species")
+sp_motu <- merge(sp_motu, stat, by="final_name")
+
+# subset vulnerable species
+vsp_motu <- subset(sp_motu, sp_motu$iucn!="LC")
+vsp_motu <- subset(vsp_motu, vsp_motu$iucn!="NE")
+
+# make long dataframe
+l_vsp <- vsp_motu %>% pivot_longer(cols = sample.1A:sample.6B_B_CLAS_NOR_Jul22,
+                               names_to = "seq_id",
+                               values_to = "reads")
+l_vsp <- merge(l_vsp, meta, by.x="seq_id")
+
+# collapse by country
+lc_vsp <- l_vsp %>%
+  group_by(final_class, final_name, country, iucn) %>%
+  summarise(sum_read = sum(reads))
 
 
+#####
+## Bubble plot 
+#####
+lc_fig <- lc_vsp
+
+# make adjustments for the figure
+
+# remove 6 reads of Atlantic salmon in CA, most likely food
+lc_fig[lc_fig$final_name=="Salmo salar" & lc_fig$country=="USA", "sum_read"] <- 0
+
+# remove Atlantic horse mackeral because it's not regionally threatened
+lc_fig <- subset(lc_fig, lc_fig$final_name!="Trachurus trachurus")
+
+# remove Jordan
+lc_fig <- subset(lc_fig, lc_fig$country!="Jordan")
+
+# transform read counts
+lc_fig$log_reads <- log(lc_fig$sum_read)
+lc_fig$sqrt_reads <- sqrt(lc_fig$sum_read)
+
+# NT "#ADFF2F"
+# new facet label names for classes
+class.labs <- c("Teleosts", "Elasmobranchs", "M", "R")
+names(class.labs) <- c("Actinopterygii", "Elasmobranchii", "Mammalia", "Reptilia")
+
+bubble <-
+ggplot(lc_fig) + 
+  geom_point(aes(x = country, y = final_name,fill = iucn, size = sqrt_reads), pch = 21) +
+  scale_fill_manual(values = c(CR = "#FF0000", DD = "#808080", 
+                               EN = "#FFA500", NT = "#CDFF3B", VU = "#FFFF00"),
+                    breaks = c("CR", "EN", "VU", "NT", "DD"),
+                    name = "IUCN") +
+  scale_size_continuous(name = expression(sqrt("reads")),
+                        range = c(3, 9),
+                        limits = c(1,200),
+                        breaks = c(1, 60, 120, 180, 200),
+                        labels = c("1","60","120","180", "200")) + 
+  guides(fill = guide_legend(override.aes = list(size = 4))) +
+  labs(x = "", y ="") + 
+  scale_y_discrete(limits = rev) +
+  #facet_grid(. ~ final_class, scales = "free", space = "free", labeller = labeller(bioregion_nmds = region.labs)) +
+  facet_grid(final_class ~., scales = "free", space = "free", labeller = labeller(final_class = class.labs)) +
+  theme_light() +
+  theme(#panel.grid.major = element_line(colour = "white"),
+        #panel.grid.minor = element_line(colour = "white"), 
+        axis.ticks = element_line(colour = "#000000"),
+        strip.text.y = element_text(colour = "#000000"),
+        axis.text.x = element_text(colour = "#000000", angle = 35, hjust = 1),
+        axis.text.y = element_text(colour = "#000000", face = "italic"),
+        text = element_text(size = 14),
+        legend.direction = "vertical", 
+        legend.box = "vertical") 
 
 
-
-
+ggsave(filename=c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/bubble.jpg"), 
+       plot = bubble, width = 6, height = 7.5, units = "in")
 
 
