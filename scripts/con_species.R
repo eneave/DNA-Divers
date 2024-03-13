@@ -217,7 +217,7 @@ write.csv(final_motu, "C:/Users/beseneav/OneDrive - Liverpool John Moores Univer
 #####
 
 # iucn information
-stat <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/metadata/supp_table_3.csv")
+stat <- read.csv("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_dnadivers/DNA-Divers/data/metadata/supp_table_4.csv")
 
 # subset species
 sp_motu <- subset(final_motu, final_motu$final_rank=="species")

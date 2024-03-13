@@ -188,13 +188,13 @@ master_aq <- bind_rows(long_aq, long_aq_elas)
 master_aq$manual_name2 <- if_else(is.na(master_aq$manual_name2), master_aq$manual_name, master_aq$manual_name2)
   
 # set up factors
-levels(master_aq$df_from) <- c("Elasmobranchs", "Ocean Display")
-master_aq$manual_name2 <- factor(master_aq$manual_name2, levels = c("Carcharhinus melanopterus", "Carcharias taurus",
+master_aq$df_from <- factor(master_aq$df_from, levels = c("Ocean Display", "Elasmobranchs Only"))
+master_aq$manual_name2 <- factor(master_aq$manual_name2, levels = c("Elasmobranch", "Teleost", 
+                                                                    "Food", "Human", "Carcharhinus melanopterus", "Carcharias taurus",
                                                                     "Chiloscyllium punctatum", "Chiloscyllium sp.",
                                                                     "Ginglymostoma cirratum", "Glaucostegus cemiculus",
                                                                     "Heterodontus sp.", "Hypanus americanus", "Orectolobus sp.",
-                                                                    "Stegostoma tigrinum", "Elasmobranch", "Teleost", 
-                                                                    "Food", "Human"))
+                                                                    "Stegostoma tigrinum"))
 master_aq$type2 <- factor(master_aq$type2, levels = c("Syringe Filter", "Diver MP", "Soak MP"))
 # set colours
 # colourblind safe colour palettes
@@ -469,6 +469,125 @@ aq_dotplot3 <-
   theme_bw() 
 ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/aq_dotplot3.jpg"),
        plot = aq_dotplot3,  width = 7, height = 3.5, units = "in")
+
+
+#####
+## Final figure 1
+#####
+
+pops_top <-
+ggplot(final_aq) +
+  geom_segment(aes(x=seq_id3, xend=seq_id3, y=0, yend=MOTUs3), color="grey") +
+  geom_point(aes(x=seq_id3, y=MOTUs3, color="MOTUs"), size=4) +
+  geom_point(aes(x=seq_id3, y=Richness3, color="Taxa"), size=4) +
+  geom_point(aes(x=seq_id3, y=Elas3, color="Elasmobranch"), size=4) +
+  scale_colour_manual(values = c("#FFC20A", "#0C7BDC", "#000000"),
+                      limits = c("MOTUs", "Taxa", "Elasmobranch"),
+                      name = "") +
+  facet_grid( ~ type2, scales = "free") +
+  labs(x ="Sample", y = "") +
+  theme_bw() +
+  theme(axis.text.y = element_text(colour = "black", size = 12, face = "bold"), 
+        axis.text.x = element_blank(), 
+        strip.text.x = element_text(size = 12, colour ="black"), 
+        legend.text = element_text(size = 12, colour ="black"), 
+        legend.position = "right", 
+        axis.title.y = element_text(face = "bold", size = 12), 
+        axis.title.x = element_blank(),
+        axis.ticks = element_line(colour ="black", linewidth = 2)) 
+ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/aq_dotplot_final.jpg"),
+       plot = pops_top,  width = 7, height = 3.5, units = "in")
+
+
+pops_top_nolegend <-
+ggplot(final_aq) +
+  geom_segment(aes(x=seq_id3, xend=seq_id3, y=0, yend=MOTUs3), color="grey") +
+  geom_point(aes(x=seq_id3, y=MOTUs3, color="MOTUs"), size=4) +
+  geom_point(aes(x=seq_id3, y=Richness3, color="Taxa"), size=4) +
+  geom_point(aes(x=seq_id3, y=Elas3, color="Elasmobranch"), size=4) +
+  scale_colour_manual(values = c("#FFC20A", "#0C7BDC", "#000000"),
+                      limits = c("MOTUs", "Taxa", "Elasmobranch"),
+                      name = "") +
+  facet_grid(location_abbreviation ~ type2, scales = "free") +
+  labs(x ="Sample", y = "") +
+  theme_bw() +
+  theme(axis.text.y = element_text(colour = "black", size = 12, face = "bold"), 
+        axis.text.x = element_blank(), 
+        legend.position = "none",
+        strip.text.y = element_text(colour = "lightgrey"),
+        strip.text.x = element_text(colour = "black", size = 12, face = "bold"), 
+        axis.title.y = element_text(face = "bold", size = 12), 
+        axis.title.x = element_blank(),
+        axis.ticks = element_line(colour ="black", linewidth = 2)) 
+
+bars_bottom <-
+ggplot(master_aq, aes(x = reorder(seq_id3, time), y = reads, fill = manual_name2)) + 
+  geom_bar(stat = "identity", color = "black", size=0.075, position = "fill") + #3
+  scale_fill_manual(values = c(cols), 
+                    labels = c("Elasmobranch", "Teleost", "Food", "Human", 
+                               expression(italic("Carcharhinus melanopterus")), 
+                               expression(italic("Carcharias taurus")),
+                               expression(italic("Chiloscyllium punctatum")), 
+                               expression(italic("Chiloscyllium")~plain("sp.")),
+                               expression(italic("Ginglymostoma cirratum")), 
+                               expression(italic("Glaucostegus cemiculus")),
+                               expression(italic("Heterodontus")~plain("sp.")), 
+                               expression(italic("Hypanus americanus")), 
+                               expression(italic("Orectolobus")~plain("sp.")),
+                               expression(italic("Stegostoma tigrinum")))) +
+  facet_grid(df_from ~ type2, scales = "free") +
+  labs(x ="Sample", y = "Proportional Read Counts") +
+  theme_bw() +
+  theme(legend.text.align = 0,
+        strip.background.x = element_blank(),
+        strip.text.x = element_blank(),
+        strip.text.y = element_text(size = 12, colour ="black", face = "bold"), 
+        legend.text = element_text(size = 12, colour ="black"), 
+        axis.text.x = element_text(colour = "black", angle = 35, hjust = 1, size = 12, face = "bold"),
+        axis.text.y = element_text(colour = "black", size = 12, face = "bold"),
+        axis.title.x = element_text(face = "bold", size = 14, colour = "black"),
+        axis.title.y = element_text(face = "bold", size = 14, colour = "black"), 
+        legend.title = element_text(size = 14, colour = "black", face = "bold"),
+        axis.ticks = element_line(colour ="black", linewidth = 2)) +
+  guides(fill=guide_legend(title="Taxa"))
+
+ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/aq_barplot_final.jpg"),
+       plot = bars_bottom,  width = 7, height = 7, units = "in")
+
+bars_bottom_nolegend <-
+  ggplot(master_aq, aes(x = reorder(seq_id3, time), y = reads, fill = manual_name2)) + 
+  geom_bar(stat = "identity", color = "black", size=0.075, position = "fill") + #3
+  scale_fill_manual(values = c(cols), 
+                    labels = c("Elasmobranch", "Teleost", "Food", "Human", 
+                               expression(italic("Carcharhinus melanopterus")), 
+                               expression(italic("Carcharias taurus")),
+                               expression(italic("Chiloscyllium punctatum")), 
+                               expression(italic("Chiloscyllium")~plain("sp.")),
+                               expression(italic("Ginglymostoma cirratum")), 
+                               expression(italic("Glaucostegus cemiculus")),
+                               expression(italic("Heterodontus")~plain("sp.")), 
+                               expression(italic("Hypanus americanus")), 
+                               expression(italic("Orectolobus")~plain("sp.")),
+                               expression(italic("Stegostoma tigrinum")))) +
+  facet_grid(df_from ~ type2, scales = "free") +
+  labs(x ="Sample", y = "Proportional Read Counts") +
+  theme_bw() +
+  theme(legend.text.align = 0,
+        strip.background.x = element_blank(),
+        strip.text.x = element_blank(),
+        strip.text.y = element_text(size = 12, colour ="black", face = "bold"), 
+        legend.position = "none", 
+        axis.text.x = element_text(colour = "black", angle = 35, hjust = 1, size = 12, face = "bold"),
+        axis.text.y = element_text(colour = "black", size = 12, face = "bold"),
+        axis.title.x = element_text(face = "bold", size = 14, colour = "black"),
+        axis.title.y = element_text(face = "bold", size = 14, colour = "black"), 
+        axis.ticks = element_line(colour ="black", linewidth = 2)) +
+  guides(fill=guide_legend(title="Taxa"))
+
+
+figure1 <- plot_grid(pops_top_nolegend, bars_bottom_nolegend, labels = "AUTO", ncol = 1,  rel_heights = c(1, 2))
+ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/figure1.jpg"),
+       plot = figure1,  width = 8, height = 12, units = "in")
 
 
 
