@@ -79,7 +79,7 @@ cols <- c("Gymnothorax kidako" = "#332288",
           "Myripristis" = "#AA4499", 
           "Siganus" = "#882255",
           "Chaetodon auriga" = "#4C0268", 
-          "Teleost" = "#000000", 
+          "Top 10" = "#000000", 
           "Food" = "#808080", 
           "Human" = "#ffffff")
 
@@ -90,54 +90,48 @@ master_aq$manual_name <- ifelse(master_aq$category2=="human", "Human",
 # update manual name 2 EDIT THE TOP 10 FISHES NAME
 master_aq$manual_name2 <- ifelse(is.na(master_aq$manual_name), master_aq$final_name, master_aq$manual_name)
 master_aq$manual_name2 <- ifelse(master_aq$df_from=="Coral Cave" & (master_aq$final_name=="Gymnothorax kidako" |
-                                 master_aq$final_name=="Gymnothorax kidako" |master_aq$final_name=="Gymnothorax kidako" |
-                                 master_aq$final_name=="Gymnothorax kidako" |master_aq$final_name=="Gymnothorax kidako" |
-                                 master_aq$final_name=="Gymnothorax kidako" |master_aq$final_name=="Gymnothorax kidako" |
-                                 master_aq$final_name=="Gymnothorax kidako" |master_aq$final_name=="Gymnothorax kidako" |
-                                master_aq$final_name=="Gymnothorax kidako"), "Top 10", master_aq$manual_name2))
+                                 master_aq$final_name=="Abudefduf" |master_aq$final_name=="Platax" |
+                                 master_aq$final_name=="Chaetodon" |master_aq$final_name=="Diagramma" |
+                                 master_aq$final_name=="Chrysiptera cyanea" |master_aq$final_name=="Arothron" |
+                                 master_aq$final_name=="Myripristis" |master_aq$final_name=="Siganus" |
+                                master_aq$final_name=="Chaetodon auriga"), "Top 10", master_aq$manual_name2)
 
-
+supp_fig_coralcave <-
 ggplot(master_aq, aes(x = seq_id, y = reads, fill = manual_name2)) + 
-  #geom_bar(stat = "identity", position = "fill") + #3a
   geom_bar(stat = "identity", color = "black", size=0.075, position = "fill") + #3
-  scale_fill_manual(values = c(cols)) +
-  facet_grid(df_from ~ type2, scales = "free") +
-  labs(x ="Sample", y = "Proportional Read Counts per MOTU") +
-  theme(axis.text.x = element_text(angle = 90)) +
+  scale_fill_manual(values = c(cols), breaks = c("Top 10", "Food", "Human", "Gymnothorax kidako",
+                                                 "Abudefduf", "Platax", "Chaetodon", "Diagramma",
+                                                 "Chrysiptera cyanea", "Arothron", "Myripristis",
+                                                 "Siganus", "Chaetodon auriga"),
+                    labels = c("Top 10 Teleosts", "Food", "Human", 
+                               expression(italic("Gymnothorax kidako")), 
+                               expression(italic("Abudefduf")~plain("sp.")),
+                               expression(italic("Platax")~plain("sp.")), 
+                               expression(italic("Chaetodon")~plain("sp.")),
+                               expression(italic("Diagramma")~plain("sp.")), 
+                               expression(italic("Chrysiptera cyanea")),
+                               expression(italic("Arothron")~plain("sp.")), 
+                               expression(italic("Myripristis")~plain("sp.")), 
+                               expression(italic("Siganus")~plain("sp.")),
+                               expression(italic("Chaetodon auriga")))) +
+  scale_x_discrete(labels=c("sample.5Et10BLUE_MPEtA_" = "10",
+                            "sample.5Ft10BLUE_MPEtB_" = "10",
+                            "sample.5Gt30BLUE_MPEtA_" = "30",
+                            "sample.5Ht30BLUE_MPEtB_" = "30",
+                            "sample.6At60BLUE_MPEtA_" = "60",
+                            "sample.6Bt60BLUE_MPEtB_" = "60",
+                            "sample.6Ct120BLUE_MPEtA" = "120",
+                            "sample.6Dt120BLUE_MPEtB" = "120",
+                            "sample.6Et240BLUE_MPEtA" = "240",
+                            "sample.6Ft240BLUE_MPEtB" = "240")) +
+  facet_grid(df_from ~ via, scales = "free") +
+  labs(x ="Time", y = "Proportional Read Counts per MOTU") +
   theme_bw() +
+  theme(legend.text.align = 0) +
   guides(fill=guide_legend(title="Taxa"))
 
-
-
-ggplot(master_aq, aes(x = reorder(seq_id3, time), y = reads, fill = manual_name2)) + 
-  geom_bar(stat = "identity", color = "black", size=0.075, position = "fill") + #3
-  scale_fill_manual(values = c(cols), 
-                    labels = c("Elasmobranch", "Teleost", "Food", "Human", 
-                               expression(italic("Carcharhinus melanopterus")), 
-                               expression(italic("Carcharias taurus")),
-                               expression(italic("Chiloscyllium punctatum")), 
-                               expression(italic("Chiloscyllium")~plain("sp.")),
-                               expression(italic("Ginglymostoma cirratum")), 
-                               expression(italic("Glaucostegus cemiculus")),
-                               expression(italic("Heterodontus")~plain("sp.")), 
-                               expression(italic("Hypanus americanus")), 
-                               expression(italic("Orectolobus")~plain("sp.")),
-                               expression(italic("Stegostoma tigrinum")))) +
-  facet_grid(df_from ~ type2, scales = "free") +
-  labs(x ="Sample", y = "Proportional Read Counts") +
-  theme_bw() +
-  theme(legend.text.align = 0,
-        strip.background.x = element_blank(),
-        strip.text.x = element_blank(),
-        strip.text.y = element_text(size = 12, colour ="black", face = "bold"), 
-        legend.text = element_text(size = 12, colour ="black"), 
-        axis.text.x = element_text(colour = "black", angle = 35, hjust = 1, size = 12, face = "bold"),
-        axis.text.y = element_text(colour = "black", size = 12, face = "bold"),
-        axis.title.x = element_text(face = "bold", size = 14, colour = "black"),
-        axis.title.y = element_text(face = "bold", size = 14, colour = "black"), 
-        legend.title = element_text(size = 14, colour = "black", face = "bold"),
-        axis.ticks = element_line(colour ="black", linewidth = 2)) +
-  guides(fill=guide_legend(title="Taxa"))
+ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/sfig_coralcavebar.jpg"),
+       plot = supp_fig_coralcave,  width = 7, height = 7, units = "in")
 
 
 

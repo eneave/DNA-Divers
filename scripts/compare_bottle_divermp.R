@@ -325,21 +325,21 @@ ggplot(cem_bray,
 
 cem_jac_nmds <-
 ggplot(cem_jac,  aes(x = NMDS1, y = NMDS2)) + 
-  geom_point(aes(shape = type, fill = site.name, colour = primer), alpha= 0.7, size = 4, stroke = 1.5) + 
+  geom_point(aes(shape = type, fill = site.name, colour = primer), alpha= 0.7, size = 6, stroke = 1.5) + 
   scale_shape_manual(values = c(24,21),labels = c("Syringe Filter", "Diver MP")) +
   scale_fill_manual(values = c("#1E88E5","#D81B60","#FFC107", "#004D40"),
-                    labels = c("Ocean Exhibit, Blue Planet", "Dukes Dock, Liverpool", 
+                    labels = c("Ocean Display, Blue Planet", "Dukes Dock, Liverpool", 
                                "SMS Brummer, Orkney","SMS Bayern, Orkney")) +
-  scale_colour_manual(values = c("black", "darkgrey"),labels = c("Elas02", "Tele02")) +
+  scale_colour_manual(values = c("black", "white"),labels = c("Elas02", "Tele02")) +
   labs(x = "NMDS1", colour = "Primer", y = "NMDS2") +
   guides(fill = guide_legend("Site", override.aes = list(shape = 21, colour = "darkgrey")),
          shape = guide_legend("Sample Type", override.aes = list(fill = "#4477AA", colour = "darkgrey"))) +
-  theme(axis.text.y = element_text(colour = "black", size = 12, face = "bold"), 
-        axis.text.x = element_text(colour = "black", face = "bold", size = 12), 
-        legend.text = element_text(size = 12, colour ="black"), 
-        legend.position = "right", axis.title.y = element_text(face = "bold", size = 14), 
-        axis.title.x = element_text(face = "bold", size = 14, colour = "black"), 
-        legend.title = element_text(size = 14, colour = "black", face = "bold")) 
+  theme(axis.text.y = element_text(colour = "black", size = 16, face = "bold"), 
+        axis.text.x = element_text(colour = "black", face = "bold", size = 16), 
+        legend.text = element_text(size = 16, colour ="black"), 
+        legend.position = "right", axis.title.y = element_text(face = "bold", size = 18), 
+        axis.title.x = element_text(face = "bold", size = 18, colour = "black"), 
+        legend.title = element_text(size = 18, colour = "black", face = "bold")) 
 
 ggsave(filename=c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/nmds_jac_cem.jpg"), 
        plot = cem_jac_nmds, width = 8, height = 6.5, units = "in")
@@ -374,13 +374,13 @@ ggplot(cem_pa, aes(x = type, y = richness)) +
                     labels = c("Dukes Dock, Liverpool", "Ocean Exhibit, Blue Planet",
                                "SMS Bayern, Orkney", "SMS Brummer, Orkney")) +
   labs(x = "Sample Type", fill = "Site", y = "Species Richness") +
-  theme(axis.text.y = element_text(colour = "black", size = 12, face = "bold"), 
-        axis.text.x = element_text(colour = "black", face = "bold", size = 12), 
-        legend.text = element_text(size = 12, colour ="black"), 
-        legend.position = "right", axis.title.y = element_text(face = "bold", size = 14), 
-        axis.title.x = element_text(face = "bold", size = 14, colour = "black"), 
-        legend.title = element_text(size = 14, colour = "black", face = "bold"),
-        strip.text = element_text(colour = "black", size = 12, face = "bold"))
+  theme(axis.text.y = element_text(colour = "black", size = 16, face = "bold"), 
+        axis.text.x = element_text(colour = "black", face = "bold", size = 16), 
+        legend.text = element_text(size = 16, colour ="black"), 
+        legend.position = "right", axis.title.y = element_text(face = "bold", size = 18), 
+        axis.title.x = element_text(face = "bold", size = 18, colour = "black"), 
+        legend.title = element_text(size = 18, colour = "black", face = "bold"),
+        strip.text = element_text(colour = "black", size = 16, face = "bold"))
 
 ggsave(filename=c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/boxplots_cem.jpg"), 
        plot = cem_boxplots, width = 8, height = 6.5, units = "in")
@@ -456,6 +456,8 @@ names(vcem_bayern) <- c("Taxa","Filter (4)","MP (6)")
 v4 <- ggvenn(vcem_bayern, c(A = "Filter (4)", B = "MP (6)"),
        set_name_size = 5, text_size = 5, 
        fill_color = c("#004D40", "#99FFEE")) 
+ggsave(filename=c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/venn_4.jpg"), 
+       plot = v4, width = 6, height = 5, units = "in")
 
 names(vcem_brummer) <- c("Taxa","Filter (4)","MP (3)")
 v3 <- ggvenn(vcem_brummer, c(A = "Filter (4)", B = "MP (3)"),
@@ -474,7 +476,11 @@ v2 <- ggvenn(vcem_liv, c(A = "Filter (4)", B = "MP (3)"),
 
 av <- plot_grid(v1,v2,v3,v4, labels = "AUTO", ncol = 2)
 
+
 ggsave(filename=c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/venn_cem.jpg"), 
-       plot = av, width = 7, height = 8, units = "in")
+       plot = av, width = 10, height = 9.5, units = "in")
 
+avn <- plot_grid(av, cem_jac_nmds, labels = c("", "E"), ncol = 1)
 
+ggsave(filename=c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/figure2.jpg"), 
+       plot = avn, width = 10.5, height = 14, units = "in")
