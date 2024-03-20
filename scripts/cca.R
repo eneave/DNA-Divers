@@ -105,6 +105,7 @@ plot(mpam.cca)
 # extract and plot data
 library(ggplot2)
 library(ggrepel)
+library(cowplot)
 
 #extracting the data as data frame; env data
 mpam_1 = as.data.frame(mpam.cca$CCA$biplot)
@@ -142,12 +143,16 @@ cca_all <-
                arrow = arrow(length = unit(0.25, "cm"))) +
   geom_text_repel(data = mpam_1,aes(x = CCA1, y = CCA2, label = c("N. Atlantic", "N. Pacific", "latitude")),
     nudge_y = -0.05, color = "black", size = 4.5) +
-  theme(axis.text = element_text(size = 14),
-        axis.title = element_text(size = 14),
-        legend.title = element_text(size = 12))
+  theme(axis.text = element_text(size = 14, face = "bold"),
+        axis.title = element_text(size = 14, face = "bold"),
+        axis.text.y = element_text(colour = "black", size = 12, face = "bold"), 
+        axis.text.x = element_text(colour = "black", face = "bold", size = 12),
+        legend.title = element_text(size = 14, colour = "black", face = "bold"))
+
+figure3b <- plot_grid(cca_all, labels = "B", ncol = 1)
 
 ggsave(filename=c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/cca_all.jpg"), 
-       plot = cca_all, width = 8, height = 6.5, units = "in")
+       plot = figure3b, width = 8, height = 6.5, units = "in")
 
 #####
 ## just N. Atlantic sites
@@ -266,13 +271,16 @@ cca_na <-
             label = c("4.a","4.b", "7.a,7.d,7.e"))) +
   geom_text(data = al2,aes(x = CCA1 + 0.2, y = CCA2 +0.2, 
                           label = c("latitude"))) +
-  theme(axis.text = element_text(size = 14),
-        axis.title = element_text(size = 14),
-        legend.title = element_text(size = 12))
+  theme(axis.text = element_text(size = 14, face = "bold"),
+        axis.title = element_text(size = 14, face = "bold"),
+        legend.title = element_text(size = 12, face = "bold"),
+        axis.text.y = element_text(colour = "black", size = 12, face = "bold"), 
+        axis.text.x = element_text(colour = "black", face = "bold", size = 12))
+
+figure3a <- plot_grid(cca_na, labels = "A", ncol = 1)
 
 ggsave(filename=c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/cca_na.jpg"), 
-       plot = cca_na, width = 8, height = 6.5, units = "in")
-
+       plot = figure3a, width = 8, height = 6.5, units = "in")
 
 
 
