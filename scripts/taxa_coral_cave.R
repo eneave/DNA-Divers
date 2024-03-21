@@ -134,6 +134,97 @@ ggsave(filename = c("C:/Users/beseneav/OneDrive - Liverpool John Moores Universi
        plot = supp_fig_coralcave,  width = 7, height = 7, units = "in")
 
 
+#####
+## Make lollipop plot for coral cave
+#####
 
+# remove rows where reads = 0
+long_aqt_2 <- subset(long_aqt_all, long_aqt_all$reads>0)
+
+# Calculate unique Motus
+# calculate the number of motus per replicate
+motus_t <- long_aqt_2 %>% count(seq_id, id, sort = TRUE)
+motus_t <- motus_t %>% count(seq_id, sort = TRUE)
+
+# Calculate unique taxa
+# calculate the number of taxa per replicate
+name_t <- long_aqt_2 %>% count(seq_id, final_name, sort = TRUE)
+name_t <- name_t %>% count(seq_id, sort = TRUE)
+
+# make dataframe
+# Combine motus and unique taxa to make alpha diversity plots
+ct <- merge(motus_t, name_t, by="seq_id")
+ct <- mutate(ct, seq_id3 = case_when(
+                     seq_id =="sample.5Et10BLUE_MPEtA_" | seq_id =="sample.5Ft10BLUE_MPEtB_"  ~ 10, 
+                     seq_id =="sample.5Gt30BLUE_MPEtA_" | seq_id =="sample.5Ht30BLUE_MPEtB_"  ~ 30, 
+                     seq_id =="sample.6At60BLUE_MPEtA_" | seq_id =="sample.6Bt60BLUE_MPEtB_"  ~ 60,  
+                     seq_id =="sample.6Ct120BLUE_MPEtA" | seq_id =="sample.6Dt120BLUE_MPEtB"  ~ 120, 
+                     seq_id =="sample.6Et240BLUE_MPEtA" | seq_id =="sample.6Ft240BLUE_MPEtB"  ~ 240, 
+                     TRUE ~ NA # This is for all other values 
+                   )) 
+colnames(ct)[2] <- "MOTUs2"
+colnames(ct)[3] <- "Richness2"
+
+
+# combine dataframe from shark tank data
+head(ad2)
+
+ad2 <- mutate(ad2, seq_id3 = case_when(
+                                  seq_id2=="10 A" ~ 10,
+                                  seq_id2=="10 B" ~ 10,
+                                  seq_id2=="30 A" ~ 30,
+                                  seq_id2=="30 B" ~ 30,
+                                  seq_id2=="60 A" ~ 60,
+                                  seq_id2=="60 B" ~ 60,
+                                  seq_id2=="120 A" ~ 120,
+                                  seq_id2=="120 B" ~ 120,
+                                  seq_id2=="240 A" ~ 240,
+                                  seq_id2=="240 B" ~ 240,
+                                  seq_id2=="Dive 1A" ~ 50,
+                                  seq_id2=="Dive 1B" ~ 50,
+                                  seq_id2=="Dive 1C" ~ 50,
+                                  seq_id2=="Dive 1D" ~ 50,
+                                  seq_id2=="Dive 2A" ~ 65,
+                                  seq_id2=="Dive 2B" ~ 65,
+                                  seq_id2=="Dive 2C" ~ 65,
+                                  seq_id2=="Dive 2D" ~ 65,
+                                  TRUE ~ NA # This is for all other values 
+                                  )) 
+
+time_ex <- rbind(ct[c(2:4)], ad2[c(2,3,5)])
+time_ex <- 
+time_ex %>% drop_na()
+
+time_ex$location <- rep(c("Ocean"),each=5)
+
+time_ex2 <- time_ex[c(1:20),]
+
+# including dives
+ggplot() +
+  geom_point(data = time_ex, aes(x = seq_id3, y = MOTUs2))
+
+# not including dives
+ggplot() +
+  geom_point(data = time_ex2, aes(x = seq_id3, y = MOTUs2))
+
+ggplot() +
+  geom_point(data = time_ex2, aes(x = seq_id3, y = MOTUs2, color="MOTUs"), size = 4, alpha=0.7) +
+  geom_point(data = time_ex2, aes(x = seq_id3, y = Richness2, color="Taxa"), size = 4, alpha=0.7) +
+  scale_colour_manual(values = c("#FFC20A", "#0C7BDC"),
+                      limits = c("MOTUs", "Taxa"),
+                      name = "") +
+  geom_line() +
+  labs(x="Time", y="") +
+  theme_bw()
+
+
+lm_tm = lm(MOTUs2 ~ seq_id3, time_ex2)
+summary(lm_tm)
+
+lm_tr = lm(Richness2 ~ seq_id3, time_ex2)
+summary(lm_tr)
+
+lm_tmr = lm(MOTUs2 + Richness2 ~ seq_id3, time_ex2)
+summary(lm_tmr)
 
 
