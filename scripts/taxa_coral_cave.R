@@ -194,28 +194,33 @@ ad2 <- mutate(ad2, seq_id3 = case_when(
 time_ex <- rbind(ct[c(2:4)], ad2[c(2,3,5)])
 time_ex <- 
 time_ex %>% drop_na()
-
-time_ex$location <- rep(c("Ocean"),each=5)
+time_ex$location <- rep(c("Ocean Exhibit","Coral Cave","Ocean Exhibit"),times=c(10,10,8))
 
 time_ex2 <- time_ex[c(1:20),]
-
-# including dives
-ggplot() +
-  geom_point(data = time_ex, aes(x = seq_id3, y = MOTUs2))
+#time_ex2$location <- rep(c("Ocean Exhibit","Coral Cave"),each=10)
 
 # not including dives
+time_lm <-
 ggplot() +
-  geom_point(data = time_ex2, aes(x = seq_id3, y = MOTUs2))
-
-ggplot() +
-  geom_point(data = time_ex2, aes(x = seq_id3, y = MOTUs2, color="MOTUs"), size = 4, alpha=0.7) +
-  geom_point(data = time_ex2, aes(x = seq_id3, y = Richness2, color="Taxa"), size = 4, alpha=0.7) +
+  geom_point(data = time_ex2, aes(x = seq_id3, y = MOTUs2, color="MOTUs", shape=location), size = 4, alpha=0.7) +
+  geom_point(data = time_ex2, aes(x = seq_id3, y = Richness2, color="Taxa", shape=location), size = 4, alpha=0.7) +
   scale_colour_manual(values = c("#FFC20A", "#0C7BDC"),
                       limits = c("MOTUs", "Taxa"),
                       name = "") +
-  geom_line() +
+  geom_smooth(data = time_ex2, aes(x = seq_id3, y = MOTUs2, color="MOTUs"),method="lm") +
+  geom_smooth(data = time_ex2, aes(x = seq_id3, y = Richness2, color="Taxa"),method="lm") +
   labs(x="Time", y="") +
-  theme_bw()
+  theme_bw() +
+  theme(axis.text.y = element_text(colour = "black", size = 16, face = "bold"), 
+        axis.text.x = element_text(colour = "black", face = "bold", size = 16), 
+        legend.text = element_text(size = 16, colour ="black"), 
+        legend.position = "right", axis.title.y = element_text(face = "bold", size = 18), 
+        axis.title.x = element_text(face = "bold", size = 18, colour = "black"), 
+        legend.title = element_text(size = 18, colour = "black", face = "bold"))
+
+ggsave(filename=c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/time_lm.jpg"), 
+       plot = time_lm, width = 8, height = 6.5, units = "in")
+
 
 
 lm_tm = lm(MOTUs2 ~ seq_id3, time_ex2)
@@ -227,4 +232,35 @@ summary(lm_tr)
 lm_tmr = lm(MOTUs2 + Richness2 ~ seq_id3, time_ex2)
 summary(lm_tmr)
 
+
+time_lm_dv <-
+  ggplot() +
+  geom_point(data = time_ex, aes(x = seq_id3, y = MOTUs2, color="MOTUs", shape=location), size = 4, alpha=0.7) +
+  geom_point(data = time_ex, aes(x = seq_id3, y = Richness2, color="Taxa", shape=location), size = 4, alpha=0.7) +
+  scale_colour_manual(values = c("#FFC20A", "#0C7BDC"),
+                      limits = c("MOTUs", "Taxa"),
+                      name = "") +
+  geom_smooth(data = time_ex, aes(x = seq_id3, y = MOTUs2, color="MOTUs"),method="lm") +
+  geom_smooth(data = time_ex, aes(x = seq_id3, y = Richness2, color="Taxa"),method="lm") +
+  geom_vline(xintercept=50, linetype="dashed", color = "red", size=1) + #indicating data from dives
+  geom_vline(xintercept=65, linetype="dashed", color = "red", size=1) +
+  labs(x="Time", y="") +
+  theme_bw() +
+  theme(axis.text.y = element_text(colour = "black", size = 16, face = "bold"), 
+        axis.text.x = element_text(colour = "black", face = "bold", size = 16), 
+        legend.text = element_text(size = 16, colour ="black"), 
+        legend.position = "right", axis.title.y = element_text(face = "bold", size = 18), 
+        axis.title.x = element_text(face = "bold", size = 18, colour = "black"), 
+        legend.title = element_text(size = 18, colour = "black", face = "bold"))
+
+ggsave(filename=c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/time_lm_dv.jpg"), 
+       plot = time_lm_dv, width = 8, height = 6.5, units = "in")
+
+
+
+lm_tmd = lm(MOTUs2 ~ seq_id3, time_ex)
+summary(lm_tmd)
+
+lm_trd = lm(Richness2 ~ seq_id3, time_ex)
+summary(lm_trd)
 
