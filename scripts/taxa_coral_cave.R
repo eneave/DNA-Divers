@@ -225,9 +225,11 @@ ggsave(filename=c("C:/Users/beseneav/OneDrive - Liverpool John Moores University
 
 lm_tm = lm(MOTUs2 ~ seq_id3, time_ex2)
 summary(lm_tm)
+anova(lm_tm)
 
 lm_tr = lm(Richness2 ~ seq_id3, time_ex2)
 summary(lm_tr)
+anova(lm_tr)
 
 lm_tmr = lm(MOTUs2 + Richness2 ~ seq_id3, time_ex2)
 summary(lm_tmr)
@@ -242,8 +244,8 @@ time_lm_dv <-
                       name = "") +
   geom_smooth(data = time_ex, aes(x = seq_id3, y = MOTUs2, color="MOTUs"),method="lm") +
   geom_smooth(data = time_ex, aes(x = seq_id3, y = Richness2, color="Taxa"),method="lm") +
-  geom_vline(xintercept=50, linetype="dashed", color = "red", size=1) + #indicating data from dives
-  geom_vline(xintercept=65, linetype="dashed", color = "red", size=1) +
+  geom_vline(xintercept=50, linetype="dashed", color = "#D81B60", size=1) + #indicating data from dives
+  geom_vline(xintercept=65, linetype="dashed", color = "#D81B60", size=1) +
   labs(x="Time", y="") +
   theme_bw() +
   theme(axis.text.y = element_text(colour = "black", size = 16, face = "bold"), 
@@ -262,5 +264,52 @@ lm_tmd = lm(MOTUs2 ~ seq_id3, time_ex)
 summary(lm_tmd)
 
 lm_trd = lm(Richness2 ~ seq_id3, time_ex)
+
 summary(lm_trd)
+
+
+final_time_lm <-
+  ggplot() +
+  geom_point(data = time_ex, aes(x = seq_id3, y = MOTUs2, color="MOTUs", shape=location), size = 4, alpha=0.8) +
+  geom_point(data = time_ex, aes(x = seq_id3, y = Richness2, color="Taxa", shape=location), size = 4, alpha=0.8) +
+  scale_colour_manual(values = c("#FFC20A", "#0C7BDC"),
+                      limits = c("MOTUs", "Taxa"),
+                      name = "") +
+  geom_smooth(data = time_ex2, aes(x = seq_id3, y = MOTUs2, color="MOTUs"),method="lm") +
+  geom_smooth(data = time_ex2, aes(x = seq_id3, y = Richness2, color="Taxa"),method="lm") +
+  geom_vline(xintercept=50, linetype="dashed", color = "#D81B60", size=0.7) + #indicating data from dives
+  geom_vline(xintercept=65, linetype="dashed", color = "#D81B60", size=0.7) +
+  #geom_smooth(data = time_ex, aes(x = seq_id3, y = MOTUs2, color="MOTUs"), fill = "#D81B60", method="lm") +
+  #geom_smooth(data = time_ex, aes(x = seq_id3, y = Richness2, color="Taxa"), fill = "#D81B60", method="lm") +
+  geom_smooth(data = time_ex, aes(x = seq_id3, y = MOTUs2, color="MOTUs"), linetype = "dashed",method="lm") +
+  geom_smooth(data = time_ex, aes(x = seq_id3, y = Richness2, color="Taxa"), linetype = "dashed",method="lm") +
+  labs(x="Time (minutes)", y="Detections") +
+  theme_bw() +
+  theme(axis.text.y = element_text(colour = "black", size = 16, face = "bold"), 
+        axis.text.x = element_text(colour = "black", face = "bold", size = 16), 
+        legend.text = element_text(size = 16, colour ="black"), 
+        legend.position = "right", axis.title.y = element_text(face = "bold", size = 18), 
+        axis.title.x = element_text(face = "bold", size = 18, colour = "black"), 
+        legend.title = element_text(size = 18, colour = "black", face = "bold"))
+
+
+ggsave(filename=c("C:/Users/beseneav/OneDrive - Liverpool John Moores University/PhD/chapter3_writing/figures/figure2.jpg"), 
+       plot = final_time_lm, width = 8, height = 6.5, units = "in")
+
+
+
+#####
+## Check how many species are detected after 10 minutes
+#####
+
+# shark tank
+
+ten <- subset(master_aq, master_aq$time=="10" & master_aq$reads>0)
+unique(ten$manual_name2)
+
+thi <- subset(master_aq, master_aq$time=="30" & master_aq$reads>0)
+unique(thi$manual_name2)
+
+six <- subset(master_aq, master_aq$time=="60" & master_aq$reads>0)
+unique(six$manual_name2)
 
