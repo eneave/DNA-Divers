@@ -304,6 +304,7 @@ ggsave(filename=c("C:/Users/beseneav/OneDrive - Liverpool John Moores University
 
 # shark tank
 
+# timed experiments
 ten <- subset(master_aq, master_aq$time=="10" & master_aq$reads>0)
 unique(ten$manual_name2)
 
@@ -312,4 +313,40 @@ unique(thi$manual_name2)
 
 six <- subset(master_aq, master_aq$time=="60" & master_aq$reads>0)
 unique(six$manual_name2)
+
+otw <- subset(master_aq, master_aq$time=="120" & master_aq$reads>0)
+unique(otw$manual_name2)
+
+tfr <- subset(master_aq, master_aq$time=="240" & master_aq$reads>0)
+unique(tfr$manual_name2)
+
+# eDNA bottles
+botA <- subset(master_aq, master_aq$seq_id3=="Bottle A" & master_aq$reads>0)
+unique(botA$manual_name2)
+
+botB <- subset(master_aq, master_aq$seq_id3=="Bottle B" & master_aq$reads>0)
+unique(botB$manual_name2)
+
+botC <- subset(master_aq, master_aq$seq_id3=="Bottle C" & master_aq$reads>0)
+unique(botC$manual_name2)
+
+botD <- subset(master_aq, master_aq$seq_id3=="Bottle D" & master_aq$reads>0)
+unique(botD$manual_name2)
+
+# DiverMP
+divA <- subset(master_aq, master_aq$seq_id3=="Dive 1A" & master_aq$reads>0)
+unique(divA$manual_name2)
+
+divB <- subset(master_aq, master_aq$seq_id3=="Dive 1B" & master_aq$reads>0)
+unique(divB$manual_name2)
+
+divC <- subset(master_aq, master_aq$seq_id3=="Dive 2A" & master_aq$reads>0)
+unique(divC$manual_name2)
+
+divD <- subset(master_aq, master_aq$seq_id3=="Dive 2B" & master_aq$reads>0)
+unique(divD$manual_name2)
+
+
+
+
 
